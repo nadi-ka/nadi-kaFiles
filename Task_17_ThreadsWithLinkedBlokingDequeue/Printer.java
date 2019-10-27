@@ -33,7 +33,7 @@ public class Printer {
                 //Sleep a little bit(printer's working);
                 Thread.sleep(200);
             } catch (NoSuchElementException ex) {
-                //Here we expected NoSuchElementException, is there's no one document in the queue;
+                //Here we expected NoSuchElementException, if there's no one document in the queue;
                 //Simply Thread'll sleep a Little Bit;
                 ex.printStackTrace();
                 Thread.sleep(300);

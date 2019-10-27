@@ -4,20 +4,20 @@ import java.util.Scanner;
 
 public class Task8_4 {
     private static int diffWords(String st) {
-        StringBuffer unicStr = new StringBuffer();
-        //unic String
+        StringBuffer uniqueStr = new StringBuffer();
+        //unique String
         String current;
         //current symbol in String
         for (int i = 0; i < st.length(); i++) {
             current = String.valueOf(st.charAt(i));
             //get current symbol
-            if (unicStr.indexOf(current) == -1)
-                unicStr.append(current);
-            //if symbol isn't in String - append it.
+            if (uniqueStr.indexOf(current) == -1)
+                uniqueStr.append(current);
+            //if there isn't symbol in the String - append it.
         }
 
-        return unicStr.length();
-        //return length of unic String
+        return uniqueStr.length();
+        //return the length of unique String
     }
 
     public static void main(String[] args) {

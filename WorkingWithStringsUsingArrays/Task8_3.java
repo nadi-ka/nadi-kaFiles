@@ -19,7 +19,7 @@ public class Task8_3 {
         for (String item : linesArray) {
             average = average + (float) item.length();
         }
-        //calculation of the average.
+        //Average calculation.
         average = average / numberOfLines;
 
         System.out.println("The average length is " + average);
