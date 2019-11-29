@@ -3,22 +3,12 @@ package by.trjava.task01.util;
 import by.trjava.task01.exception.BallWithNullValuesException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Basket {
-    private ArrayList<Ball> balls;
+    private List<Ball> balls = new ArrayList<>();
 
-    public Basket() {
-    }
-
-    public Basket(ArrayList<Ball> balls) {
-        this.balls = new ArrayList<Ball>();
-    }
-
-    public void setBalls(ArrayList<Ball> balls) {
-        this.balls = new ArrayList<Ball>();
-    }
-
-    public  ArrayList<Ball>getBalls() {
+    public Iterable<Ball>getBalls() {
         return balls;
     }
 
@@ -26,17 +16,13 @@ public class Basket {
         if (ball.getWeight() == 0 || ball.getColour() == null) {
             throw new BallWithNullValuesException("Exception in Class Basket, Method addBall(). You can't add" +
                     "the ball without indication of colour and/or weight to the basket!");
-        } else {
-            balls.add(ball);
         }
+
+        balls.add(ball);
     }
 
-    public void removeBall() {
-        if (!balls.isEmpty()) {
-            for (Ball ball : balls) {
-                balls.remove(ball);
-            }
-        }
+    public void removeBalls() {
+        balls.clear();
     }
 
     @Override

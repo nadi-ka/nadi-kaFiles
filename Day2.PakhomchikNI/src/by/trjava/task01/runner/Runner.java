@@ -13,33 +13,18 @@ public class Runner {
         int amountOfBlue;
         double totalWeight;
 
-        ArrayList<Ball> balls = new ArrayList<>();
+        Basket basket = new Basket();
 
-        Basket basket = new Basket(balls);
         try {
-            Ball ball1 = new Ball(Colour.BLUE, 1.0);
-            Ball ball2 = new Ball(Colour.ORANGE, 0.7);
-            Ball ball3 = new Ball(Colour.PURPLE, 0.5);
-            Ball ball4 = new Ball(Colour.YELLOW, 1.1);
-            Ball ball5 = new Ball(Colour.BLUE, 1.0);
-            Ball ball6 = new Ball(Colour.WHITE, 1.2);
-            Ball ball7 = new Ball(Colour.RED, 1.5);
-
-            basket.addBall(ball1);
-            basket.addBall(ball2);
-            basket.addBall(ball3);
-            basket.addBall(ball4);
-            basket.addBall(ball5);
-            basket.addBall(ball6);
-            basket.addBall(ball7);
+            basket.addBall(new Ball(Colour.BLUE, 1.0));
+            basket.addBall(new Ball(Colour.ORANGE, 0.7));
+            basket.addBall(new Ball(Colour.PURPLE, 0.5));
+            basket.addBall(new Ball(Colour.YELLOW, 1.1));
+            basket.addBall(new Ball(Colour.BLUE, 1.0));
+            basket.addBall(new Ball(Colour.WHITE, 1.2));
+            basket.addBall(new Ball(Colour.RED, 1.5));
         }
-        catch (AbsentColourException ex){
-            ex.getMessage();
-        }
-        catch (NegativeOrZeroWeightException ex) {
-            ex.getMessage();
-        }
-        catch (BallWithNullValuesException ex) {
+        catch (AbsentColourException | NegativeOrZeroWeightException | BallWithNullValuesException ex){
             ex.getMessage();
         }
 
@@ -49,7 +34,5 @@ public class Runner {
 
         amountOfBlue = service.getNumberOfBlueBalls(basket);
         System.out.println("The amount of blue balls is: " + amountOfBlue);
-
-
     }
 }
