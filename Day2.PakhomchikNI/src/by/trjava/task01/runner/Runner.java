@@ -1,21 +1,15 @@
 package by.trjava.task01.runner;
 
-import by.trjava.task01.exception.AbsentColourException;
-import by.trjava.task01.exception.BallWithNullValuesException;
-import by.trjava.task01.exception.NegativeOrZeroWeightException;
-import by.trjava.task01.util.*;
-
-import java.util.ArrayList;
+import by.trjava.task01.exceptions.AbsentColourException;
+import by.trjava.task01.exceptions.NegativeOrZeroWeightException;
+import by.trjava.task01.entities.*;
+import by.trjava.task01.service.BasketCalculatorService;
+import by.trjava.task01.service.BasketCalculator;
 
 public class Runner {
 
     public static void main(String[] args) {
-        int amountOfBlue;
-        double totalWeight;
-
-        ArrayList<Ball> balls = new ArrayList<>();
-
-        Basket basket = new Basket(balls);
+        Basket basket = new Basket();
         try {
             Ball ball1 = new Ball(Colour.BLUE, 1.0);
             Ball ball2 = new Ball(Colour.ORANGE, 0.7);
@@ -33,23 +27,17 @@ public class Runner {
             basket.addBall(ball6);
             basket.addBall(ball7);
         }
-        catch (AbsentColourException ex){
-            ex.getMessage();
+        catch (AbsentColourException | NegativeOrZeroWeightException ex){
+            ex.printStackTrace();
         }
-        catch (NegativeOrZeroWeightException ex) {
-            ex.getMessage();
-        }
-        catch (BallWithNullValuesException ex) {
-            ex.getMessage();
-        }
-
-        ServiceCalculator service = new Service();
+        int amountOfBlue;
+        double totalWeight;
+        BasketCalculator service = new BasketCalculatorService();
         totalWeight = service.weighBalls(basket);
         System.out.println("The weight of the basket with balls is: " + totalWeight);
-
         amountOfBlue = service.getNumberOfBlueBalls(basket);
         System.out.println("The amount of blue balls is: " + amountOfBlue);
-
-
+        System.out.println(basket.removeBall(Colour.BLUE, 1.0));
+        System.out.println(service.getNumberOfBlueBalls(basket));
     }
 }

@@ -12,8 +12,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -21,6 +21,11 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.editor" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="by.trjava.task01.service" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -34,60 +39,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Runner (1)">
+  <component name="RunManager" selected="Application.Runner (2)">
     <configuration name="Runner (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="by.trjava.task01.runner.Runner" />
-      <module name="Day2.PakhomchikNI" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="by.trjava.task01.runner.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Runner (3)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="by.trjava.console.task04.runner.Runner" />
-      <module name="Day2.PakhomchikNI" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="by.trjava.console.task04.runner.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Runner (4)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="by.trjava.console.task05.runner.Runner" />
-      <module name="Day2.PakhomchikNI" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="by.trjava.console.task05.runner.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Runner (5)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="by.trjava.console.task06.runner.Runner" />
-      <module name="Day2.PakhomchikNI" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="by.trjava.console.task06.runner.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Runner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="by.trjava.console.task07.runner.Runner" />
       <module name="Day2.PakhomchikNI" />
       <extension name="coverage">
@@ -100,20 +53,72 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Runner (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.task01.runner.Runner" />
+      <module name="Day2.PakhomchikNI" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="by.trjava.task01.runner.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Runner (4)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.console.task04.runner.Runner" />
+      <module name="Day2.PakhomchikNI" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="by.trjava.console.task04.runner.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Runner (5)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.console.task05.runner.Runner" />
+      <module name="Day2.PakhomchikNI" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="by.trjava.console.task05.runner.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Runner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.console.task06.runner.Runner" />
+      <module name="Day2.PakhomchikNI" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="by.trjava.console.task06.runner.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
-      <item itemvalue="Application.Runner (3)" />
       <item itemvalue="Application.Runner (4)" />
       <item itemvalue="Application.Runner (5)" />
       <item itemvalue="Application.Runner" />
       <item itemvalue="Application.Runner (1)" />
+      <item itemvalue="Application.Runner (2)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Runner (2)" />
         <item itemvalue="Application.Runner (1)" />
         <item itemvalue="Application.Runner" />
         <item itemvalue="Application.Runner (5)" />
         <item itemvalue="Application.Runner (4)" />
-        <item itemvalue="Application.Runner (3)" />
       </list>
     </recent_temporary>
   </component>

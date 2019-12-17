@@ -7,21 +7,18 @@ import java.util.GregorianCalendar;
 
 public class BirthdayQualifier {
 
-    public static Calendar getObjectDate(String dayArgs, String monthArgs, String yearArgs) {
+    public static Calendar getObjectDate(String dayArgs, String monthArgs, String yearArgs) throws NullPointerException,
+            NumberFormatException {
         int day;
         int month;
         int year;
-        try {
-            day = Integer.parseInt(dayArgs);
-            month = Integer.parseInt(monthArgs);
-            year = Integer.parseInt(yearArgs);
-        }
-        catch (NumberFormatException ex){
-            System.out.println("Illegal arguments!");
+        if (dayArgs == null || monthArgs == null || yearArgs == null) {
             return null;
         }
+        day = Integer.parseInt(dayArgs);
+        month = Integer.parseInt(monthArgs);
+        year = Integer.parseInt(yearArgs);
         Calendar calendar = new GregorianCalendar(year, month, day);
-
         return calendar;
     }
 

@@ -8,7 +8,6 @@ public class Runner {
         boolean isEquals;
         String truePassword = "12345";
         String introducedPassword;
-
         introducedPassword = args[0];
         isEquals = PasswordsComparator.comparePasswords(truePassword, introducedPassword);
         System.out.println("Passwords are equals: " + isEquals);
