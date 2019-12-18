@@ -1,16 +1,20 @@
 package by.trjava.task01.util.service;
 
+import by.trjava.task01.util.entity.IntegerArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayService {
+    // IMHO ArrayService in your case should work with you class IntegerArray. Otherwise, why would you create it?
 
-    public static int searchMaxValue(int[] array) {
-        if (array != null && array.length != 0) {
-            int maxValue = array[0];
-            for (int i = 0; i < array.length - 1; i++) {
-                if (array[i + 1] > array[i]) {
-                    maxValue = array[i + 1];
+    public static int searchMaxValue(IntegerArray array) {
+        if (array != null && array.getArraySize() != 0) {
+            int maxValue = array.getElement(0);
+            for (int i = 0; i < array.getArraySize() - 1; i++) {
+                // Something wron here
+                if (array.getElement(i + 1) > maxValue) {
+                    maxValue = array.getElement(i + 1);
                 }
             }
             return maxValue;
@@ -19,12 +23,12 @@ public class ArrayService {
         }
     }
 
-    public static int searchMinValue(int[] array) {
-        if (array != null && array.length != 0) {
-            int minValue = array[0];
-            for (int i = 0; i < array.length - 1; i++) {
-                if (array[i + 1] < minValue) {
-                    minValue = array[i + 1];
+    public static int searchMinValue(IntegerArray array) {
+        if (array != null && array.getArraySize() != 0) {
+            int minValue = array.getElement(0);
+            for (int i = 0; i < array.getArraySize() - 1; i++) {
+                if (array.getElement(i + 1) < minValue) {
+                    minValue = array.getElement(i + 1);
                 }
             }
             return minValue;
@@ -38,7 +42,8 @@ public class ArrayService {
         int firstDivider = 2;
         boolean isSimple = true;
         if (number > 1) {
-            for (int i = firstDivider; i < number; i++) {
+            // Just a math tip: you can loop until i < ((int)(number/2)+1)
+            for (int i = firstDivider; i < ((int)(number/2)+1); i++) {
                 if (number % i == 0) {
                     isSimple = false;
                     break;
@@ -50,12 +55,18 @@ public class ArrayService {
         return isSimple;
     }
 
-    public static List<Integer> getSimpleNumbers(int[] array) {
+    public static List<Integer> getSimpleNumbers(IntegerArray array) {
         List<Integer> resultList = new ArrayList<>();
-        if (array != null && array.length != 0) {
-            for (int i = 0; i < array.length; i++) {
-                if (isSimpleNumber(array[i])) {
-                    resultList.add(array[i]);
+        if (array != null && array.getArraySize() != 0) {
+            // Let's use the power of Iterable here
+//            for (int i = 0; i < array.getArraySize(); i++) {
+//                if (isSimpleNumber(array[i])) {
+//                    resultList.add(array[i]);
+//                }
+//            }
+            for (int value: array) {
+                if (isSimpleNumber(value)) {
+                    resultList.add(value);
                 }
             }
         }
@@ -73,28 +84,36 @@ public class ArrayService {
     }
 
     //Algorithm of checking if the number is Fibonacci number: Math.sqrt(5 * N^2 + 4 || 5 * N^2 - 4);
-    public static List<Integer> getFibonacciNumbers(int[] array) {
+    public static List<Integer> getFibonacciNumbers(IntegerArray array) {
         List<Integer> listFibonacci = new ArrayList<>();
-        for (int i = 0; i < array.length; i++) {
-            if (isPerfectSquare(5 * array[i] * array[i] + 4) ||
-                    isPerfectSquare(5 * array[i] * array[i] - 4)) {
-                listFibonacci.add(array[i]);
+//        for (int i = 0; i < array.getArraySize(); i++) {
+//            if (isPerfectSquare(5 * array[i] * array[i] + 4) ||
+//                    isPerfectSquare(5 * array[i] * array[i] - 4)) {
+//                listFibonacci.add(array[i]);
+//            }
+//        }
+        // Power of Iterable here!!!
+        for (int value: array) {
+            if (isPerfectSquare(5 * value * value + 4) ||
+                    isPerfectSquare(5 * value * value - 4)) {
+                listFibonacci.add(value);
             }
         }
         return listFibonacci;
     }
 
-    public static List<Integer> getNumbersWithThreeDifferentDigits(int[] array) {
+    public static List<Integer> getNumbersWithThreeDifferentDigits(IntegerArray array) {
         List<Integer> listOfNumbers = new ArrayList<>();
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < array.getArraySize(); i++) {
+            // Lover - любовник. You mean lower
             int loverBoard = 100;
             int upperBoard = 999;
-            if (array[i] >= loverBoard && array[i] <= upperBoard) {
-                int firstDigit = array[i] % 10;
-                int secondDigit = array[i] / 10 % 10;
-                int thirdDigit = array[i] / 100;
+            if (array.getElement(i) >= loverBoard && array.getElement(i) <= upperBoard) {
+                int firstDigit = array.getElement(i) % 10;
+                int secondDigit = array.getElement(i) / 10 % 10;
+                int thirdDigit = array.getElement(i) / 100;
                 if (firstDigit != secondDigit && secondDigit != thirdDigit) {
-                    listOfNumbers.add(array[i]);
+                    listOfNumbers.add(array.getElement(i));
                 }
 
             }

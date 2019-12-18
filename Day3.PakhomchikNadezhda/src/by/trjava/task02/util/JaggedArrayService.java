@@ -10,6 +10,8 @@ public class JaggedArrayService {
         return sum;
     }
 
+    // I would also change the int[][] arrayJagged to your JaggedArray arrayJagged. Same way, as I've done in the
+    // IntegerArray. It's however more tricky. So, up to you.
     public static void bubbleSortBySumInRow(int[][] arrayJagged, boolean isAscending) {
         boolean isSorted = false;
         int[] tmp;

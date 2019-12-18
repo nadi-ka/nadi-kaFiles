@@ -1,10 +1,11 @@
 package by.trjava.task03.util.service;
 
 import by.trjava.exceptions.NullValueException;
+import by.trjava.task03.util.entity.TextStorage;
 
 public class TextService {
-
-    public static String changeEveryKthLetterToSymbol(String text, int indexK, String symbol) throws NullValueException {
+    // Let's use your TextStorage object here and in all other methods.
+    public static TextStorage changeEveryKthLetterToSymbol(TextStorage text, int indexK, String symbol) throws NullValueException {
         if (text == null) {
             throw new NullValueException("Reference to the text shouldn't be equals null!");
         } else if (indexK <= 0 || symbol == null) {
@@ -14,26 +15,27 @@ public class TextService {
             int indexStart = 1;
             int indexFinish;
             String word;
+            String textString = text.getText();
             for (int i = 0; i < text.length(); i++) {
-                if (text.charAt(i) == ' ' || text.charAt(i) == '.' || text.charAt(i) == ',' ||
-                        text.charAt(i) == '!' || text.charAt(i) == '?' || text.charAt(i) == '\n' ||
-                        text.charAt(i) == ';' || text.charAt(i) == ':' || text.charAt(i) == '-' ||
-                        text.charAt(i) == '\t') {
+                if (textString.charAt(i) == ' ' || textString.charAt(i) == '.' || textString.charAt(i) == ',' ||
+                        textString.charAt(i) == '!' || textString.charAt(i) == '?' || textString.charAt(i) == '\n' ||
+                        textString.charAt(i) == ';' || textString.charAt(i) == ':' || textString.charAt(i) == '-' ||
+                        textString.charAt(i) == '\t') {
                     indexFinish = i;
-                    word = text.substring(indexStart, indexFinish);
+                    word = textString.substring(indexStart, indexFinish);
                     if (word.length() >= indexK) {
                         resultText.append(word.substring(0, indexK - 1)).append(symbol).
                                 append(word.substring(indexK));
                     } else {
                         resultText.append(word);
                     }
-                    resultText.append(text.charAt(i));
-                    if (i != text.length() - 1) {
+                    resultText.append(textString.charAt(i));
+                    if (i != textString.length() - 1) {
                         indexStart = i + 1;
                     }
                 }
             }
-            return resultText.toString();
+            return new TextStorage(resultText.toString());
     }
 
     public static String changeEveryKthLetterToSymbolPattern(String text, int indexK, String symbol)

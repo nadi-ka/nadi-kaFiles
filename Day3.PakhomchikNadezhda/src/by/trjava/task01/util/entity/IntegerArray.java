@@ -26,7 +26,8 @@ public class IntegerArray implements Iterable<Integer> {
         this.setArray(array);
     }
 
-    public void setArray(int[] array) throws NullValueException {
+    // I would do it private. IMHO breaks the encapsulation.
+    private void setArray(int[] array) throws NullValueException {
         if (array != null) {
             this.array = array;
         }
@@ -35,6 +36,7 @@ public class IntegerArray implements Iterable<Integer> {
                     " The array shouldn't reference to null!");
         }
     }
+
     public boolean setElement(int index, int elementValue) {
         if (index >= 0 && index < array.length) {
             array[index] = elementValue;
@@ -43,13 +45,20 @@ public class IntegerArray implements Iterable<Integer> {
         return false;
     }
 
-    public int[] getArray() {
-        return array;
+    // Instead of getArray()[i]
+    public int getElement(int index) {
+        return array[index];
     }
 
-    public Iterable<Integer> getArray1() {
-        return this;
-    }
+    // It's workable approach, but as already said, I would not do it - breaks the encapsulation.
+//    public int[] getArray() {
+//        return array;
+//    }
+
+    // No need, you has already iterator method that does the same thing.
+//    public Iterable<Integer> getArray1() {
+//        return this;
+//    }
 
     public int getArraySize() {
         return this.array.length;

@@ -11,7 +11,8 @@ public class TextStorage {
         this.setText(text);
     }
 
-    public void setText(String text) {
+    // I prefer not to have such Public methods if possible
+    private void setText(String text) {
         if (text != null) {
             this.text = text;
         }
@@ -20,11 +21,12 @@ public class TextStorage {
         }
     }
 
+    // Here it's ok, since the strings are immutable
     public String getText() {
         return text;
     }
 
-    public int getTextLength() {
+    public int length() {
         return text.length();
     }
 
@@ -37,7 +39,7 @@ public class TextStorage {
             return false;
         }
         TextStorage textStorage = (TextStorage) object;
-        return (text.length() == textStorage.getTextLength()) &&
+        return (text.length() == textStorage.length()) &&
                 ((text == textStorage.text) || ((text != null) && (text.equals(textStorage.getText()))));
     }
 

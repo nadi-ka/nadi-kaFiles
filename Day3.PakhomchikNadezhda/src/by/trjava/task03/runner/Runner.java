@@ -15,9 +15,9 @@ public class Runner {
         TextStorage textStorage = new TextStorage(text1);
         System.out.println(textStorage);
         //Reading text from file;
-        String text2 = null;
+        TextStorage text2 = null;
         try {
-            text2 = DataAccessText.readTextFromFile();
+            text2 = new TextStorage(DataAccessText.readTextFromFile());
             System.out.println(text2);
         } catch (InputFromFileImpossibleException ex) {
             ex.printStackTrace();
@@ -26,7 +26,7 @@ public class Runner {
         //Replacement every K-th letter in words to symbol;
         String symbol = DataScanner.readTextFromConsole();
         int indexK = DataScanner.readIntegerFromConsole();
-        String resultText1 = null;
+        TextStorage resultText1 = null;
         try {
             resultText1 = TextService.changeEveryKthLetterToSymbol(text2, indexK, symbol);
             System.out.println(resultText1);
@@ -37,7 +37,7 @@ public class Runner {
         //Replacement every K-th letter in words to symbol, using regular expression;
         String resultText2 = null;
         try {
-            resultText2 = TextService.changeEveryKthLetterToSymbolPattern(text2, indexK, symbol);
+            resultText2 = TextService.changeEveryKthLetterToSymbolPattern(text2.getText(), indexK, symbol);
             System.out.println(resultText2);
         }
         catch (NullValueException ex) {
@@ -50,9 +50,9 @@ public class Runner {
         String resultText3 = null;
         String resultText4 = null;
         try {
-            resultText3 = TextService.changeAtoOAfterLetterR(text2);
+            resultText3 = TextService.changeAtoOAfterLetterR(text2.getText());
             System.out.println(resultText3);
-            resultText4 = TextService.changeAtoOAfterLetterRPattern(text2);
+            resultText4 = TextService.changeAtoOAfterLetterRPattern(text2.getText());
             System.out.println(resultText4);
         }
         catch (NullValueException ex) {
@@ -66,9 +66,9 @@ public class Runner {
         int wordLength = DataScanner.readIntegerFromConsole();
         String substring = DataScanner.readTextFromConsole();
         try {
-            resultString5 = TextService.changeWordsOfGivenLengthToSubstring(text2, wordLength, substring);
+            resultString5 = TextService.changeWordsOfGivenLengthToSubstring(text2.getText(), wordLength, substring);
             System.out.println(resultString5);
-            resultString6 = TextService.changeWordsOfGivenLengthToSubstringPattern(text2, wordLength, substring);
+            resultString6 = TextService.changeWordsOfGivenLengthToSubstringPattern(text2.getText(), wordLength, substring);
             System.out.println(resultString6);
         }
         catch (NullValueException ex) {
@@ -80,9 +80,9 @@ public class Runner {
         String resultString7 = null;
         String resultString8 = null;
         try {
-            resultString7 = TextService.removeAllSymbolsExceptSpaceStrings(text2);
+            resultString7 = TextService.removeAllSymbolsExceptSpaceStrings(text2.getText());
             System.out.println(resultString7);
-            resultString8 = TextService.removeAllSymbolsExceptSpaceStringsPattern(text2);
+            resultString8 = TextService.removeAllSymbolsExceptSpaceStringsPattern(text2.getText());
             System.out.println(resultString8);
         } catch (NullValueException ex) {
             ex.printStackTrace();
@@ -94,9 +94,9 @@ public class Runner {
         String resultString10 = null;
         int wordLength2 = DataScanner.readIntegerFromConsole();
         try {
-            resultString9 = TextService.removeWordsOfGivenLengthFromConsonants(text2, wordLength2);
+            resultString9 = TextService.removeWordsOfGivenLengthFromConsonants(text2.getText(), wordLength2);
             System.out.println(resultString9);
-            resultString10 = TextService.removeWordsOfGivenLengthFromConsonantsPattern(text2, wordLength2);
+            resultString10 = TextService.removeWordsOfGivenLengthFromConsonantsPattern(text2.getText(), wordLength2);
             System.out.println(resultString10);
         }
         catch (NullValueException ex) {

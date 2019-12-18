@@ -68,15 +68,14 @@ public class Runner {
         catch (NegativeSizeException ex) {
             ex.printStackTrace();
         }
-        int[] array4 = integerArray.getArray();
         //Looking for max and min values int the array;
         int valueMax;
         int valueMin;
-        System.out.println("Max value: " + ArrayService.searchMaxValue(array4));
-        System.out.println("Min value: " + ArrayService.searchMinValue(array4));
+        System.out.println("Max value: " + ArrayService.searchMaxValue(integerArray));
+        System.out.println("Min value: " + ArrayService.searchMinValue(integerArray));
         //Looking for simple numbers in the array;
         List<Integer> simpleNumbers;
-        simpleNumbers = ArrayService.getSimpleNumbers(array4);
+        simpleNumbers = ArrayService.getSimpleNumbers(integerArray);
         System.out.print("Simple numbers: ");
         for (Integer element: simpleNumbers) {
             System.out.print(element + " ");
@@ -84,7 +83,7 @@ public class Runner {
         System.out.println();
         //Looking for Fibonacci numbers;
         List<Integer> fibonacciNumbers;
-        fibonacciNumbers = ArrayService.getFibonacciNumbers(array4);
+        fibonacciNumbers = ArrayService.getFibonacciNumbers(integerArray);
         System.out.print("Fibonacci numbers: ");
         for (Integer element: fibonacciNumbers) {
             System.out.print(element + " ");
@@ -92,7 +91,7 @@ public class Runner {
         System.out.println();
         //Looking for numbers with 3 different digits;
         List<Integer> numbersWith3DifferentDigits;
-        numbersWith3DifferentDigits = ArrayService.getNumbersWithThreeDifferentDigits(array4);
+        numbersWith3DifferentDigits = ArrayService.getNumbersWithThreeDifferentDigits(integerArray);
         System.out.print("Numbers with 3 different digits: ");
         for (Integer element: numbersWith3DifferentDigits) {
             System.out.print(element + " ");
