@@ -17,6 +17,7 @@ public class UserDaoJson implements UserDao {
     public void addUsers(List<User> users) throws DAOException {
         try {
             ObjectMapper mapper = new ObjectMapper();
+            // Generate unique user ids
             mapper.writeValue(file, users);
         } catch (IOException ex) {
             throw new DAOException("The list of users wasn't added to file! " + baseFile);
@@ -26,6 +27,7 @@ public class UserDaoJson implements UserDao {
     public void addUser(User user) throws DAOException {
         try {
             List<User> users = getAllUsers();
+            // Generate unique user id
             users.add(user);
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(file, users);

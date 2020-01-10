@@ -3,6 +3,7 @@ package by.trjava.library.bean.book;
 import java.io.Serializable;
 
 public class Book implements Serializable {
+    // If you use UUID approach, then id will be string
     private long id;
     private BookCategory category;
     private String author;
@@ -18,6 +19,9 @@ public class Book implements Serializable {
     public Book(BookCategory category, String author, String title, int yearOfEdition,
                 double prise, boolean isPopular, String description) {
         IdGeneratorBook instance = IdGeneratorBook.getInstance();
+
+        // how do you set the ID, when you read an existing book from file?
+        // do not use generator here, just make a normal input parameter id
         this.id = instance.getNextId();
         this.category = category;
         this.author = author;
@@ -32,6 +36,9 @@ public class Book implements Serializable {
         return id;
     }
 
+    // same here, it is not the right place to generate ids.
+    // you should generate the id only on insert into the Database/File. In the rest
+    // situations it must be stable
     public void setId() {
         IdGeneratorBook instance = IdGeneratorBook.getInstance();
         this.id = instance.getNextId();

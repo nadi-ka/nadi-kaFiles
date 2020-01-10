@@ -3,6 +3,7 @@ package by.trjava.library.bean.user;
 import java.io.Serializable;
 
 public class User implements Serializable {
+    // If you use UUID approach, then id will be string
     private long id;
     private UserRole userRole;
     private String surname;
@@ -15,6 +16,8 @@ public class User implements Serializable {
 
     public User(String login, String password) {
         IdGenerator instance = IdGenerator.getInstance();
+
+        // Same id problem as in the Book.
         this.id = instance.getNextId();
         this.userRole = UserRole.USER;
         this.login = login;
@@ -29,6 +32,8 @@ public class User implements Serializable {
         this.surname = surname;
     }
 
+
+    // Same id problem as in the Book. Make just normal setter here.
     public void setId() {
         IdGenerator instance = IdGenerator.getInstance();
         this.id = instance.getNextId();

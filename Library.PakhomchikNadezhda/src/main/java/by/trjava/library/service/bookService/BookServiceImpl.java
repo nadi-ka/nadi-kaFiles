@@ -14,8 +14,8 @@ import java.util.List;
 
 public class BookServiceImpl implements BookService {
 
-    DaoFactory factory = JsonDaoFactory.getInstance();
-    BookDao bookDao = factory.getBookDao();
+    private final DaoFactory factory = JsonDaoFactory.getInstance();
+    private final BookDao bookDao = factory.getBookDao();
 
     public void addBook(Book book, User userWhoPerform) throws ServiceException {
         if (ValidationUser.isAdministrator(userWhoPerform)) {

@@ -1,5 +1,7 @@
 package by.trjava.library.service.validation;
 
+
+// I do not like the name of the class. Sounds odd. I would name it: BookValidator or similar
 public class ValidationBook {
 
     public static boolean isCorrectAuthor(String author) {

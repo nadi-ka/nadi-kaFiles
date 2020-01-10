@@ -18,6 +18,10 @@ public class BookDaoJson implements BookDao {
     public void addBook(Book book) throws DAOException {
         try {
             List<Book> books = getAllBooks();
+
+            // Here you should generate a new Book Id
+            // book.setId(generator.generateId())
+
             books.add(book);
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(file, books);
@@ -29,6 +33,10 @@ public class BookDaoJson implements BookDao {
     public void addBooks(List<Book> books) throws DAOException {
         try {
             ObjectMapper mapper = new ObjectMapper();
+
+            // Loop through books and generate the Ids
+            // book.setId(generator.generateId())
+
             mapper.writeValue(file, books);
         } catch (IOException ex) {
             throw new DAOException("The list of books wasn't added to file! " + baseFile);

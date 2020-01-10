@@ -5,6 +5,7 @@ import by.trjava.library.bean.user.UserRole;
 
 import java.util.List;
 
+// Better naming: e.g. UserValidator
 public class ValidationUser {
 
     public static boolean isCorrectName(String name) {
