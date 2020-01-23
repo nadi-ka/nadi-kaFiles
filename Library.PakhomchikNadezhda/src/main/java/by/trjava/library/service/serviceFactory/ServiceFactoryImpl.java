@@ -17,11 +17,11 @@ public final class ServiceFactoryImpl implements ServiceFactory{
     }
 
     public UserService getUserService() {
-        return userService;
+        return new UserServiceImpl();
     }
 
     public BookService getBookService() {
-        return bookService;
+        return new BookServiceImpl();
     }
 
 

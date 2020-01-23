@@ -1,7 +1,7 @@
 package by.trjava.library.dal.userDao;
 
 import by.trjava.library.dal.exeptionDao.DAOException;
-import by.trjava.library.bean.user.User;
+import by.trjava.library.beans.user.User;
 import java.util.List;
 
 public interface UserDao {
@@ -12,11 +12,9 @@ public interface UserDao {
 
     List<User> getAllUsers() throws DAOException;
 
-    User getUserById(long id) throws DAOException, NullPointerException;
+    User getUserById(String id) throws DAOException;
 
-    List<User> getUserBySurname(String surname) throws DAOException, NullPointerException;
-
-    boolean deleteUserById (long id) throws DAOException;
+    List<User> getUserBySurname(String surname) throws DAOException;
 
     boolean deleteUser(User user) throws DAOException;
 

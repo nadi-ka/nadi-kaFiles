@@ -11,8 +11,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -48,13 +48,26 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Runner">
-    <configuration name="Runner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="by.trjava.library.runner.Runner" />
+  <component name="RunManager" selected="Application.View">
+    <configuration name="BookRegistrationView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.library.view.BookRegistrationView" />
       <module name="Library.PakhomchikNadezhda" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="by.trjava.library.runner.*" />
+          <option name="PATTERN" value="by.trjava.library.view.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Runner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.library.view.Runner" />
+      <module name="Library.PakhomchikNadezhda" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="by.trjava.library.view.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -63,11 +76,37 @@
       </method>
     </configuration>
     <configuration name="User" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="by.trjava.library.bean.user.User" />
+      <option name="MAIN_CLASS_NAME" value="by.trjava.library.beans.user.User" />
       <module name="Library.PakhomchikNadezhda" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="by.trjava.library.bean.user.*" />
+          <option name="PATTERN" value="by.trjava.library.beans.idGenerator.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserRegistrationView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.library.view.UserRegistrationView" />
+      <module name="Library.PakhomchikNadezhda" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="by.trjava.library.view.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="View" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.library.view.View" />
+      <module name="Library.PakhomchikNadezhda" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="by.trjava.library.view.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -77,6 +116,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.View" />
+        <item itemvalue="Application.UserRegistrationView" />
+        <item itemvalue="Application.BookRegistrationView" />
         <item itemvalue="Application.Runner" />
         <item itemvalue="Application.User" />
       </list>
@@ -94,5 +136,10 @@
       <updated>1577359493201</updated>
     </task>
     <servers />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Library_PakhomchikNadezhda$View.ic" NAME="View Coverage Results" MODIFIED="1579529120528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>by.trjava.library.view.*</FILTER>
+    </SUITE>
   </component>
 </project>

@@ -1,9 +1,10 @@
 package by.trjava.library.dal.userDao;
 
 import by.trjava.library.dal.exeptionDao.DAOException;
-import by.trjava.library.bean.user.User;
+import by.trjava.library.beans.user.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class UserDaoJson implements UserDao {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(file, users);
         } catch (IOException ex) {
-            throw new DAOException("The list of users wasn't added to file! " + baseFile);
+            throw new DAOException("The list of users wasn't added to file!", ex);
         }
     }
 
@@ -30,7 +31,7 @@ public class UserDaoJson implements UserDao {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(file, users);
         } catch (IOException ex) {
-            throw new DAOException("The user wasn't added to file! " + baseFile);
+            throw new DAOException("The user wasn't added to file!", ex);
         }
     }
 
@@ -41,12 +42,12 @@ public class UserDaoJson implements UserDao {
             users = mapper.readValue(file, new TypeReference<List<User>>() {
             });
         } catch (IOException ex) {
-            throw new DAOException("Extracting from file is impossible! " + baseFile);
+            throw new DAOException("Extracting from file is impossible!", ex);
         }
         return users;
     }
 
-    public User getUserById(long id) throws DAOException, NullPointerException {
+    public User getUserById(String id) throws DAOException {
         User userById = null;
         try {
             List<User> users;
@@ -54,18 +55,18 @@ public class UserDaoJson implements UserDao {
             users = mapper.readValue(file, new TypeReference<List<User>>() {
             });
             for (User user : users) {
-                if (user.getId() == id) {
+                if (user.getId().equals(id)) {
                     userById = user;
                     break;
                 }
             }
         } catch (IOException ex) {
-            throw new DAOException("Extracting from file is impossible! " + baseFile);
+            throw new DAOException("The user wasn't found! " + id, ex);
         }
         return userById;
     }
 
-    public List<User> getUserBySurname(String surname) throws DAOException, NullPointerException {
+    public List<User> getUserBySurname(String surname) throws DAOException {
         List<User> usersBySurname = new ArrayList<User>();
         try {
             List<User> users;
@@ -78,27 +79,9 @@ public class UserDaoJson implements UserDao {
                 }
             }
         } catch (IOException ex) {
-            throw new DAOException("Extracting from file is impossible! " + baseFile);
+            throw new DAOException("The user wasn't found! " + surname, ex);
         }
         return usersBySurname;
-    }
-
-    public boolean deleteUserById(long id) throws DAOException {
-        boolean wasRemoved = false;
-        try {
-            List<User> users = getAllUsers();
-            for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getId() == id) {
-                    users.remove(users.get(i));
-                    wasRemoved = true;
-                }
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(file, users);
-        } catch (IOException ex) {
-            throw new DAOException("The user wasn't added to file! " + baseFile);
-        }
-        return wasRemoved;
     }
 
     public boolean deleteUser(User user) throws DAOException {
@@ -114,7 +97,7 @@ public class UserDaoJson implements UserDao {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(file, users);
         } catch (IOException ex) {
-            throw new DAOException("The user wasn't added to file! " + baseFile);
+            throw new DAOException("The user wasn't deleted!", ex);
         }
         return wasRemoved;
     }
