@@ -7,8 +7,11 @@ import by.trjava.library.service.userService.UserServiceImpl;
 
 public final class ServiceFactoryImpl implements ServiceFactory{
     private final static ServiceFactoryImpl instance = new ServiceFactoryImpl();
-    private UserServiceImpl userService;
-    private BookServiceImpl bookService;
+
+    // Since you were told to make ServiceFactoryImpl singleton, then you should make use of it. E.g. initialize
+    // the variable here and return them. It will make you to have always the same service object:
+    private UserServiceImpl userService = new UserServiceImpl();;
+    private BookServiceImpl bookService = new BookServiceImpl();
 
     private ServiceFactoryImpl() {}
 
@@ -17,12 +20,11 @@ public final class ServiceFactoryImpl implements ServiceFactory{
     }
 
     public UserService getUserService() {
-        return new UserServiceImpl();
+        return userService;
     }
 
     public BookService getBookService() {
-        return new BookServiceImpl();
+        return bookService;
     }
-
 
 }

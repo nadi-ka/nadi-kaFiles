@@ -56,6 +56,8 @@ public class UserValidator {
         return true;
     }
 
+    // Methods checkLoginAndPassword and isAdministrator are security related. You can make a class SecurityValiator
+    // and move them there.
     public static boolean checkLoginAndPassword(User user, String login, String password) {
         if (user.getLogin().equals(login) && user.getPassword().equals(password)) {
             return true;

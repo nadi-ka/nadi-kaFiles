@@ -1,11 +1,17 @@
 package by.trjava.library.view;
 
+import by.trjava.library.controller.command.CommandName;
+import by.trjava.library.controller.model.RequestModel;
 import by.trjava.library.view.scanner.DataScanner;
 
+
+// In my opinion this is view, you do not need ViewService then. I would also make public methods non-static and
+// work with the object of View in the main method.
 class ViewService {
     private final static char delimiter = ';';
 
     private static String getCommandFromClient() {
+        // Add info about the EXIT command
         System.out.println("Please, choose the operation you want to perform from the next list of operations:\n" +
                 "sign_in,\n" + "register,\n" + "set_permission_administrator,\n" + "update_user,\n" +
                 "delete_user,\n" + "find_user_by_id,\n" + "find_user_by_surname,\n\n" + "add_book\n" +
@@ -86,6 +92,13 @@ class ViewService {
     }
 
     private static String getParametersForAddBook() {
+        // Do not create local variable on top. It was done in some old languages, but currently considered as an
+        // old fashioned style. The general recommendation is to create the variables near the first usage.
+        // So, just:
+        // String bookCategory = DataScanner...
+        // String author = DataScanner.readString...
+        // ...
+        // This recommendation relates also to all other methods
         String bookCategory;
         String author;
         String title;
@@ -189,12 +202,14 @@ class ViewService {
         return request;
     }
 
-    public static String getRequestWithParameters() {
+    // Why not return CommandName and parameters here. You can pack it into a RequestModel class
+    public static RequestModel getRequestWithParameters() {
         String command = getCommandFromClient();
-        String request;
+        RequestModel request;
         switch (command) {
             case "SIGN_IN":
-                request = command + getParametersForSignIn();
+                // Use it here and in all the other cases
+                request = new RequestModel(CommandName.SIGN_IN, getParametersForSignIn());
                 break;
             case "REGISTER":
                 request = command + getParametersForRegister();
@@ -224,6 +239,10 @@ class ViewService {
                 break;
             case "READ_BOOK":
                 request = command + getParametersForReadBook();
+                break;
+            // Add EXIT command to allow exiting from the while(True) loop
+            case "EXIT":
+                request = "EXIT";
                 break;
             default:
                 request = command + delimiter;

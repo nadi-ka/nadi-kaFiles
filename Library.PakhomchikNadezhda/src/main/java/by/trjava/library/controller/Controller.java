@@ -1,12 +1,14 @@
 package by.trjava.library.controller;
 
 import by.trjava.library.controller.command.Command;
+import by.trjava.library.controller.model.RequestModel;
 
 public final class Controller {
     private final CommandProvider provider = new CommandProvider();
     private final char paramDelimiter = ';';
 
-    public String executeRequest(String request) {
+    // Make it work with RequestModel
+    public String executeRequest(RequestModel request) {
         String commandName;
         Command executionCommand;
 
