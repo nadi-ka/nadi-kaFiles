@@ -13,10 +13,16 @@ import by.trjava.library.service.validation.UserValidator;
 
 import java.util.List;
 
+
+// If they ask you why you are not storing intermediate results into a List<Book> in service, you can answer that there
+// is a trade off: not having such a List improves the consistency. Meanwhile, you need to overwrite the json file on
+// each request. I think that json file should be not very big and overwriting it is acceptable. If we need to store
+// much data we should use a DataBase instead. DB will be able to handle this situation gracefully also for a
+// bigger amount of data.
 public class BookServiceImpl implements BookService {
 
-    DaoFactory factory = DaoFactoryImpl.getInstance();
-    BookDao bookDao = factory.getBookDao();
+    private DaoFactory factory = DaoFactoryImpl.getInstance();
+    private BookDao bookDao = factory.getBookDao();
 
     public void addBook(Book book, User userWhoPerform) throws ServiceException {
         if (UserValidator.isAdministrator(userWhoPerform)) {

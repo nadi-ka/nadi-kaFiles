@@ -8,6 +8,8 @@ import by.trjava.library.dal.userDao.UserDaoJson;
 public final class DaoFactoryImpl implements DaoFactory {
 
     private final static DaoFactoryImpl instance = new DaoFactoryImpl();
+
+    // Same thing as in ServiceFactory.
     private UserDaoJson userDaoJson;
     private BookDaoJson bookDaoJson;
 

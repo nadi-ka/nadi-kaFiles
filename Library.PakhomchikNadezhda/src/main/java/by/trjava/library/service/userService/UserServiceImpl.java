@@ -12,9 +12,9 @@ import by.trjava.library.service.validation.UserValidator;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-
-    DaoFactory factory = DaoFactoryImpl.getInstance();
-    UserDao userDao = factory.getUserDao();
+    // A good style is to always define the access specifiers. So always define private, public, etc.
+    private DaoFactory factory = DaoFactoryImpl.getInstance();
+    private UserDao userDao = factory.getUserDao();
 
     public void register(String surname, String name, String login, String password)
             throws ServiceException {
