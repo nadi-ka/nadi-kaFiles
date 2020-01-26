@@ -2,7 +2,7 @@ package by.trjava.library.controller;
 
 import by.trjava.library.controller.command.Command;
 import by.trjava.library.controller.command.CommandName;
-import by.trjava.library.controller.command.impl.*;
+import by.trjava.library.controller.command.commandImpl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +23,7 @@ public class CommandProvider {
         repository.put(CommandName.DELETE_BOOK_BY_ID, new DeleteBookById());
         repository.put(CommandName.READ_BOOK, new ReadBook());
         repository.put(CommandName.FIND_BOOK, new FindBook());
+        repository.put(CommandName.EXIT, new Exit());
         repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
     }
 

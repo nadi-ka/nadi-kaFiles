@@ -1,8 +1,8 @@
 package by.trjava.library.service.bookService;
 
-import by.trjava.library.beans.book.Book;
-import by.trjava.library.beans.book.BookCategory;
-import by.trjava.library.beans.user.User;
+import by.trjava.library.bean.book.Book;
+import by.trjava.library.bean.book.BookCategory;
+import by.trjava.library.bean.user.User;
 import by.trjava.library.service.exceptionService.ServiceException;
 
 import java.util.List;

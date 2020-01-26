@@ -1,7 +1,7 @@
 package by.trjava.library.service.validation;
 
-import by.trjava.library.beans.user.User;
-import by.trjava.library.beans.user.UserRole;
+import by.trjava.library.bean.user.User;
+import by.trjava.library.bean.user.UserRole;
 
 import java.util.List;
 

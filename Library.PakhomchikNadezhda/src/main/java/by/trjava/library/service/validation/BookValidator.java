@@ -1,7 +1,7 @@
 package by.trjava.library.service.validation;
 
-import by.trjava.library.beans.book.Book;
-import by.trjava.library.beans.book.BookCategory;
+import by.trjava.library.bean.book.Book;
+import by.trjava.library.bean.book.BookCategory;
 
 import java.util.List;
 

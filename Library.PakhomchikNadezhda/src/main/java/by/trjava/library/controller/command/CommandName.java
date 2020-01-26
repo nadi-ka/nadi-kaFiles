@@ -13,5 +13,6 @@ public enum CommandName {
     DELETE_BOOK_BY_ID,
     READ_BOOK,
     FIND_BOOK,
+    EXIT,
     WRONG_REQUEST;
 }

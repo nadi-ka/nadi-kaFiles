@@ -1,7 +1,7 @@
 package by.trjava.library.dal.bookDao;
 
 import by.trjava.library.dal.exeptionDao.DAOException;
-import by.trjava.library.beans.book.Book;
+import by.trjava.library.bean.book.Book;
 
 import java.util.List;
 

@@ -11,8 +11,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -48,13 +48,26 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.View">
+  <component name="RunManager" selected="Application.LibraryApplication">
     <configuration name="BookRegistrationView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="by.trjava.library.view.BookRegistrationView" />
       <module name="Library.PakhomchikNadezhda" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="by.trjava.library.view.*" />
+          <option name="PATTERN" value="by.trjava.library.view.viewService.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LibraryApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="by.trjava.library.view.LibraryApplication" />
+      <module name="Library.PakhomchikNadezhda" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="by.trjava.library.view.viewService.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -67,7 +80,7 @@
       <module name="Library.PakhomchikNadezhda" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="by.trjava.library.view.*" />
+          <option name="PATTERN" value="by.trjava.library.view.viewService.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -76,11 +89,11 @@
       </method>
     </configuration>
     <configuration name="User" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="by.trjava.library.beans.user.User" />
+      <option name="MAIN_CLASS_NAME" value="by.trjava.library.bean.user.User" />
       <module name="Library.PakhomchikNadezhda" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="by.trjava.library.beans.idGenerator.*" />
+          <option name="PATTERN" value="by.trjava.library.bean.idGenerator.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -93,20 +106,7 @@
       <module name="Library.PakhomchikNadezhda" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="by.trjava.library.view.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="View" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="by.trjava.library.view.View" />
-      <module name="Library.PakhomchikNadezhda" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="by.trjava.library.view.*" />
+          <option name="PATTERN" value="by.trjava.library.view.viewService.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -116,7 +116,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.View" />
+        <item itemvalue="Application.LibraryApplication" />
         <item itemvalue="Application.UserRegistrationView" />
         <item itemvalue="Application.BookRegistrationView" />
         <item itemvalue="Application.Runner" />

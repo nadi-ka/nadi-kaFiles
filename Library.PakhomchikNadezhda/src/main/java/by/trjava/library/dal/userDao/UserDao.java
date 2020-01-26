@@ -1,7 +1,7 @@
 package by.trjava.library.dal.userDao;
 
 import by.trjava.library.dal.exeptionDao.DAOException;
-import by.trjava.library.beans.user.User;
+import by.trjava.library.bean.user.User;
 import java.util.List;
 
 public interface UserDao {

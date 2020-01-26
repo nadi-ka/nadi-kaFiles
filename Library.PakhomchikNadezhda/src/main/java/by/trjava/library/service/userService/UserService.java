@@ -1,6 +1,6 @@
 package by.trjava.library.service.userService;
 
-import by.trjava.library.beans.user.User;
+import by.trjava.library.bean.user.User;
 import by.trjava.library.service.exceptionService.ServiceException;
 
 import java.util.List;
