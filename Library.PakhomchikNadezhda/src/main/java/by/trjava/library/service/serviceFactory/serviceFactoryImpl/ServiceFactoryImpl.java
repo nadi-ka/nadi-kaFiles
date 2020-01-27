@@ -8,8 +8,8 @@ import by.trjava.library.service.userService.userServiceImpl.UserServiceImpl;
 
 public final class ServiceFactoryImpl implements ServiceFactory {
     private final static ServiceFactoryImpl instance = new ServiceFactoryImpl();
-    private UserService userService = new UserServiceImpl();
-    private BookService bookService = new BookServiceImpl();
+    private final UserService userService = new UserServiceImpl();
+    private final BookService bookService = new BookServiceImpl();
 
     private ServiceFactoryImpl() {}
 

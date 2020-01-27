@@ -12,13 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class BookDaoJson implements BookDao {
-    private String baseFile;
+    private File file;
 
     public BookDaoJson(String baseFile) {
-        this.baseFile = baseFile;
+        file = new File(baseFile);
     }
-
-    File file = new File(baseFile);
 
     public void addBook(Book book) throws DAOException {
         try {

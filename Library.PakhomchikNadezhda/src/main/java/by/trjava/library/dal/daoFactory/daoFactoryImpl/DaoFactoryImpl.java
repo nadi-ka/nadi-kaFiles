@@ -11,12 +11,12 @@ import by.trjava.library.settings.settingsImpl.LibrarySettingsImpl;
 public final class DaoFactoryImpl implements DaoFactory {
 
     private final static DaoFactoryImpl instance = new DaoFactoryImpl();
-    private LibrarySettings settings = LibrarySettingsImpl.getInstance();
+    private LibrarySettings settings = new LibrarySettingsImpl();
     private String userSettings = settings.getUserSettings();
     private String bookSettings = settings.getBookSettings();
 
-    private UserDao userDao = new UserDaoJson(userSettings);
-    private BookDao bookDao = new BookDaoJson(bookSettings);
+    private final UserDao userDao = new UserDaoJson(userSettings);
+    private final BookDao bookDao = new BookDaoJson(bookSettings);
 
     private DaoFactoryImpl() {
     }

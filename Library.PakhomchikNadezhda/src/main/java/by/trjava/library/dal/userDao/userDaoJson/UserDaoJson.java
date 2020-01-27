@@ -12,13 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class UserDaoJson implements UserDao {
-    private String baseFile;
+    private File file;
 
     public UserDaoJson(String baseFile) {
-        this.baseFile = baseFile;
+        file = new File(baseFile);
     }
-
-    File file = new File(baseFile);
 
     public void addUsers(List<User> users) throws DAOException {
         try {
