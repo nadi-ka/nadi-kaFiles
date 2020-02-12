@@ -10,6 +10,7 @@ import by.trjava.library.service.exceptionService.ServiceException;
 import by.trjava.library.service.userService.UserService;
 import by.trjava.library.service.validation.UserValidator;
 
+import java.util.Collections;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -50,7 +51,8 @@ public class UserServiceImpl implements UserService {
                     return one;
                 }
             }
-            throw new ServiceException("Incorrect login or password. Please, try to log in again!");
+            throw new ServiceException("The user wasn't found! Please, check your login and password and try again. " +
+                    "Login: " + login + "password: " + password);
         } catch (DAOException ex) {
             throw new ServiceException("The user wasn't found! " + login, ex);
         }
@@ -145,15 +147,15 @@ public class UserServiceImpl implements UserService {
         if (surname != null && UserValidator.isAdministrator(userAdministrator)) {
             try {
                 list = userDao.getUserBySurname(surname);
-                if (!list.isEmpty()) {
-                    return list;
+                if (list.isEmpty()) {
+                    return Collections.emptyList();
                 }
-                throw new ServiceException("The user with such surname wasn't found in base!");
+                return list;
             } catch (DAOException ex) {
-                throw new ServiceException("The user wasn't found! " + surname, ex);
+                throw new ServiceException("Getting of the user is impossible. Surname: " + surname, ex);
             }
         } else {
-            throw new ServiceException("You haven't permission of administrator or  have entered " +
+            throw new ServiceException("You haven't permission of administrator or have entered " +
                     "incorrect data!");
         }
     }

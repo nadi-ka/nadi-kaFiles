@@ -12,6 +12,7 @@ import by.trjava.library.service.exceptionService.ServiceException;
 import by.trjava.library.service.validation.BookValidator;
 import by.trjava.library.service.validation.UserValidator;
 
+import java.util.Collections;
 import java.util.List;
 
 public class BookServiceImpl implements BookService {
@@ -138,12 +139,12 @@ public class BookServiceImpl implements BookService {
         if (BookValidator.isCorrectTitle(title)) {
             try {
                 list = bookDao.getBooksByTitle(title);
-                if (!list.isEmpty()) {
-                    return list;
+                if (list.isEmpty()) {
+                    return Collections.emptyList();
                 }
-                throw new ServiceException("Nothing was found by your request. " + "Title: " + title);
+                return list;
             } catch (DAOException ex) {
-                throw new ServiceException("Nothing was found by your request. " + "Title: " + title, ex);
+                throw new ServiceException("Getting of the book is impossible. " + "Title: " + title, ex);
             }
         } else {
             throw new ServiceException("Incorrect title as a function's parameter!" + title);
@@ -155,16 +156,15 @@ public class BookServiceImpl implements BookService {
         if (BookValidator.isCorrectAuthorForRequest(author)) {
             try {
                 list = bookDao.getBooksByAuthor(author);
-                if (!list.isEmpty()) {
-                    return list;
+                if (list.isEmpty()) {
+                    return Collections.emptyList();
                 }
-                throw new ServiceException("Nothing was found by your request. " + "Author: " + author);
+                return list;
             } catch (DAOException ex) {
-                throw new ServiceException("Nothing was found by your request. " + "Author: " + author, ex);
+                throw new ServiceException("Getting of the book is impossible. " + "Author: " + author, ex);
             }
         } else {
             throw new ServiceException("Incorrect name of the author as a function's parameter!" + author);
         }
     }
-
 }

@@ -64,7 +64,7 @@ public final class UserDaoJson implements UserDao {
                 }
             }
         } catch (IOException ex) {
-            throw new DAOException("The user wasn't found! " + id, ex);
+            throw new DAOException("Reading from file is impossible! ", ex);
         }
         return userById;
     }
@@ -82,7 +82,7 @@ public final class UserDaoJson implements UserDao {
                 }
             }
         } catch (IOException ex) {
-            throw new DAOException("The user wasn't found! " + surname, ex);
+            throw new DAOException("Reading from file is impossible! ", ex);
         }
         return usersBySurname;
     }

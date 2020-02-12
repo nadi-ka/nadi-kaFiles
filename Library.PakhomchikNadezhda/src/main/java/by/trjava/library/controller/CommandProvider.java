@@ -4,7 +4,9 @@ import by.trjava.library.controller.command.Command;
 import by.trjava.library.controller.command.CommandName;
 import by.trjava.library.controller.command.commandImpl.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CommandProvider {
@@ -30,13 +32,19 @@ public class CommandProvider {
     Command getCommand(String name) {
         CommandName commandName;
         Command command;
-        try {
+
+        List<String> names = new ArrayList<>();
+        for (CommandName one : CommandName.values()) {
+            names.add(one.name());
+        }
+
+        if (!names.contains(name)) {
+            command = repository.get(CommandName.WRONG_REQUEST);
+        } else {
             commandName = CommandName.valueOf(name);
             command = repository.get(commandName);
         }
-        catch (IllegalArgumentException | NullPointerException ex) {
-            command = repository.get(CommandName.WRONG_REQUEST);
-        }
+
         return command;
     }
 }

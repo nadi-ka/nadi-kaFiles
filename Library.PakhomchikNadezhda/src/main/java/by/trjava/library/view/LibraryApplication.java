@@ -2,7 +2,6 @@ package by.trjava.library.view;
 
 import by.trjava.library.controller.Controller;
 import by.trjava.library.view.viewService.ViewService;
-
 public class LibraryApplication {
 
     public static void main(String[] args) {

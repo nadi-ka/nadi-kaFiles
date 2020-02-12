@@ -77,7 +77,6 @@ public final class BookDaoJson implements BookDao {
 
     public List<Book> getBooksByAuthor(String author) throws DAOException {
         List<Book> booksByAuthor = new ArrayList<Book>();
-        boolean wasFound = false;
         try {
             List<Book> books;
             ObjectMapper mapper = new ObjectMapper();
@@ -86,21 +85,16 @@ public final class BookDaoJson implements BookDao {
             for (Book book : books) {
                 if (book.getAuthor().contains(author)) {
                     booksByAuthor.add(book);
-                    wasFound = true;
                 }
             }
         } catch (IOException ex) {
-            throw new DAOException("Nothing was found by your request! Reading from the file is impossible.", ex);
-        }
-        if (!wasFound) {
-            throw new DAOException("Nothing was found by your request! " + author);
+            throw new DAOException("Reading from the file is impossible.", ex);
         }
         return booksByAuthor;
     }
 
     public List<Book> getBooksByTitle(String title) throws DAOException {
         List<Book> booksByTitle = new ArrayList<Book>();
-        boolean wasFound = false;
         try {
             List<Book> books;
             ObjectMapper mapper = new ObjectMapper();
@@ -109,14 +103,10 @@ public final class BookDaoJson implements BookDao {
             for (Book book : books) {
                 if (book.getTitle().contains(title)) {
                     booksByTitle.add(book);
-                    wasFound = true;
                 }
             }
         } catch (IOException ex) {
-            throw new DAOException("Nothing was found by your request! Reading from the file is impossible.", ex);
-        }
-        if (!wasFound) {
-            throw new DAOException("Nothing was found by your request! " + title);
+            throw new DAOException("Reading from the file is impossible.", ex);
         }
         return booksByTitle;
     }
