@@ -8,5 +8,7 @@ public interface UserService {
 			throws ServiceException;
 	
 	UserBean logIn(String login, String password) throws ServiceException;
+	
+	void clearConnection();
 
 }

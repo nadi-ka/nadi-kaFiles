@@ -82,14 +82,10 @@ public class UserServiceImpl implements UserService {
 		}
 		return patientBean.getId();
 	}
-
-	public static void main(String[] args) {
-		try {
-			UserServiceImpl userServiceImpl = new UserServiceImpl();
-			System.out.println(userServiceImpl.logIn("бета", "бета222").toString());
-		} catch (ServiceException ex) {
-			ex.printStackTrace();
-		}
+	
+	public void clearConnection() {
+		userDao.clearConnection();
 	}
+
 
 }

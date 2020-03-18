@@ -1,9 +1,7 @@
 package by.epam.ts.dal;
 
-import java.rmi.server.ExportException;
-
-
 public class DaoException extends Exception{
+	private static final long serialVersionUID = 1L;
 	
 	public DaoException() {}
 	
