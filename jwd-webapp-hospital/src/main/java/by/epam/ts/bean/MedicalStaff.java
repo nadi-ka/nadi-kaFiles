@@ -1,8 +1,8 @@
-package by.epam.ts.beans;
+package by.epam.ts.bean;
 
 import java.io.Serializable;
 
-public class MedicalStaffBean implements Serializable{
+public class MedicalStaff implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private String id;
@@ -11,9 +11,9 @@ public class MedicalStaffBean implements Serializable{
 	private String name;
 	private String email;
 	
-	public MedicalStaffBean() {}
+	public MedicalStaff() {}
 
-	public MedicalStaffBean(String id, String specialty, String surname, String name, String email) {
+	public MedicalStaff(String id, String specialty, String surname, String name, String email) {
 		super();
 		this.id = id;
 		this.specialty = specialty;
@@ -82,7 +82,7 @@ public class MedicalStaffBean implements Serializable{
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		MedicalStaffBean other = (MedicalStaffBean) obj;
+		MedicalStaff other = (MedicalStaff) obj;
 		return (id == other.id || (id != null && id.equals(other.getId()))) &&
 				(surname == other.surname || 
 				(surname != null && surname.equals(other.getSurname()))) &&

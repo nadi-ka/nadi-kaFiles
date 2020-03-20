@@ -1,9 +1,9 @@
-package by.epam.ts.beans;
+package by.epam.ts.bean;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class PatientBean implements Serializable {
+public class Patient implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String id;
@@ -14,9 +14,9 @@ public class PatientBean implements Serializable {
 	private Date dischargeDate;
 	private String email;
 	
-	public PatientBean() {}
+	public Patient() {}
 
-	public PatientBean(String id, String surname, String name, int age, Date entryDate, Date dischargeDate,
+	public Patient(String id, String surname, String name, int age, Date entryDate, Date dischargeDate,
 			String email) {
 		this.id = id;
 		this.surname = surname;
@@ -105,7 +105,7 @@ public class PatientBean implements Serializable {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		PatientBean other = (PatientBean) obj;
+		Patient other = (Patient) obj;
 		
 		return age == other.age &&
 			(id == other.id || (id != null && id.equals(other.getId()))) &&	

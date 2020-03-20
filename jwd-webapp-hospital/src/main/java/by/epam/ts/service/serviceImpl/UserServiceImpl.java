@@ -1,8 +1,8 @@
 package by.epam.ts.service.serviceImpl;
 
-import by.epam.ts.beans.MedicalStaffBean;
-import by.epam.ts.beans.PatientBean;
-import by.epam.ts.beans.UserBean;
+import by.epam.ts.bean.MedicalStaff;
+import by.epam.ts.bean.Patient;
+import by.epam.ts.bean.User;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.daoFactory.DaoFactory;
@@ -35,52 +35,55 @@ public class UserServiceImpl implements UserService {
 			id = getPatientsIdByEmail(email);
 			role = 3;
 		}
-		UserBean user = new UserBean(id, login, password, role, userStatus);
+		
+		if (id == null) {
+			return updatedRows;
+		}
+		User user = new User(id, login, password, role, userStatus);
 		try {
 			updatedRows = userDao.addUser(user, isStaff);
 		} catch (DaoException ex) {
-			throw new ServiceException("Sign up procedure failed", ex);
+			throw new ServiceException("Sign up procedure failed.", ex);
 		}
 		return updatedRows;
 	}
 
-	public UserBean logIn(String login, String password) throws ServiceException {
-		UserBean user;
+	public User logIn(String login, String password) throws ServiceException {
+		User user = null;
 		try {
 			user = userDao.findUserByLoginPassword(login, password);
 		} catch (DaoException ex) {
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
-		if (user == null) {
-			throw new ServiceException("The user wasn't found. " + "login=" + login + ", password=" + password);
-		}
 		return user;
 	}
 
 	private String getStaffIdByEmail(String email) throws ServiceException {
-		MedicalStaffBean medicalStaffBean;
+		MedicalStaff medicalStaff = null;
+		String id = null;
 		try {
-			medicalStaffBean = userDao.findStaffByEmail(email);
+			medicalStaff = userDao.findStaffByEmail(email);
 		} catch (DaoException ex) {
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
-		if (medicalStaffBean == null) {
-			throw new ServiceException("Person with this email wasn't found." + email);
+		if (medicalStaff != null) {
+			id = medicalStaff.getId();
 		}
-		return medicalStaffBean.getId();
+		return id;
 	}
 
 	private String getPatientsIdByEmail(String email) throws ServiceException {
-		PatientBean patientBean;
+		Patient patient = null;
+		String id = null;
 		try {
-			patientBean = userDao.findPatientByEmail(email);
+			patient = userDao.findPatientByEmail(email);
 		} catch (DaoException ex) {
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
-		if (patientBean == null) {
-			throw new ServiceException("Person with this email wasn't found." + email);
+		if (patient != null) {
+			id = patient.getId();
 		}
-		return patientBean.getId();
+		return id;
 	}
 	
 	public void clearConnection() {

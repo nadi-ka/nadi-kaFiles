@@ -1,7 +1,9 @@
 package by.epam.ts.command.commandImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import by.epam.ts.bean.User;
 import by.epam.ts.command.ActionCommand;
 import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
@@ -25,20 +27,36 @@ public class LoginCommand implements ActionCommand{
 		factory = ServiceFactoryImpl.getInstance();
 		}catch(ServiceException ex) {
 			//log
+			String message = MessageManager.getProperty("message.technicalerror");
 			request.setAttribute("techninalErrorMessage", 
-					MessageManager.getProperty("message.technicalerror"));
+					message);
 			page = ConfigurationManager.getProperty("path.page.error");
 		}
 		UserService userService = factory.getUserService();
+		User user = null;
+		
 		try {
-			userService.logIn(login, password);
+			user = userService.logIn(login, password);
+		}catch (ServiceException ex) {
+			//log
+			String message = MessageManager.getProperty("message.technicalerror");
+			request.setAttribute("techninalErrorMessage", 
+					message);
+			page = ConfigurationManager.getProperty("path.page.error");
+		}
+			
+			if(user == null) {
+				String message = MessageManager.getProperty("message.loginerror");
+				request.setAttribute("errorLoginPassMessage", message);
+				page = ConfigurationManager.getProperty("path.page.login");
+			}
+			HttpSession session = request.getSession(true);
+			
+			//User stores parameters: id, login, role, userStatus;
+			session.setAttribute("userData", user);
+			
 			request.setAttribute("user", login);
 			page = ConfigurationManager.getProperty("path.page.main");
-		} catch(ServiceException ex) {
-			//log
-			request.setAttribute("errorLoginPassMessage", MessageManager.getProperty("message.loginerror"));
-			page = ConfigurationManager.getProperty("path.page.login");
-		}
 		
 		return page;
 	

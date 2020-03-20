@@ -1,18 +1,18 @@
 package by.epam.ts.dal;
 
-import by.epam.ts.beans.MedicalStaffBean;
-import by.epam.ts.beans.PatientBean;
-import by.epam.ts.beans.UserBean;
+import by.epam.ts.bean.MedicalStaff;
+import by.epam.ts.bean.Patient;
+import by.epam.ts.bean.User;
 
 public interface UserDao {
 	
-	public int addUser (UserBean user, boolean isStaff) throws DaoException;
+	public int addUser (User user, boolean isStaff) throws DaoException;
 	
-	MedicalStaffBean findStaffByEmail(String email) throws DaoException;
+	MedicalStaff findStaffByEmail(String email) throws DaoException;
 	
-	PatientBean findPatientByEmail(String email) throws DaoException;
+	Patient findPatientByEmail(String email) throws DaoException;
 	
-	UserBean findUserByLoginPassword(String login, String password) 
+	User findUserByLoginPassword(String login, String password) 
 			throws DaoException;
 	
 	void clearConnection();

@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 
 public class MessageManager {
 	
-	private final static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("messages");
+	private final static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("message");
 	
 	private MessageManager() {}
 	

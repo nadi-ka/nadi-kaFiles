@@ -13,7 +13,7 @@ public class ActionFactory {
 	
 	public ActionCommand defineCommand(HttpServletRequest request) {
 		
-		ActionCommand current= new EmptyCommand();
+		ActionCommand current = new EmptyCommand();
 		String action = request.getParameter("command");
 		if (action == null || action.isEmpty()) {
 			return current;
@@ -23,13 +23,13 @@ public class ActionFactory {
 		for(CommandEnum one: CommandEnum.values()) {
 			names.add(one.name());
 		}
-		if (!names.contains(action)) {
-			CommandEnum currentEnum = CommandEnum.WRONG_REQUEST;
-			current = currentEnum.getCurrentCommand();
+		if (!names.contains(action.toUpperCase())) {
+			CommandEnum command = CommandEnum.WRONG_REQUEST;
+			current = command.getCurrentCommand();
 			return current;
 		}
-		CommandEnum currentEnum = CommandEnum.valueOf(action.toUpperCase());
-		current = currentEnum.getCurrentCommand();
+		CommandEnum command = CommandEnum.valueOf(action.toUpperCase());
+		current = command.getCurrentCommand();
 		return current;
 	}
 

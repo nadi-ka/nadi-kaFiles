@@ -10,8 +10,8 @@ public class WrongRequestCommand implements ActionCommand{
 	
 	@Override
 	public String execute(HttpServletRequest request) {
-		request.setAttribute("wrondCommandMessage", 
-				MessageManager.getProperty("message.wrongCommandMessage"));
+		String message = MessageManager.getProperty("message.wrongCommandMessage");
+		request.setAttribute("wrongCommandMessage", message);
 		String page = ConfigurationManager.getProperty("path.page.error");
 		return page;
 	}

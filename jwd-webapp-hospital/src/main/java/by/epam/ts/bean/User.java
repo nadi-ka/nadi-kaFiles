@@ -1,8 +1,8 @@
-package by.epam.ts.beans;
+package by.epam.ts.bean;
 
 import java.io.Serializable;
 
-public class UserBean implements Serializable {
+public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -11,18 +11,21 @@ public class UserBean implements Serializable {
 	private String password;
 	private int role;
 	private boolean userStatus;
-	
-	private boolean isStaff;
 
-	public UserBean() {
+	public User() {
 	}
 
-	public UserBean(String id, String login, String password, int role, boolean userStatus) {
+	public User(String id, String login, int role, boolean userStatus) {
+		super();
 		this.id = id;
 		this.login = login;
-		this.password = password;
 		this.role = role;
 		this.userStatus = userStatus;
+	}
+
+	public User(String id, String login, String password, int role, boolean userStatus) {
+		this(id, login, role, userStatus);
+		this.password = password;
 	}
 
 	public String getId() {
@@ -73,7 +76,7 @@ public class UserBean implements Serializable {
 		if (object == null || this.getClass() != object.getClass()) {
 			return false;
 		}
-		UserBean user = (UserBean) object;
+		User user = (User) object;
 
 		return role == user.role && userStatus == user.userStatus
 				&& (id == user.id || (id != null && id.equals(user.getId())))

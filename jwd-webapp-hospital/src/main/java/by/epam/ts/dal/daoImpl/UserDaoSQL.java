@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import by.epam.ts.beans.MedicalStaffBean;
-import by.epam.ts.beans.PatientBean;
-import by.epam.ts.beans.UserBean;
+import by.epam.ts.bean.MedicalStaff;
+import by.epam.ts.bean.Patient;
+import by.epam.ts.bean.User;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.connectionPool.ConnectionPool;
@@ -46,11 +46,10 @@ public class UserDaoSQL implements UserDao {
 		return connection;
 	}
 
-	public int addUser(UserBean user, boolean isStaff) throws DaoException {
+	public int addUser(User user, boolean isStaff) throws DaoException {
 		int insertedRows = 0;
 		Connection connection = getConnection();
 		PreparedStatement signUpStaff = null;
-		;
 		PreparedStatement signUpPatient = null;
 
 		try {
@@ -72,7 +71,7 @@ public class UserDaoSQL implements UserDao {
 				insertedRows = signUpPatient.executeUpdate();
 			}
 		} catch (SQLException ex) {
-			throw new DaoException("Inserting the user's data to the DB was failed.", ex);
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
 		} finally {
 			if (signUpStaff != null) {
 				try {
@@ -93,23 +92,25 @@ public class UserDaoSQL implements UserDao {
 		return insertedRows;
 	}
 
-	public MedicalStaffBean findStaffByEmail(String email) throws DaoException {
+	public MedicalStaff findStaffByEmail(String email) throws DaoException {
 		Connection connection = getConnection();
-		MedicalStaffBean medicalStaffBean = null;
+		MedicalStaff medicalStaff = null;
 		PreparedStatement findStaffByEmail = null;
 
 		try {
 			findStaffByEmail = connection.prepareStatement(sqlFindStaffByEmail);
 			findStaffByEmail.setString(1, email);
 			ResultSet staffResultSet = findStaffByEmail.executeQuery();
-			while (staffResultSet.next()) {
+			if (!staffResultSet.next()) {
+				return medicalStaff;
+			}
 
 				String id = staffResultSet.getString(1);
 				String specialty = staffResultSet.getString(2);
 				String surname = staffResultSet.getString(3);
 				String name = staffResultSet.getString(4);
-				medicalStaffBean = new MedicalStaffBean(id, specialty, surname, name, email);
-			}
+				medicalStaff = new MedicalStaff(id, specialty, surname, name, email);
+			
 		} catch (SQLException ex) {
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
@@ -122,12 +123,12 @@ public class UserDaoSQL implements UserDao {
 			}
 		}
 		connectionPool.releaseConnection(connection);
-		return medicalStaffBean;
+		return medicalStaff;
 	}
 
-	public PatientBean findPatientByEmail(String email) throws DaoException {
+	public Patient findPatientByEmail(String email) throws DaoException {
 		Connection connection = getConnection();
-		PatientBean patientBean = null;
+		Patient patient = null;
 		PreparedStatement findPatientByEmail = null;
 
 		try {
@@ -135,7 +136,9 @@ public class UserDaoSQL implements UserDao {
 			findPatientByEmail.setString(1, email);
 			ResultSet patientResultSet = findPatientByEmail.executeQuery();
 
-			while (patientResultSet.next()) {
+			if (!patientResultSet.next()) {
+				return patient;
+			}
 
 				String id = patientResultSet.getString(1);
 				String surname = patientResultSet.getString(2);
@@ -143,8 +146,8 @@ public class UserDaoSQL implements UserDao {
 				int age = patientResultSet.getInt(4);
 				Date entryDate = patientResultSet.getDate(5);
 				Date dischargeDate = patientResultSet.getDate(6);
-				patientBean = new PatientBean(id, surname, name, age, entryDate, dischargeDate, email);
-			}
+				patient = new Patient(id, surname, name, age, entryDate, dischargeDate, email);
+			
 		} catch (SQLException ex) {
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
@@ -157,12 +160,12 @@ public class UserDaoSQL implements UserDao {
 			}
 		}
 		connectionPool.releaseConnection(connection);
-		return patientBean;
+		return patient;
 	}
 
-	public UserBean findUserByLoginPassword(String login, String password) throws DaoException {
+	public User findUserByLoginPassword(String login, String password) throws DaoException {
 		Connection connection = getConnection();
-		UserBean user = null;
+		User user = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet userResultSet = null;
 		try {
@@ -171,9 +174,9 @@ public class UserDaoSQL implements UserDao {
 			preparedStatement.setString(2, password);
 			userResultSet = preparedStatement.executeQuery();
 
-			if (userResultSet != null) {
-				while (userResultSet.next()) {
-
+				if (!userResultSet.next()) {
+					return user;
+				}
 					String idStaff = userResultSet.getString(2);
 					String idPatient = userResultSet.getString(3);
 					String idUser = null;
@@ -184,9 +187,9 @@ public class UserDaoSQL implements UserDao {
 					}
 					int role = userResultSet.getInt(6);
 					boolean userStatus = userResultSet.getBoolean(7);
-					user = new UserBean(idUser, login, password, role, userStatus);
-				}
-			}
+					user = new User(idUser, login, role, userStatus);
+				
+			
 		} catch (SQLException ex) {
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
@@ -205,5 +208,4 @@ public class UserDaoSQL implements UserDao {
 	public void clearConnection() {
 		connectionPool.dispose();
 	}
-
 }
