@@ -1,4 +1,4 @@
-package by.epam.ts.servlet.sessionContent;
+package src.main.java.by.epam.ts.servlet.sessionContent;
 
 import java.util.HashMap;
 

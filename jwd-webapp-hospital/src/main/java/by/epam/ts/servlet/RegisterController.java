@@ -1,4 +1,4 @@
-package by.epam.ts.servlet;
+package src.main.java.by.epam.ts.servlet;
 
 import java.io.IOException;
 
@@ -8,14 +8,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import by.epam.ts.command.ActionCommand;
-import by.epam.ts.service.ServiceException;
-import by.epam.ts.service.UserService;
-import by.epam.ts.service.serviceFactory.ServiceFactory;
-import by.epam.ts.service.serviceFactory.serviceFactoryImpl.ServiceFactoryImpl;
-import by.epam.ts.servlet.actionFactory.ActionFactory;
-import by.epam.ts.servlet.manager.ConfigurationManager;
-import by.epam.ts.servlet.manager.MessageManager;
+import src.main.java.by.epam.ts.command.ActionCommand;
+import src.main.java.by.epam.ts.service.ServiceException;
+import src.main.java.by.epam.ts.service.UserService;
+import src.main.java.by.epam.ts.service.serviceFactory.ServiceFactory;
+import src.main.java.by.epam.ts.service.serviceFactory.serviceFactoryImpl.ServiceFactoryImpl;
+import src.main.java.by.epam.ts.servlet.actionFactory.ActionFactory;
+import src.main.java.by.epam.ts.servlet.manager.ConfigurationManager;
+import src.main.java.by.epam.ts.servlet.manager.MessageManager;
 
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;

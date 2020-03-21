@@ -1,14 +1,14 @@
-package by.epam.ts.command.commandImpl;
+package src.main.java.by.epam.ts.command.commandImpl;
 
 import javax.servlet.http.HttpServletRequest;
 
-import by.epam.ts.command.ActionCommand;
-import by.epam.ts.service.ServiceException;
-import by.epam.ts.service.UserService;
-import by.epam.ts.service.serviceFactory.ServiceFactory;
-import by.epam.ts.service.serviceFactory.serviceFactoryImpl.ServiceFactoryImpl;
-import by.epam.ts.servlet.manager.ConfigurationManager;
-import by.epam.ts.servlet.manager.MessageManager;
+import src.main.java.by.epam.ts.command.ActionCommand;
+import src.main.java.by.epam.ts.service.ServiceException;
+import src.main.java.by.epam.ts.service.UserService;
+import src.main.java.by.epam.ts.service.serviceFactory.ServiceFactory;
+import src.main.java.by.epam.ts.service.serviceFactory.serviceFactoryImpl.ServiceFactoryImpl;
+import src.main.java.by.epam.ts.servlet.manager.ConfigurationManager;
+import src.main.java.by.epam.ts.servlet.manager.MessageManager;
 
 public class SignUpCommand implements ActionCommand {
 
@@ -17,7 +17,6 @@ public class SignUpCommand implements ActionCommand {
 	private static final String PARAM_NAME_EMAIL = "email";
 	private static final String PARAM_NAME_USER_TYPE = "type-of-user";
 
-	@Override
 	public String execute(HttpServletRequest request) {
 		String page = null;
 		String login = request.getParameter(PARAM_NAME_LOGIN);

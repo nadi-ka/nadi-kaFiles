@@ -1,4 +1,4 @@
-package by.epam.ts.service;
+package src.main.java.by.epam.ts.service;
 
 public class ServiceException extends Exception {
 	private static final long serialVersionUID = 1L;

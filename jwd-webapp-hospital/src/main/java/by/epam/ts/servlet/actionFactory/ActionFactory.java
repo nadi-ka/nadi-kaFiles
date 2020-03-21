@@ -1,13 +1,13 @@
-package by.epam.ts.servlet.actionFactory;
+package src.main.java.by.epam.ts.servlet.actionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import by.epam.ts.command.ActionCommand;
-import by.epam.ts.command.CommandEnum;
-import by.epam.ts.command.commandImpl.EmptyCommand;
+import src.main.java.by.epam.ts.command.ActionCommand;
+import src.main.java.by.epam.ts.command.CommandEnum;
+import src.main.java.by.epam.ts.command.commandImpl.EmptyCommand;
 
 public class ActionFactory {
 	

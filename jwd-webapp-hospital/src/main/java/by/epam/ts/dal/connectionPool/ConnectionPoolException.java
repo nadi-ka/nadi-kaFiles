@@ -1,4 +1,4 @@
-package by.epam.ts.dal.connectionPool;
+package src.main.java.by.epam.ts.dal.connectionPool;
 
 public class ConnectionPoolException extends Exception{
 	public static final long serialVersionUID = 1L;

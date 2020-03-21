@@ -1,14 +1,14 @@
-package by.epam.ts.service.serviceImpl;
+package src.main.java.by.epam.ts.service.serviceImpl;
 
-import by.epam.ts.bean.MedicalStaff;
-import by.epam.ts.bean.Patient;
-import by.epam.ts.bean.User;
-import by.epam.ts.dal.DaoException;
-import by.epam.ts.dal.UserDao;
-import by.epam.ts.dal.daoFactory.DaoFactory;
-import by.epam.ts.dal.daoFactory.daoFactoryImpl.DaoFactoryImpl;
-import by.epam.ts.service.ServiceException;
-import by.epam.ts.service.UserService;
+import src.main.java.by.epam.ts.bean.MedicalStaff;
+import src.main.java.by.epam.ts.bean.Patient;
+import src.main.java.by.epam.ts.bean.User;
+import src.main.java.by.epam.ts.dal.DaoException;
+import src.main.java.by.epam.ts.dal.UserDao;
+import src.main.java.by.epam.ts.dal.daoFactory.DaoFactory;
+import src.main.java.by.epam.ts.dal.daoFactory.daoFactoryImpl.DaoFactoryImpl;
+import src.main.java.by.epam.ts.service.ServiceException;
+import src.main.java.by.epam.ts.service.UserService;
 
 public class UserServiceImpl implements UserService {
 	private DaoFactory daoFactory;

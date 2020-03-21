@@ -7,7 +7,7 @@
   
   <servlet>
     <servlet-name>RegisterController</servlet-name>
-    <servlet-class>by.epam.ts.servlet.RegisterController</servlet-class>
+    <servlet-class>src.main.java.by.epam.ts.servlet.RegisterController</servlet-class>
   </servlet>
   
     

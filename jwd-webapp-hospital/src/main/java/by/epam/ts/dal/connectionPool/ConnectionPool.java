@@ -1,4 +1,4 @@
-package by.epam.ts.dal.connectionPool;
+package src.main.java.by.epam.ts.dal.connectionPool;
 
 import java.sql.Array;
 import java.sql.Blob;
@@ -23,8 +23,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
-import by.epam.ts.dal.connectionPool.resourceManager.DBParameter;
-import by.epam.ts.dal.connectionPool.resourceManager.ResourceManager;
+import src.main.java.by.epam.ts.dal.connectionPool.resourceManager.DBParameter;
+import src.main.java.by.epam.ts.dal.connectionPool.resourceManager.ResourceManager;
 
 public final class ConnectionPool {
 	private BlockingQueue<Connection> connectionQueue;

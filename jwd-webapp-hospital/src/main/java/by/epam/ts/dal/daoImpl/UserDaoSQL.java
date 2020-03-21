@@ -1,4 +1,4 @@
-package by.epam.ts.dal.daoImpl;
+package src.main.java.by.epam.ts.dal.daoImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,13 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import by.epam.ts.bean.MedicalStaff;
-import by.epam.ts.bean.Patient;
-import by.epam.ts.bean.User;
-import by.epam.ts.dal.DaoException;
-import by.epam.ts.dal.UserDao;
-import by.epam.ts.dal.connectionPool.ConnectionPool;
-import by.epam.ts.dal.connectionPool.ConnectionPoolException;
+import src.main.java.by.epam.ts.bean.MedicalStaff;
+import src.main.java.by.epam.ts.bean.Patient;
+import src.main.java.by.epam.ts.bean.User;
+import src.main.java.by.epam.ts.dal.DaoException;
+import src.main.java.by.epam.ts.dal.UserDao;
+import src.main.java.by.epam.ts.dal.connectionPool.ConnectionPool;
+import src.main.java.by.epam.ts.dal.connectionPool.ConnectionPoolException;
 
 public class UserDaoSQL implements UserDao {
 

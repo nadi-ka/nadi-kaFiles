@@ -1,9 +1,9 @@
-package by.epam.ts.command;
+package src.main.java.by.epam.ts.command;
 
-import by.epam.ts.command.commandImpl.LoginCommand;
-import by.epam.ts.command.commandImpl.LogoutCommand;
-import by.epam.ts.command.commandImpl.SignUpCommand;
-import by.epam.ts.command.commandImpl.WrongRequestCommand;
+import src.main.java.by.epam.ts.command.commandImpl.LoginCommand;
+import src.main.java.by.epam.ts.command.commandImpl.LogoutCommand;
+import src.main.java.by.epam.ts.command.commandImpl.SignUpCommand;
+import src.main.java.by.epam.ts.command.commandImpl.WrongRequestCommand;
 
 public enum CommandEnum {
 

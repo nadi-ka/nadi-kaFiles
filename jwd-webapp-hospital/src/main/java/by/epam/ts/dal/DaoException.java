@@ -1,4 +1,4 @@
-package by.epam.ts.dal;
+package src.main.java.by.epam.ts.dal;
 
 public class DaoException extends Exception{
 	private static final long serialVersionUID = 1L;
