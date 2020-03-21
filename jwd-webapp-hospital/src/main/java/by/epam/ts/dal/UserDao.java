@@ -1,8 +1,8 @@
-package by.epam.ts.dal;
+package src.main.java.by.epam.ts.dal;
 
-import by.epam.ts.bean.MedicalStaff;
-import by.epam.ts.bean.Patient;
-import by.epam.ts.bean.User;
+import src.main.java.by.epam.ts.bean.MedicalStaff;
+import src.main.java.by.epam.ts.bean.Patient;
+import src.main.java.by.epam.ts.bean.User;
 
 public interface UserDao {
 	

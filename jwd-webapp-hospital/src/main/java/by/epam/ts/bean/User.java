@@ -1,4 +1,4 @@
-package by.epam.ts.bean;
+package src.main.java.by.epam.ts.bean;
 
 import java.io.Serializable;
 

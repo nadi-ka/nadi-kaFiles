@@ -1,4 +1,4 @@
-package by.epam.ts.dal.connectionPool.resourceManager;
+package src.main.java.by.epam.ts.dal.connectionPool.resourceManager;
 
 public final class DBParameter {
 	

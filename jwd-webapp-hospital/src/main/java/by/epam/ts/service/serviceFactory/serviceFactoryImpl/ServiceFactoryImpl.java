@@ -1,9 +1,9 @@
-package by.epam.ts.service.serviceFactory.serviceFactoryImpl;
+package src.main.java.by.epam.ts.service.serviceFactory.serviceFactoryImpl;
 
-import by.epam.ts.service.ServiceException;
-import by.epam.ts.service.UserService;
-import by.epam.ts.service.serviceFactory.ServiceFactory;
-import by.epam.ts.service.serviceImpl.UserServiceImpl;
+import src.main.java.by.epam.ts.service.ServiceException;
+import src.main.java.by.epam.ts.service.UserService;
+import src.main.java.by.epam.ts.service.serviceFactory.ServiceFactory;
+import src.main.java.by.epam.ts.service.serviceImpl.UserServiceImpl;
 
 public final class ServiceFactoryImpl implements ServiceFactory{
 	private static ServiceFactoryImpl instance;

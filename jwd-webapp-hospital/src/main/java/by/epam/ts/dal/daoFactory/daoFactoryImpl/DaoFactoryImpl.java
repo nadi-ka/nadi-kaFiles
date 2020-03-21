@@ -1,10 +1,10 @@
-package by.epam.ts.dal.daoFactory.daoFactoryImpl;
+package src.main.java.by.epam.ts.dal.daoFactory.daoFactoryImpl;
 
-import by.epam.ts.dal.DaoException;
-import by.epam.ts.dal.UserDao;
-import by.epam.ts.dal.connectionPool.ConnectionPool;
-import by.epam.ts.dal.daoFactory.DaoFactory;
-import by.epam.ts.dal.daoImpl.UserDaoSQL;
+import src.main.java.by.epam.ts.dal.DaoException;
+import src.main.java.by.epam.ts.dal.UserDao;
+import src.main.java.by.epam.ts.dal.connectionPool.ConnectionPool;
+import src.main.java.by.epam.ts.dal.daoFactory.DaoFactory;
+import src.main.java.by.epam.ts.dal.daoImpl.UserDaoSQL;
 
 public final class DaoFactoryImpl implements DaoFactory {
 	private static DaoFactoryImpl instance;

@@ -1,6 +1,6 @@
-package by.epam.ts.service;
+package src.main.java.by.epam.ts.service;
 
-import by.epam.ts.bean.User;
+import src.main.java.by.epam.ts.bean.User;
 
 public interface UserService {
 	

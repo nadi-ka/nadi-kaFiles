@@ -1,4 +1,4 @@
-package by.epam.ts.servlet.manager;
+package src.main.java.by.epam.ts.servlet.manager;
 
 import java.util.ResourceBundle;
 

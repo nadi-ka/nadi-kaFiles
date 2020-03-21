@@ -1,6 +1,6 @@
-package by.epam.ts.dal.daoFactory;
+package src.main.java.by.epam.ts.dal.daoFactory;
 
-import by.epam.ts.dal.UserDao;
+import src.main.java.by.epam.ts.dal.UserDao;
 
 public interface DaoFactory {
 	
