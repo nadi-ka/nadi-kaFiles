@@ -2,13 +2,12 @@ package by.epam.ts.dal.daoFactory.daoFactoryImpl;
 
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
-import by.epam.ts.dal.connectionPool.ConnectionPool;
 import by.epam.ts.dal.daoFactory.DaoFactory;
 import by.epam.ts.dal.daoImpl.UserDaoSQL;
 
 public final class DaoFactoryImpl implements DaoFactory {
 	private static DaoFactoryImpl instance;
-	private final ConnectionPool connectionPool = new ConnectionPool();
+	
 	private final UserDao userDao;
 	
 	private DaoFactoryImpl() throws DaoException{

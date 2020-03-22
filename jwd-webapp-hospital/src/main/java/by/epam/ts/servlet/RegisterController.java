@@ -3,6 +3,7 @@ package by.epam.ts.servlet;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,21 @@ import by.epam.ts.servlet.manager.MessageManager;
 
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	public RegisterController () {
+		super();
+	}
+	
+	@Override
+	public void init(ServletConfig config)throws ServletException {
+		super.init(config);
+	}
+	
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse 
+			response) throws ServletException, IOException {
+		super.service(request, response);
+	}
 	
 	@Override
 	public void destroy() {
@@ -51,15 +67,18 @@ public class RegisterController extends HttpServlet {
 		ActionFactory client = new ActionFactory();
 		ActionCommand command = client.defineCommand(request);
 		page = command.execute(request);
+		
 		if (page != null) {
-			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(page);
+			RequestDispatcher dispatcher = request.getRequestDispatcher(page);
 			dispatcher.forward(request, response);	
 		}
+		
 		else {
 			page = ConfigurationManager.getProperty("path.page.index");
 			request.getSession().setAttribute("nullPage", MessageManager.getProperty("message.nullpage"));
 			response.sendRedirect(request.getContextPath() + page);
 		}
+		
 		
 	}
 }

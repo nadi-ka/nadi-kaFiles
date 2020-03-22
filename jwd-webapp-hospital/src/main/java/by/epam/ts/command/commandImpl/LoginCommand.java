@@ -31,6 +31,7 @@ public class LoginCommand implements ActionCommand{
 			request.setAttribute("techninalErrorMessage", 
 					message);
 			page = ConfigurationManager.getProperty("path.page.error");
+			return page;
 		}
 		UserService userService = factory.getUserService();
 		User user = null;
@@ -43,12 +44,14 @@ public class LoginCommand implements ActionCommand{
 			request.setAttribute("techninalErrorMessage", 
 					message);
 			page = ConfigurationManager.getProperty("path.page.error");
+			return page;
 		}
 			
 			if(user == null) {
 				String message = MessageManager.getProperty("message.loginerror");
 				request.setAttribute("errorLoginPassMessage", message);
 				page = ConfigurationManager.getProperty("path.page.login");
+				return page;
 			}
 			HttpSession session = request.getSession(true);
 			

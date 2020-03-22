@@ -10,6 +10,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>jwd-webapp-hospital Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  
+  
   <dependencies>
   
     <dependency>
@@ -38,6 +40,19 @@
         <artifactId>jstl</artifactId>
         <version>1.2</version>
 	 </dependency>
+	 
+	<!-- MySql 5.5 Connector -->   
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.5-bin</version>
+    </dependency>
+    
+    <dependency>
+    	<groupId>mysql</groupId>
+    	<artifactId>mysql-connector-java</artifactId>
+    	<version>5.1.5</version>
+	</dependency> 
         
   </dependencies>
   <build>

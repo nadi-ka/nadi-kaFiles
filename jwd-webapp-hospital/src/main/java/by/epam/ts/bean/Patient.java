@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Patient implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String id;
 	private String surname;
 	private String name;
@@ -13,11 +13,11 @@ public class Patient implements Serializable {
 	private Date entryDate;
 	private Date dischargeDate;
 	private String email;
-	
-	public Patient() {}
 
-	public Patient(String id, String surname, String name, int age, Date entryDate, Date dischargeDate,
-			String email) {
+	public Patient() {
+	}
+
+	public Patient(String id, String surname, String name, int age, Date entryDate, Date dischargeDate, String email) {
 		this.id = id;
 		this.surname = surname;
 		this.name = name;
@@ -106,31 +106,20 @@ public class Patient implements Serializable {
 			return false;
 		}
 		Patient other = (Patient) obj;
-		
-		return age == other.age &&
-			(id == other.id || (id != null && id.equals(other.getId()))) &&	
-			(surname == other.surname || 
-			(surname != null && surname.equals(other.getSurname()))) &&
-			(name == other.name || (name != null && name.equals(other.getName()))) &&
-			(entryDate ==other.getEntryDate() || 
-			(entryDate != null && entryDate.equals(other.getEntryDate()))) &&
-			(dischargeDate == other.dischargeDate || 
-			(dischargeDate != null && (dischargeDate.equals(other.dischargeDate)))) &&
-			(email == other.email || (email != null && email.equals(other.getEmail())));
+
+		return age == other.age && (id == other.id || (id != null && id.equals(other.getId())))
+				&& (surname == other.surname || (surname != null && surname.equals(other.getSurname())))
+				&& (name == other.name || (name != null && name.equals(other.getName())))
+				&& (entryDate == other.getEntryDate() || (entryDate != null && entryDate.equals(other.getEntryDate())))
+				&& (dischargeDate == other.dischargeDate
+						|| (dischargeDate != null && (dischargeDate.equals(other.dischargeDate))))
+				&& (email == other.email || (email != null && email.equals(other.getEmail())));
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "@[id = " + id + 
-				", surname = " + surname + 
-				", name = " + name + 
-				", age = " + age + 
-				", entryDate = " + entryDate + 
-				", dischargeDate = " + dischargeDate + 
-				", email = " + email + "]";
+		return getClass().getName() + "@[id = " + id + ", surname = " + surname + ", name = " + name + ", age = " + age
+				+ ", entryDate = " + entryDate + ", dischargeDate = " + dischargeDate + ", email = " + email + "]";
 	}
-	
-	
-	
-	
+
 }

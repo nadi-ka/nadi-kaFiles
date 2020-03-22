@@ -43,7 +43,9 @@ public final class ConnectionPool {
 		this.user = resourceManager.getValue(DBParameter.DB_USER);
 		this.password = resourceManager.getValue(DBParameter.DB_PASSWORD);
 		try {
-			this.poolSize = Integer.parseInt(resourceManager.getValue(DBParameter.DB_POOL_SIZE));
+			String poolSize = resourceManager.getValue(DBParameter.DB_POOL_SIZE);
+			int sizeInt = Integer.parseInt(poolSize);
+			this.poolSize = sizeInt;
 		} catch (NumberFormatException ex) {
 			this.poolSize = 5;
 		}
@@ -62,6 +64,7 @@ public final class ConnectionPool {
 		} catch (SQLException ex) {
 			throw new ConnectionPoolException("Connection wasn't created", ex);
 		} catch (ClassNotFoundException ex) {
+			System.out.println(ex.toString());
 			throw new ConnectionPoolException("Class of the driver wasn't found", ex);
 		}
 	}

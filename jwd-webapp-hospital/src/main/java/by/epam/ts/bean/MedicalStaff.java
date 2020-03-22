@@ -101,10 +101,4 @@ public class MedicalStaff implements Serializable{
 				", email = " + email + "]";
 	}
 	
-	
-	
-	
-	
-	
-
 }

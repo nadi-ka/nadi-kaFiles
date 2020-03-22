@@ -2,6 +2,7 @@ package by.epam.ts.service.serviceImpl;
 
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
+import by.epam.ts.bean.Treatment;
 import by.epam.ts.bean.User;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
@@ -89,6 +90,17 @@ public class UserServiceImpl implements UserService {
 	public void clearConnection() {
 		userDao.clearConnection();
 	}
+	
+	public Treatment getTreatmentByPatientsId (String id) throws ServiceException{
+		Treatment treatment = null;
+		try {
+			treatment = userDao.findTreatmentByPatintsId(id);
+		} catch (DaoException ex) {
+			throw new ServiceException("Error during reading from DB.", ex);
+		}
+		return treatment;
+	}
+
 
 
 }

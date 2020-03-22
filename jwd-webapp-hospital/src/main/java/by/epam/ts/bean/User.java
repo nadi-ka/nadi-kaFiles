@@ -98,7 +98,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "@[id = " + id + ", login + " + login + ", password = " + password + ", role = "
+		return getClass().getName() + "@[id = " + id + ", login = " + login + ", password = " + password + ", role = "
 				+ role + ", userstatus = " + userStatus + "]";
 	}
 

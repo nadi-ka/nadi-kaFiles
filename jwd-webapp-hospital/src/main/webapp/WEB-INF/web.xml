@@ -34,7 +34,6 @@
   <error-page>
  	<exception-type>java.lang.RuntimeException</exception-type>
  	<location>/jsp/error/error.jsp</location>
-  </error-page>
-  
+  </error-page> 
 
 </web-app>

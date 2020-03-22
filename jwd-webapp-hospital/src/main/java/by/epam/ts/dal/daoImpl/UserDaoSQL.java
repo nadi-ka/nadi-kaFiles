@@ -8,6 +8,7 @@ import java.util.Date;
 
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
+import by.epam.ts.bean.Treatment;
 import by.epam.ts.bean.User;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
@@ -18,13 +19,14 @@ public class UserDaoSQL implements UserDao {
 
 	ConnectionPool connectionPool;
 
-	private String sqlAddUserStaff = 
+	private static final String sqlAddUserStaff = 
 			"INSERT INTO users (id_medical_staff, login, password, role, user_status) VALUES (?,?,?,?,?);";
-	private String sqlAddUserPatient = 
+	private static final String sqlAddUserPatient = 
 			"INSERT INTO users (id_patient, login, password, role, user_status) VALUES (?,?,?,?,?);";
-	private String sqlFindStaffByEmail = "SELECT * FROM `medical-staff` WHERE email=(?);";
-	private String sqlFindPatientByEmail = "SELECT * FROM patients WHERE email=(?);";
-	private String sqlFindUserByLoginPassword = "SELECT * FROM users WHERE " + "login=(?) AND password=(?);";
+	private static final String sqlFindStaffByEmail = "SELECT * FROM `medical-staff` WHERE email=(?);";
+	private static final String sqlFindPatientByEmail = "SELECT * FROM patients WHERE email=(?);";
+	private static final String sqlFindUserByLoginPassword = "SELECT * FROM users WHERE login=(?) AND password=(?);";
+	private static final String sqlFindTreatmentByPatientId = "SELECT * FROM treatment WHERE id_patient=(?);";
 
 	public UserDaoSQL() throws DaoException {
 		connectionPool = new ConnectionPool();
@@ -203,6 +205,44 @@ public class UserDaoSQL implements UserDao {
 		}
 		connectionPool.releaseConnection(connection);
 		return user;
+	}
+	
+	public Treatment findTreatmentByPatintsId(String id) throws DaoException{
+		Connection connection = getConnection();
+		Treatment treatment = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			preparedStatement = connection.prepareStatement(sqlFindTreatmentByPatientId);
+			preparedStatement.setString(1, id);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(!resultSet.next()) {
+				return treatment;
+			}
+			int idAppointment = resultSet.getInt("id_appointment");
+			String treatmentType= resultSet.getString("treatment_type");
+			String treatmentName = resultSet.getString("treatment_name");
+			String idDoctorWhoAssigned = resultSet.getString("id_assigned_by");
+			Date dateBeggining = resultSet.getDate("data_begin/holding");
+			Date dateFinishing = resultSet.getDate("date_finish");
+			boolean consent = resultSet.getBoolean("consent");
+			treatment = new Treatment(idAppointment, id, treatmentType, 
+					treatmentName, idDoctorWhoAssigned, dateBeggining, 
+					dateFinishing, consent);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during reading from DB.", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					throw new DaoException("Error during closing the statement.", ex);
+				}
+			}
+		}
+		connectionPool.releaseConnection(connection);
+		return treatment;
 	}
 
 	public void clearConnection() {
