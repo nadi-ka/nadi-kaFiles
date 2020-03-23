@@ -19,7 +19,7 @@
  		<input type="submit" value="Log in"/>
  		<br/>
  		
- 		<h3>Don't have an account? <a href="/jsp/signUp.jsp">Register</a></h3>
+ 		<h3>Don't have an account? <a href="jsp/signUp.jsp">Register</a></h3>
 	</form><hr/>
 	
 </body>

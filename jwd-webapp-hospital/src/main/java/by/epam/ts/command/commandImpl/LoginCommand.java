@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import by.epam.ts.bean.User;
 import by.epam.ts.command.ActionCommand;
+import by.epam.ts.dal.connectionPool.ConnectionPool;
 import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.serviceFactory.ServiceFactory;
@@ -22,17 +23,8 @@ public class LoginCommand implements ActionCommand{
 		String login = request.getParameter(PARAM_NAME_LOGIN);
 		String password = request.getParameter(PARAM_NAME_PASSWORD);
 		
-		ServiceFactory factory = null;
-		try {
-		factory = ServiceFactoryImpl.getInstance();
-		}catch(ServiceException ex) {
-			//log
-			String message = MessageManager.getProperty("message.technicalerror");
-			request.setAttribute("techninalErrorMessage", 
-					message);
-			page = ConfigurationManager.getProperty("path.page.error");
-			return page;
-		}
+		ServiceFactory factory = new ServiceFactoryImpl(daoFactory);
+		
 		UserService userService = factory.getUserService();
 		User user = null;
 		

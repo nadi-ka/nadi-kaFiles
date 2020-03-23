@@ -25,15 +25,7 @@ public class SignUpCommand implements ActionCommand {
 		String email = request.getParameter(PARAM_NAME_EMAIL);
 		String typeOfUser = request.getParameter(PARAM_NAME_USER_TYPE);
 
-		ServiceFactory factory = null;
-		try {
-			factory = ServiceFactoryImpl.getInstance();
-		} catch (ServiceException ex) {
-			// log
-			String message = MessageManager.getProperty("message.technicalerror");
-			request.setAttribute("techninalErrorMessage", message);
-			page = ConfigurationManager.getProperty("path.page.error");
-		}
+		ServiceFactory factory = new ServiceFactoryImpl(daoFactory);
 		UserService userService = factory.getUserService();
 		boolean isStaff = false;
 		if (typeOfUser.equals("medical-staff")) {

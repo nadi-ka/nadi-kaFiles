@@ -1,5 +1,7 @@
 package by.epam.ts.service.serviceImpl;
 
+import java.util.List;
+
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
 import by.epam.ts.bean.Treatment;
@@ -7,7 +9,6 @@ import by.epam.ts.bean.User;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.daoFactory.DaoFactory;
-import by.epam.ts.dal.daoFactory.daoFactoryImpl.DaoFactoryImpl;
 import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
 
@@ -15,13 +16,9 @@ public class UserServiceImpl implements UserService {
 	private DaoFactory daoFactory;
 	private UserDao userDao;
 
-	public UserServiceImpl() throws ServiceException {
-		try {
-			daoFactory = DaoFactoryImpl.getInstance();
-			userDao = daoFactory.getUserDao();
-		} catch (DaoException ex) {
-			throw new ServiceException("The instance of daoFactory wasn't created.");
-		}
+	public UserServiceImpl(DaoFactory daoFactory) {
+		this.daoFactory = daoFactory;
+		userDao = daoFactory.getUserDao();
 	}
 
 	public int signUp(String email, String login, String password, boolean isStaff) throws ServiceException {
@@ -36,7 +33,7 @@ public class UserServiceImpl implements UserService {
 			id = getPatientsIdByEmail(email);
 			role = 3;
 		}
-		
+
 		if (id == null) {
 			return updatedRows;
 		}
@@ -86,21 +83,15 @@ public class UserServiceImpl implements UserService {
 		}
 		return id;
 	}
-	
-	public void clearConnection() {
-		userDao.clearConnection();
-	}
-	
-	public Treatment getTreatmentByPatientsId (String id) throws ServiceException{
-		Treatment treatment = null;
+
+	public List<Treatment> getPatientsTreatmentById(String id) throws ServiceException {
+		List<Treatment> prescriptions = null;
 		try {
-			treatment = userDao.findTreatmentByPatintsId(id);
+			prescriptions = userDao.findPatientsTreatmentById(id);
 		} catch (DaoException ex) {
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
-		return treatment;
+		return prescriptions;
 	}
-
-
 
 }

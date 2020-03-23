@@ -14,10 +14,29 @@ public class Patient implements Serializable {
 	private Date dischargeDate;
 	private String email;
 
+	private Treatment treatment;
+
 	public Patient() {
 	}
 
+	public Patient(String surname, String name, Treatment treatment) {
+		this.surname = surname;
+		this.name = name;
+		this.treatment = treatment;
+	}
+
+	public Patient(String id, String surname, String name, int age, Date entryDate, Date dischargeDate, String email,
+			Treatment treatment) {
+		this(surname, name, treatment);
+		this.id = id;
+		this.age = age;
+		this.entryDate = entryDate;
+		this.dischargeDate = dischargeDate;
+		this.email = email;
+	}
+
 	public Patient(String id, String surname, String name, int age, Date entryDate, Date dischargeDate, String email) {
+		super();
 		this.id = id;
 		this.surname = surname;
 		this.name = name;
@@ -83,6 +102,14 @@ public class Patient implements Serializable {
 		this.email = email;
 	}
 
+	public Treatment getTreatment() {
+		return treatment;
+	}
+
+	public void setTreatment(Treatment treatment) {
+		this.treatment = treatment;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -94,6 +121,7 @@ public class Patient implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
+		result = prime * result + ((treatment == null) ? 0 : treatment.hashCode());
 		return result;
 	}
 
@@ -113,13 +141,15 @@ public class Patient implements Serializable {
 				&& (entryDate == other.getEntryDate() || (entryDate != null && entryDate.equals(other.getEntryDate())))
 				&& (dischargeDate == other.dischargeDate
 						|| (dischargeDate != null && (dischargeDate.equals(other.dischargeDate))))
-				&& (email == other.email || (email != null && email.equals(other.getEmail())));
+				&& (email == other.email || (email != null && email.equals(other.getEmail())))
+				&& (treatment == other.treatment || (treatment != null && treatment.equals(other.getTreatment())));
 	}
 
 	@Override
 	public String toString() {
 		return getClass().getName() + "@[id = " + id + ", surname = " + surname + ", name = " + name + ", age = " + age
-				+ ", entryDate = " + entryDate + ", dischargeDate = " + dischargeDate + ", email = " + email + "]";
+				+ ", entryDate = " + entryDate + ", dischargeDate = " + dischargeDate + ", email = " + email
+				+ ", treatment = " + treatment.toString() + "]";
 	}
 
 }

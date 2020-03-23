@@ -6,22 +6,31 @@
 
 <body>
 
-	<h3>You are welcome!</h3>
-	<hr/>
-	${user}, welcome!
-	<hr/>
+	<header>
+	
+		<nav>
+      		<input type="hidden" name="command" value="showTreatment" />
+		    <input type="submit" name="btn_showTreatment" value="Show treatment">
+      	</nav>	
+      	
+      	<hr/>
+		<h3>${user}, welcome at the main page of our hospital!</h3>
+	    <hr/>
+	
+	</header>
 	
 	<form name="LogoutForm" method="POST" action="register">
+	
 		<input type="hidden" name="command" value="logout" />
-		
 		<input type="submit" name="btn_logout" value="Log out">
 		
 	</form>
 	
-	<a href="/index.jsp">Navigate to the main page</a>
+	<a href="/index.jsp">Navigate to the login page</a>
 	
 	<br/>
-    ${loggedOut};
+	${accessDeniedMessage}
+	<br/>
 	
 </body>
 </html>

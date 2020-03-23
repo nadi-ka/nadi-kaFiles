@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
@@ -17,25 +19,23 @@ import by.epam.ts.dal.connectionPool.ConnectionPoolException;
 
 public class UserDaoSQL implements UserDao {
 
-	ConnectionPool connectionPool;
+	private ConnectionPool connectionPool;
 
 	private static final String sqlAddUserStaff = 
 			"INSERT INTO users (id_medical_staff, login, password, role, user_status) VALUES (?,?,?,?,?);";
 	private static final String sqlAddUserPatient = 
 			"INSERT INTO users (id_patient, login, password, role, user_status) VALUES (?,?,?,?,?);";
-	private static final String sqlFindStaffByEmail = "SELECT * FROM `medical-staff` WHERE email=(?);";
-	private static final String sqlFindPatientByEmail = "SELECT * FROM patients WHERE email=(?);";
-	private static final String sqlFindUserByLoginPassword = "SELECT * FROM users WHERE login=(?) AND password=(?);";
-	private static final String sqlFindTreatmentByPatientId = "SELECT * FROM treatment WHERE id_patient=(?);";
+	private static final String sqlFindStaffByEmail = 
+			"SELECT * FROM `medical-staff` WHERE email=(?);";
+	private static final String sqlFindPatientByEmail = 
+			"SELECT * FROM patients WHERE email=(?);";
+	private static final String sqlFindUserByLoginPassword = 
+			"SELECT * FROM users WHERE login=(?) AND password=(?);";
+	private static final String sqlFindTreatmentByPatientId = 
+			"SELECT id_appointment, treatment_type, treatment_name, `data_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?);";
 
-	public UserDaoSQL() throws DaoException {
-		connectionPool = new ConnectionPool();
-
-		try {
-			connectionPool.initializePoolData();
-		} catch (ConnectionPoolException ex) {
-			throw new DaoException("Error during initialisation of connection pool", ex);
-		}
+	public UserDaoSQL(ConnectionPool connectionPool) {
+		this.connectionPool = connectionPool;
 	}
 
 	private Connection getConnection() throws DaoException {
@@ -207,9 +207,10 @@ public class UserDaoSQL implements UserDao {
 		return user;
 	}
 	
-	public Treatment findTreatmentByPatintsId(String id) throws DaoException{
+	public List<Treatment> findPatientsTreatmentById(String id) throws DaoException{
 		Connection connection = getConnection();
 		Treatment treatment = null;
+		List<Treatment> prescriptions = new ArrayList<Treatment>(); 
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
@@ -217,19 +218,22 @@ public class UserDaoSQL implements UserDao {
 			preparedStatement.setString(1, id);
 			resultSet = preparedStatement.executeQuery();
 			
-			if(!resultSet.next()) {
-				return treatment;
-			}
+			while(resultSet.next()) {
 			int idAppointment = resultSet.getInt("id_appointment");
 			String treatmentType= resultSet.getString("treatment_type");
 			String treatmentName = resultSet.getString("treatment_name");
-			String idDoctorWhoAssigned = resultSet.getString("id_assigned_by");
 			Date dateBeggining = resultSet.getDate("data_begin/holding");
 			Date dateFinishing = resultSet.getDate("date_finish");
 			boolean consent = resultSet.getBoolean("consent");
+			String doctorSurname = resultSet.getString("surname");
+			String doctorName = resultSet.getString("name");
+			
 			treatment = new Treatment(idAppointment, id, treatmentType, 
-					treatmentName, idDoctorWhoAssigned, dateBeggining, 
+					treatmentName, doctorSurname,doctorName,dateBeggining, 
 					dateFinishing, consent);
+			prescriptions.add(treatment);
+			}
+	
 		} catch (SQLException ex) {
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
@@ -242,10 +246,7 @@ public class UserDaoSQL implements UserDao {
 			}
 		}
 		connectionPool.releaseConnection(connection);
-		return treatment;
+		return prescriptions;
 	}
-
-	public void clearConnection() {
-		connectionPool.dispose();
-	}
+	
 }

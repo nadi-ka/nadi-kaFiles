@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import by.epam.ts.command.ActionCommand;
+import by.epam.ts.dal.DaoException;
+import by.epam.ts.dal.connectionPool.ConnectionPool;
+import by.epam.ts.dal.connectionPool.ConnectionPoolException;
+import by.epam.ts.dal.daoFactory.DaoFactory;
+import by.epam.ts.dal.daoFactory.daoFactoryImpl.DaoFactoryImpl;
 import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.serviceFactory.ServiceFactory;
@@ -20,6 +25,7 @@ import by.epam.ts.servlet.manager.MessageManager;
 
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private ConnectionPool connectionPool;
 	
 	public RegisterController () {
 		super();
@@ -27,6 +33,16 @@ public class RegisterController extends HttpServlet {
 	
 	@Override
 	public void init(ServletConfig config)throws ServletException {
+		connectionPool = new ConnectionPool();
+		try {
+			connectionPool.initializePoolData();
+		} catch (ConnectionPoolException ex) {
+			//log;
+		}
+		DaoFactory daoFactory = DaoFactoryImpl.getInstance();
+		ServiceFactory factoryService = ServiceFactoryImpl.getInstance();
+		
+		
 		super.init(config);
 	}
 	

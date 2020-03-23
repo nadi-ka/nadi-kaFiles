@@ -1,5 +1,7 @@
 package by.epam.ts.dal;
 
+import java.util.List;
+
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
 import by.epam.ts.bean.Treatment;
@@ -16,8 +18,6 @@ public interface UserDao {
 	User findUserByLoginPassword(String login, String password) 
 			throws DaoException;
 	
-	Treatment findTreatmentByPatintsId(String id) throws DaoException;
-	
-	void clearConnection();
+	List<Treatment> findPatientsTreatmentById(String id) throws DaoException;
 	
 }
