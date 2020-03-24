@@ -8,37 +8,10 @@ import by.epam.ts.command.commandImpl.WrongRequestCommand;
 
 public enum CommandEnum {
 
-	LOGIN {
-		{
-			this.command = new LoginCommand();
-		}
-	},
-	LOGOUT {
-		{
-			this.command = new LogoutCommand();
-		}
-	},
-	SIGN_UP {
-		{
-			this.command = new SignUpCommand();
-		}
-	},
-	SHOW_TREATMENT {
-		{
-			this.command = new ShowTreatment();
-		}
-	},
-
-	WRONG_REQUEST {
-		{
-			this.command = new WrongRequestCommand();
-		}
-	};
-
-	ActionCommand command;
-
-	public ActionCommand getCurrentCommand() {
-		return command;
-	}
+	LOGIN ,
+	LOGOUT ,
+	SIGN_UP ,
+	SHOW_TREATMENT ,
+	WRONG_REQUEST ;
 
 }

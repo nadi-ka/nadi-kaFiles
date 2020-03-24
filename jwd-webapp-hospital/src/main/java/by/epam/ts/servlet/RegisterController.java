@@ -10,13 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import by.epam.ts.command.ActionCommand;
-import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.connectionPool.ConnectionPool;
 import by.epam.ts.dal.connectionPool.ConnectionPoolException;
 import by.epam.ts.dal.daoFactory.DaoFactory;
 import by.epam.ts.dal.daoFactory.daoFactoryImpl.DaoFactoryImpl;
-import by.epam.ts.service.ServiceException;
-import by.epam.ts.service.UserService;
 import by.epam.ts.service.serviceFactory.ServiceFactory;
 import by.epam.ts.service.serviceFactory.serviceFactoryImpl.ServiceFactoryImpl;
 import by.epam.ts.servlet.actionFactory.ActionFactory;
@@ -39,9 +36,6 @@ public class RegisterController extends HttpServlet {
 		} catch (ConnectionPoolException ex) {
 			//log;
 		}
-		DaoFactory daoFactory = DaoFactoryImpl.getInstance();
-		ServiceFactory factoryService = ServiceFactoryImpl.getInstance();
-		
 		
 		super.init(config);
 	}
@@ -54,14 +48,7 @@ public class RegisterController extends HttpServlet {
 	
 	@Override
 	public void destroy() {
-		ServiceFactory factory = null;
-		try {
-			factory = ServiceFactoryImpl.getInstance();
-		}catch(ServiceException ex) {
-			//log
-		}
-		UserService userService = factory.getUserService();
-		userService.clearConnection();
+		connectionPool.dispose();
 		super.destroy();
 	}
 
@@ -80,8 +67,10 @@ public class RegisterController extends HttpServlet {
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		String page = null;
-		ActionFactory client = new ActionFactory();
-		ActionCommand command = client.defineCommand(request);
+		DaoFactory daoFactory = new DaoFactoryImpl(connectionPool);
+		ServiceFactory serviceFactory = new ServiceFactoryImpl(daoFactory);
+		ActionFactory actionFactory = new ActionFactory(serviceFactory);
+		ActionCommand command = actionFactory.defineCommand(request);
 		page = command.execute(request);
 		
 		if (page != null) {

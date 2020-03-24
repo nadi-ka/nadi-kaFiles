@@ -11,17 +11,21 @@ import by.epam.ts.command.ActionCommand;
 import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.serviceFactory.ServiceFactory;
-import by.epam.ts.service.serviceFactory.serviceFactoryImpl.ServiceFactoryImpl;
 import by.epam.ts.servlet.manager.ConfigurationManager;
 import by.epam.ts.servlet.manager.MessageManager;
 
 public class ShowTreatment implements ActionCommand {
+	
+	private ServiceFactory factory;
+	
+	public  ShowTreatment(ServiceFactory factory) {
+		this.factory = factory;
+	}
 
 	@Override
 	public String execute(HttpServletRequest request) {
 		String page = null;
 
-		ServiceFactory factory = new ServiceFactoryImpl(daoFactory);
 		UserService userService = factory.getUserService();
 
 		HttpSession session = request.getSession();

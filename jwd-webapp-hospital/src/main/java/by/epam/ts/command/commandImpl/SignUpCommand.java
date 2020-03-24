@@ -6,7 +6,6 @@ import by.epam.ts.command.ActionCommand;
 import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.serviceFactory.ServiceFactory;
-import by.epam.ts.service.serviceFactory.serviceFactoryImpl.ServiceFactoryImpl;
 import by.epam.ts.servlet.manager.ConfigurationManager;
 import by.epam.ts.servlet.manager.MessageManager;
 
@@ -16,6 +15,12 @@ public class SignUpCommand implements ActionCommand {
 	private static final String PARAM_NAME_PASSWORD = "password";
 	private static final String PARAM_NAME_EMAIL = "email";
 	private static final String PARAM_NAME_USER_TYPE = "type-of-user";
+	
+	private ServiceFactory factory;
+	
+	public  SignUpCommand(ServiceFactory factory) {
+		this.factory = factory;
+	}
 
 	@Override
 	public String execute(HttpServletRequest request) {
@@ -25,7 +30,6 @@ public class SignUpCommand implements ActionCommand {
 		String email = request.getParameter(PARAM_NAME_EMAIL);
 		String typeOfUser = request.getParameter(PARAM_NAME_USER_TYPE);
 
-		ServiceFactory factory = new ServiceFactoryImpl(daoFactory);
 		UserService userService = factory.getUserService();
 		boolean isStaff = false;
 		if (typeOfUser.equals("medical-staff")) {

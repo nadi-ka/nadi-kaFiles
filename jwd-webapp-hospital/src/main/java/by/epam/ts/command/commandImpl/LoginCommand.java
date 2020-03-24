@@ -5,25 +5,26 @@ import javax.servlet.http.HttpSession;
 
 import by.epam.ts.bean.User;
 import by.epam.ts.command.ActionCommand;
-import by.epam.ts.dal.connectionPool.ConnectionPool;
 import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.serviceFactory.ServiceFactory;
-import by.epam.ts.service.serviceFactory.serviceFactoryImpl.ServiceFactoryImpl;
 import by.epam.ts.servlet.manager.ConfigurationManager;
 import by.epam.ts.servlet.manager.MessageManager;
 
-public class LoginCommand implements ActionCommand{
+public final class LoginCommand implements ActionCommand{
 	private static final String PARAM_NAME_LOGIN = "login";
 	private static final String PARAM_NAME_PASSWORD = "password";
+	private ServiceFactory factory;
+	
+	public LoginCommand(ServiceFactory factory) {
+		this.factory = factory;
+	}
 	
 	@Override
 	public String execute(HttpServletRequest request) {
 		String page = null;
 		String login = request.getParameter(PARAM_NAME_LOGIN);
 		String password = request.getParameter(PARAM_NAME_PASSWORD);
-		
-		ServiceFactory factory = new ServiceFactoryImpl(daoFactory);
 		
 		UserService userService = factory.getUserService();
 		User user = null;
