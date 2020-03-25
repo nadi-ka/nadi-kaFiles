@@ -9,7 +9,7 @@ import by.epam.ts.service.serviceFactory.ServiceFactory;
 import by.epam.ts.servlet.manager.ConfigurationManager;
 import by.epam.ts.servlet.manager.MessageManager;
 
-public class SignUpCommand implements ActionCommand {
+public final class SignUpCommand implements ActionCommand {
 
 	private static final String PARAM_NAME_LOGIN = "login";
 	private static final String PARAM_NAME_PASSWORD = "password";

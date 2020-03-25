@@ -10,11 +10,16 @@
     <servlet-class>by.epam.ts.servlet.RegisterController</servlet-class>
   </servlet>
   
-    
   <servlet-mapping>
     <servlet-name>RegisterController</servlet-name>
     <url-pattern>/register</url-pattern>
   </servlet-mapping>
+  
+  <listener>
+    <listener-class>
+    by.epam.ts.servlet.listener.ConnectionPoolListener
+    </listener-class>
+ </listener>
   
   <session-config>
     <session-timeout>

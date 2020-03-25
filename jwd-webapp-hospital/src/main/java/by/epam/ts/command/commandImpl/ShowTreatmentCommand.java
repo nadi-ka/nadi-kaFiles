@@ -14,11 +14,11 @@ import by.epam.ts.service.serviceFactory.ServiceFactory;
 import by.epam.ts.servlet.manager.ConfigurationManager;
 import by.epam.ts.servlet.manager.MessageManager;
 
-public class ShowTreatment implements ActionCommand {
+public final class ShowTreatmentCommand implements ActionCommand {
 	
 	private ServiceFactory factory;
 	
-	public  ShowTreatment(ServiceFactory factory) {
+	public  ShowTreatmentCommand(ServiceFactory factory) {
 		this.factory = factory;
 	}
 

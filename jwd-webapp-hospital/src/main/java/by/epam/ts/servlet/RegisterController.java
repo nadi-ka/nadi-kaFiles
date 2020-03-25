@@ -23,6 +23,9 @@ import by.epam.ts.servlet.manager.MessageManager;
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ConnectionPool connectionPool;
+	private DaoFactory daoFactory;
+	private ServiceFactory serviceFactory;
+	private ActionFactory actionFactory;
 	
 	public RegisterController () {
 		super();
@@ -36,6 +39,10 @@ public class RegisterController extends HttpServlet {
 		} catch (ConnectionPoolException ex) {
 			//log;
 		}
+		
+		daoFactory = new DaoFactoryImpl(connectionPool);
+		serviceFactory = new ServiceFactoryImpl(daoFactory);
+		actionFactory = new ActionFactory(serviceFactory);
 		
 		super.init(config);
 	}
@@ -67,9 +74,6 @@ public class RegisterController extends HttpServlet {
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		String page = null;
-		DaoFactory daoFactory = new DaoFactoryImpl(connectionPool);
-		ServiceFactory serviceFactory = new ServiceFactoryImpl(daoFactory);
-		ActionFactory actionFactory = new ActionFactory(serviceFactory);
 		ActionCommand command = actionFactory.defineCommand(request);
 		page = command.execute(request);
 		
