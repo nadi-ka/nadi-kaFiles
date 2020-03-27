@@ -9,7 +9,9 @@ import by.epam.ts.bean.User;
 
 public interface UserDao {
 	
-	public int addUser (User user, boolean isStaff) throws DaoException;
+	int addUserPatient(User user) throws DaoException;
+	
+	int addUserStaff (User user) throws DaoException;
 	
 	MedicalStaff findStaffByEmail(String email) throws DaoException;
 	

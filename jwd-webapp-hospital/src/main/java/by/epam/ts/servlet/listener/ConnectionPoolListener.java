@@ -4,8 +4,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import by.epam.ts.dal.connectionPool.ConnectionPool;
-import by.epam.ts.dal.connectionPool.ConnectionPoolException;
+import by.epam.ts.dal.factory.impl.DaoFactoryImpl;
+import by.epam.ts.dal.pool.ConnectionPool;
+import by.epam.ts.dal.pool.ConnectionPoolException;
 
 public class ConnectionPoolListener implements ServletContextListener {
 	
@@ -20,6 +21,7 @@ public class ConnectionPoolListener implements ServletContextListener {
 		}catch (ConnectionPoolException e) {
 			// log
 		}
+		DaoFactoryImpl.setConnectionPool(connectionPool);
 		context.setAttribute("connectionPool", connectionPool);
 	}
 

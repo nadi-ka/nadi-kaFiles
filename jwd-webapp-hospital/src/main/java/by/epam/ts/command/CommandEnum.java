@@ -7,5 +7,5 @@ public enum CommandEnum {
 	SIGN_UP ,
 	SHOW_TREATMENT ,
 	WRONG_REQUEST ;
-
+	
 }
