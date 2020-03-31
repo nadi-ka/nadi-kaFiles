@@ -40,13 +40,14 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-
-		<!-- MySql 5.5 Connector -->
+		
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
-    	<groupId>mysql</groupId>
+    		<groupId>mysql</groupId>
     		<artifactId>mysql-connector-java</artifactId>
-    		<version>8.0.12</version>
+    		<version>8.0.18</version>
 		</dependency>
+		
 		
 		<dependency>
   			<groupId>org.apache.logging.log4j</groupId>

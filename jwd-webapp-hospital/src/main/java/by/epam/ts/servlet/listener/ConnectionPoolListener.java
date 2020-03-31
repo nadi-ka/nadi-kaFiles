@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +15,7 @@ import by.epam.ts.dal.pool.ConnectionPoolException;
 public class ConnectionPoolListener implements ServletContextListener {
 	
 	private ConnectionPool connectionPool;
-	static final Logger log = LogManager.getLogger( DaoFactoryImpl.class);
+	static final Logger log = LogManager.getLogger( ConnectionPoolListener.class);
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -22,8 +23,8 @@ public class ConnectionPoolListener implements ServletContextListener {
 		connectionPool = new ConnectionPool();
 		try {
 		connectionPool.initializePoolData();
-		}catch (ConnectionPoolException e) {
-			// log
+		}catch (ConnectionPoolException ex) {
+			log.log(Level.ERROR, "ConnectionPool wasn't initialized",ex);
 		}
 		DaoFactoryImpl.setConnectionPool(connectionPool);
 		context.setAttribute("connectionPool", connectionPool);
