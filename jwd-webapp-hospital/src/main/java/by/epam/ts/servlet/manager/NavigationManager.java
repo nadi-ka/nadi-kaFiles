@@ -2,11 +2,11 @@ package by.epam.ts.servlet.manager;
 
 import java.util.ResourceBundle;
 
-public class PageManager {
+public class NavigationManager {
 	
-	private final static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("config");
+	private final static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("navigation");
 	
-	private PageManager() {}
+	private NavigationManager() {}
 	
 	public static String getProperty(String key) {
 		return RESOURCE_BUNDLE.getString(key);

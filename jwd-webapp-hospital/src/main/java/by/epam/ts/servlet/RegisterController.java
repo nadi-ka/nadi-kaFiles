@@ -9,16 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine.Command;
 
+import by.epam.ts.command.Command;
 import by.epam.ts.command.CommandProvider;
 import by.epam.ts.servlet.manager.MessageManager;
-import by.epam.ts.servlet.manager.PageManager;
+import by.epam.ts.servlet.manager.NavigationManager;
+
 
 public class RegisterController extends HttpServlet {
 private static final long serialVersionUID = 1L;
 	
-	static final Logger log = LogManager.getLogger(RegisterController.class);
+	private static final Logger log = LogManager.getLogger(RegisterController.class);
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -34,15 +35,17 @@ private static final long serialVersionUID = 1L;
 	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		log.info("Logger!!!");
+		log.info("Logger from RegisterController.");
 		String page = null;
+		request.getSession(true).setAttribute("local", request.getParameter("local"));
 		CommandProvider provider = new CommandProvider();
 		Command command = provider.defineCommand(request);
 		page = command.execute(request);
 		
 		if (page == null) {
-			page = PageManager.getProperty("path.page.index");
-			request.getSession().setAttribute("nullPage", MessageManager.getProperty("message.nullpage"));
+			page = NavigationManager.getProperty("path.page.index");
+			String message = MessageManager.getProperty("local.nullpage");
+			request.getSession().setAttribute("nullPage", message);
 			response.sendRedirect(request.getContextPath() + page);
 		}
 		

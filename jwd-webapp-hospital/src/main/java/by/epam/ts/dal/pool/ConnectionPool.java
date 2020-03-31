@@ -67,6 +67,7 @@ public final class ConnectionPool {
 				Connection connection = DriverManager.getConnection(url, user, password);
 				InnerConnection innerConnection = new InnerConnection(connection);
 				connectionQueue.add(innerConnection);
+				log.info("after pool init!");
 			}
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Connection wasn't created", ex);
