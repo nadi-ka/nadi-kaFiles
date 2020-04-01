@@ -1,6 +1,11 @@
 package by.epam.ts.service.impl;
 
 import java.util.List;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
 import by.epam.ts.bean.Treatment;
@@ -15,6 +20,7 @@ import by.epam.ts.service.UserService;
 public class UserServiceImpl implements UserService {
 	private DaoFactory daoFactory = DaoFactoryImpl.getInstance();
 	private UserDao userDao = daoFactory.getUserDao();
+	static final Logger log = LogManager.getLogger( UserServiceImpl.class);
 
 	public int signUp(String email, String login, String password) throws ServiceException {
 		int updatedRows = 0;
@@ -31,6 +37,7 @@ public class UserServiceImpl implements UserService {
 			try {
 			updatedRows = userDao.addUserStaff(user);
 			} catch (DaoException ex) {
+				log.log(Level.ERROR, "Sign up procedure failed.", ex);
 				throw new ServiceException("Sign up procedure failed.", ex);
 			}
 		}
@@ -39,6 +46,7 @@ public class UserServiceImpl implements UserService {
 			try {
 			updatedRows = userDao.addUserPatient(user);
 			} catch (DaoException ex) {
+				log.log(Level.ERROR, "Sign up procedure failed.", ex);
 				throw new ServiceException("Sign up procedure failed.", ex);
 			}
 		}
@@ -53,7 +61,12 @@ public class UserServiceImpl implements UserService {
 		try {
 			user = userDao.findUserByLoginPassword(login, password);
 		} catch (DaoException ex) {
+			log.log(Level.ERROR, "Error during calling method findUserByLoginPassword()", ex);
 			throw new ServiceException("Error during reading from DB.", ex);
+		}
+		if (user == null) {
+			log.info("User == null. login=" + login );
+			throw new ServiceException("User wasn't found. login = " + login);
 		}
 		return user;
 	}
@@ -64,6 +77,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			medicalStaff = userDao.findStaffByEmail(email);
 		} catch (DaoException ex) {
+			log.log(Level.ERROR, "Staff wasn't found: " + email, ex);
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
 		if (medicalStaff != null) {
@@ -78,6 +92,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			patient = userDao.findPatientByEmail(email);
 		} catch (DaoException ex) {
+			log.log(Level.ERROR, "Patient wasn't found: " + email, ex);
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
 		if (patient != null) {
@@ -91,6 +106,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			prescriptions = userDao.findPatientsTreatmentById(id);
 		} catch (DaoException ex) {
+			log.log(Level.ERROR, "Treatment by id wasn't found. id: " + id, ex);
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
 		return prescriptions;

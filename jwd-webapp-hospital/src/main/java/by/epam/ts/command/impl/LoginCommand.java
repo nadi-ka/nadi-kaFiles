@@ -12,9 +12,10 @@ import by.epam.ts.command.Command;
 import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
-import by.epam.ts.servlet.manager.NavigationManager;
 import by.epam.ts.servlet.RegisterController;
-import by.epam.ts.servlet.manager.MessageManager;
+import by.epam.ts.servlet.manager.NavigationManager;
+
+
 
 public final class LoginCommand implements Command {
 	private static final String PARAM_NAME_LOGIN = "login";
@@ -33,18 +34,13 @@ public final class LoginCommand implements Command {
 
 		try {
 			user = userService.logIn(login, password);
+			log.info("From LoginCommand: success method logIn()");
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method logIn() from LoginCommand.", ex);
 			page = NavigationManager.getProperty("path.page.error");
 			return page;
 		}
 
-		if (user == null) {
-			String message = MessageManager.getProperty("local.login.errordata");
-			request.setAttribute("errordata", message);
-			page = NavigationManager.getProperty("path.page.login");
-			return page;
-		}
 		HttpSession session = request.getSession(true);
 
 		// User stores parameters: id, login, role, userStatus;

@@ -20,14 +20,6 @@
 <fmt:message bundle="${loc}" key="local.locbutton.name.en"
 	var="en_button" />
 
-<fmt:setLocale value="${requestScope.local}" />
-<fmt:setBundle basename="localization.local" var="loc" />
-<fmt:message bundle="${loc}" key="local.login.errordata" var="errordata" />
-<fmt:message bundle="${loc}" key="local.nullpage" var="nullpage" />
-<fmt:message bundle="${loc}" key="local.wrongaction" var="wrongaction" />
-<fmt:message bundle="${loc}" key="local.login.successfully.logout" var="logoutsuccess" />
-<fmt:message bundle="${loc}" key="local.login.successfully.registr" var="registrsuccess" />
-
 </head>
 
 <body>

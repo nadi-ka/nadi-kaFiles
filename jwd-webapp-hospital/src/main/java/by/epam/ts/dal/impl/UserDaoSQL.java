@@ -196,26 +196,8 @@ public class UserDaoSQL implements UserDao {
 			preparedStatement.setString(2, password);
 			userResultSet = preparedStatement.executeQuery();
 
-
-			
-			int count = 0;
-
-			while (userResultSet.next()) {
-			    ++count;
-			    // Get data from the current row and use it
-			}
-
-			if (count == 0) {
-			    System.out.println("No records found");
-			}
-			else {
-				System.out.println(count);
-			}
-			
-			
-			
-
 			if (!userResultSet.next()) {
+				log.info("From UserDaoSql: !userResultSet.next()");
 				return user;
 			}
 			String idStaff = userResultSet.getString(2);
@@ -230,6 +212,7 @@ public class UserDaoSQL implements UserDao {
 			boolean userStatus = userResultSet.getBoolean(7);
 			
 			user = new User(idUser, login, role, userStatus);
+			log.info("From UserDaoSql: user was found)");
 		}catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool");
@@ -294,31 +277,4 @@ public class UserDaoSQL implements UserDao {
 		return prescriptions;
 	}
 	
-	public static void main(String [] args) {
-		ConnectionPool connectionPool = null;
-		try {
-			connectionPool = new ConnectionPool();
-			try {
-			connectionPool.initializePoolData();
-			}catch (ConnectionPoolException e) {
-				e.printStackTrace();
-			}
-			UserDaoSQL userDaoSQL = new UserDaoSQL(connectionPool);
-			User user = userDaoSQL.findUserByLoginPassword("альфа", "альфа222");
-			if (user == null) {
-				System.out.println("null");
-			}
-			else {
-			System.out.println(user.toString());
-			}
-			}
-			catch (DaoException e) {
-				e.printStackTrace();
-			}
-		finally {
-			connectionPool.dispose();
-		}
-			
-	}
-
 }
