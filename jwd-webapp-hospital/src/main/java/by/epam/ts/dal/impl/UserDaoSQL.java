@@ -191,13 +191,13 @@ public class UserDaoSQL implements UserDao {
 		ResultSet userResultSet = null;
 		try {
 			connection = connectionPool.takeConnection();
+			log.info("Login = " + login + " Password = " + password);
 			preparedStatement = connection.prepareStatement(sqlFindUserByLoginPassword);
 			preparedStatement.setString(1, login);
 			preparedStatement.setString(2, password);
 			userResultSet = preparedStatement.executeQuery();
 
 			if (!userResultSet.next()) {
-				log.info("From UserDaoSql: !userResultSet.next()");
 				return user;
 			}
 			String idStaff = userResultSet.getString(2);

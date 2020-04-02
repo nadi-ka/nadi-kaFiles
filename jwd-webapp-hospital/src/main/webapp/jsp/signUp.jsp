@@ -70,7 +70,7 @@
 	</form>
 
 	<h3>
-		<c:out value="${account}" /> <a href="login.jsp"><c:out value="${reflogin}"/></a>
+		<c:out value="${account}" /> <a href="/index.jsp"><c:out value="${reflogin}"/></a>
 	</h3>
 
 </body>
