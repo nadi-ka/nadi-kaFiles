@@ -31,7 +31,7 @@ public class RegisterController extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		String local = request.getParameter("local");
 		session.setAttribute("local", local);
-		CommandProvider provider = new CommandProvider();
+		CommandProvider provider = CommandProvider.getInstanse();
 		Command command = provider.defineCommand(request);
 		command.execute(request,response);
 

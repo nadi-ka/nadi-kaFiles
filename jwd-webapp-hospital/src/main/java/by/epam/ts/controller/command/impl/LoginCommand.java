@@ -2,7 +2,6 @@ package by.epam.ts.controller.command.impl;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,10 +13,12 @@ import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.bean.User;
 import by.epam.ts.controller.command.Command;
+import by.epam.ts.controller.constant_attribute.RequestAtribute;
+import by.epam.ts.controller.constant_attribute.SessionAtribute;
 import by.epam.ts.controller.manager.MessageManager;
-import by.epam.ts.controller.manager.NavigationManager;
-import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
+import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class LoginCommand implements Command {
@@ -36,23 +37,33 @@ public final class LoginCommand implements Command {
 
 			try {
 				user = userService.logIn(login, password);
+			}catch (ValidationServiceException ex) {
+				log.log(Level.INFO, "Validation error during calling method logIn()", ex);
+				String message = MessageManager.getProperty("local.login.errordata");
+				request.setAttribute(RequestAtribute.ERROR_DATA, message);
+				response.sendRedirect(request.getContextPath() + "/register?command=show_index_page");
+			
 			} catch (ServiceException ex) {
 				log.log(Level.ERROR, "Error during calling method logIn() from LoginCommand.", ex);
-				String message = MessageManager.getProperty("local.login.successfully.registr");
-				request.setAttribute("errordata", message);
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher(NavigationManager.getProperty("path.page.login"));
-				if (requestDispatcher != null) {
-					requestDispatcher.forward(request, response);
-				} else {
-					log.log(Level.ERROR, "requestDispatcher==null");
-					response.sendRedirect(NavigationManager.getProperty("path.page.error"));
-				}
+				String message = MessageManager.getProperty("local.technicalerror");
+				request.setAttribute(RequestAtribute.TECHNICAL_ERROR, message);
+				response.sendRedirect(request.getContextPath() + "/register?command=show_error_page");
 			}
-
-			HttpSession session = request.getSession(true);
-			// User stores parameters: id, login, role, userStatus;
-			session.setAttribute("userData", user);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_patient_main_page");
+			
+			if (user != null) {
+				HttpSession session = request.getSession(true);
+				// User stores parameters: id, login, role, userStatus;
+				session.setAttribute(SessionAtribute.USER_ID, user.getId());
+				session.setAttribute(SessionAtribute.USER_LOGIN, user.getLogin());
+				session.setAttribute(SessionAtribute.USER_ROLE, user.getRole());
+				session.setAttribute(SessionAtribute.USER_STATUS, user.isUserStatus());
+				response.sendRedirect(request.getContextPath() + "/register?command=show_patient_main_page");
+			}else {
+				String message = MessageManager.getProperty("local.login.errordata");
+				request.setAttribute(RequestAtribute.ERROR_DATA, message);
+				response.sendRedirect(request.getContextPath() + "/register?command=show_index_page");
+				
+			}
 		
 	}
 

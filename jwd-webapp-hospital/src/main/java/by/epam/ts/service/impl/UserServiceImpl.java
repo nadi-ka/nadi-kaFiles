@@ -1,6 +1,5 @@
 package by.epam.ts.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,14 +15,16 @@ import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.factory.DaoFactory;
 import by.epam.ts.dal.factory.impl.DaoFactoryImpl;
-import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
+import by.epam.ts.service.constant.ValidationConstant;
+import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.validator.ValidatorManager;
 
 public class UserServiceImpl implements UserService {
 	private DaoFactory daoFactory = DaoFactoryImpl.getInstance();
 	private UserDao userDao = daoFactory.getUserDao();
-	static final Logger log = LogManager.getLogger( UserServiceImpl.class);
+	static final Logger log = LogManager.getLogger(UserServiceImpl.class);
 
 	public int signUp(String email, String login, String password) throws ServiceException {
 		int updatedRows = 0;
@@ -35,16 +36,33 @@ public class UserServiceImpl implements UserService {
 			for (String data : invalidDataSet) {
 				builder.append(data);
 			}
-			throw new ServiceException("Incorrect data: " + builder.toString());
+			throw new ValidationServiceException(builder.toString());
 		}
+		
+		//checking, if the login is unique;
+		try {
+		String checkedLogin = userDao.findLogin(login);
+		if (checkedLogin != null) {
+			log.log(Level.INFO, "Not unique login.");
+			throw new ValidationServiceException(ValidationConstant.INVALID_LOGIN);
+		}
+		}catch (DaoException ex) {
+			log.log(Level.ERROR, "Procedure of checking login, if it's unique, failed.", ex);
+			throw new ServiceException("Procedure of checking login, if it's unique, failed.", ex);
+		}
+		
 		String idStaff;
 		String idPatient;
+		
+		//checking, if person exists in table staff or patient;
 		idStaff = getStaffIdByEmail(email);
 		idPatient = getPatientsIdByEmail(email);
 		int roleMedicalStaff = 2;
 		int rolePatient = 3;
 		boolean userStatus = true;
 		User user;
+		
+		//if id was found in the table staff;
 		if (idStaff != null) {
 			user = new User(idStaff, login, password, roleMedicalStaff, userStatus);
 			try {
@@ -54,6 +72,7 @@ public class UserServiceImpl implements UserService {
 				throw new ServiceException("Sign up procedure failed.", ex);
 			}
 		}
+		//if id was found in the table patient;
 		else if (idPatient != null) {
 			user = new User(idPatient, login, password, rolePatient, userStatus);
 			try {
@@ -63,7 +82,9 @@ public class UserServiceImpl implements UserService {
 				throw new ServiceException("Sign up procedure failed.", ex);
 			}
 		}
+		//id wasn't found in any table;
 		else {
+			log.log(Level.INFO, "Sign up procedure failed. Given e-mail isn't exist in DB.");
 			return updatedRows;
 		}	
 		return updatedRows;
@@ -77,20 +98,17 @@ public class UserServiceImpl implements UserService {
 			for (String data : invalidDataSet) {
 				builder.append(data);
 			}
-			throw new ServiceException("Incorrect data: " + builder.toString());
+			throw new ValidationServiceException(builder.toString());
 		}
 		
 		User user = null;
 		try {
 			user = userDao.findUserByLoginPassword(login, password);
 		} catch (DaoException ex) {
-			log.log(Level.ERROR, "Error during calling method findUserByLoginPassword()", ex);
+			log.log(Level.ERROR, "Error during during reading from DB.", ex);
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
-		if (user == null) {
-			log.info("User wasn't found in DB. Login=" + login);
-			throw new ServiceException("User wasn't found. Login = " + login);
-		}
+		
 		return user;
 	}
 

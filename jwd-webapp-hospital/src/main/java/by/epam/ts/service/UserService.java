@@ -4,6 +4,7 @@ import java.util.List;
 
 import by.epam.ts.bean.Treatment;
 import by.epam.ts.bean.User;
+import by.epam.ts.service.exception.ServiceException;
 
 public interface UserService {
 	

@@ -4,7 +4,6 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -17,8 +16,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class CharsetFilter implements Filter {
 	
-	private String encoding;
-	private ServletContext context;
+	private static final String ENCODING = "characterEncoding";
+	private String defaultEncoding = "utf-8";
+	
 	private static final Logger log = LogManager.getLogger(CharsetFilter.class);
 	
     public CharsetFilter() {
@@ -28,15 +28,18 @@ public class CharsetFilter implements Filter {
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		request.setCharacterEncoding(encoding);
-		response.setCharacterEncoding(encoding);
+		request.setCharacterEncoding(defaultEncoding);
+		response.setCharacterEncoding(defaultEncoding);
 		log.info("Charset was set successfully.");
 		chain.doFilter(request, response);
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {
-		encoding = fConfig.getInitParameter("characterEncoding");
-		context = fConfig.getServletContext();
+		String encoding = fConfig.getInitParameter(ENCODING);
+		if (encoding != null) {
+            defaultEncoding = encoding;
+        }
+ 
 	}
 
 }

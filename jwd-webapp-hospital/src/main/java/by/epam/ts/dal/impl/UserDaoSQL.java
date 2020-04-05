@@ -31,7 +31,9 @@ public class UserDaoSQL implements UserDao {
 	private static final String sqlFindPatientByEmail = "SELECT * FROM patients WHERE email=(?);";
 	private static final String sqlFindUserByLoginPassword = "SELECT * FROM users WHERE login=(?) AND password=(?);";
 	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, `data_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?);";
-	static final Logger log = LogManager.getLogger(UserDaoSQL.class);
+	private static final String sqlFindLogin = "SELECT login FROM users WHERE login=(?);";
+	
+	private static final Logger log = LogManager.getLogger(UserDaoSQL.class);
 	
 	
 	public UserDaoSQL(ConnectionPool connectionPool) {
@@ -191,7 +193,6 @@ public class UserDaoSQL implements UserDao {
 		ResultSet userResultSet = null;
 		try {
 			connection = connectionPool.takeConnection();
-			log.info("Login = " + login + " Password = " + password);
 			preparedStatement = connection.prepareStatement(sqlFindUserByLoginPassword);
 			preparedStatement.setString(1, login);
 			preparedStatement.setString(2, password);
@@ -212,7 +213,7 @@ public class UserDaoSQL implements UserDao {
 			boolean userStatus = userResultSet.getBoolean(7);
 			
 			user = new User(idUser, login, role, userStatus);
-			log.info("From UserDaoSql: user was found)");
+			
 		}catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool");
@@ -275,6 +276,45 @@ public class UserDaoSQL implements UserDao {
 			connectionPool.releaseConnection(connection);
 		}
 		return prescriptions;
+	}
+	
+	public String findLogin(String login) throws DaoException{
+		Connection connection = null;
+		String resultLogin = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlFindLogin);
+			preparedStatement.setString(1, login);
+			resultSet = preparedStatement.executeQuery();
+			
+			//if set is empty, users login is unique;
+
+			if (!resultSet.next()) {
+				return resultLogin;
+			}		
+			
+		}catch (ConnectionPoolException ex) {
+			log.log(Level.ERROR, "Error during taking connection from pool", ex);
+			throw new DaoException("Error during taking connection from pool");
+		} catch (SQLException ex) {
+			log.log(Level.ERROR, "Error during reading from DB.", ex);
+			throw new DaoException("Error during reading from DB.", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		
+		//returning the login means that users login isn't unique;
+		return login;
+		
 	}
 	
 }

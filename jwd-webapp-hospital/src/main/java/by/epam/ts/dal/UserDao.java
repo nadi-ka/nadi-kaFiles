@@ -22,4 +22,6 @@ public interface UserDao {
 	
 	List<Treatment> findPatientsTreatmentById(String id) throws DaoException;
 	
+	String findLogin(String login) throws DaoException;
+	
 }

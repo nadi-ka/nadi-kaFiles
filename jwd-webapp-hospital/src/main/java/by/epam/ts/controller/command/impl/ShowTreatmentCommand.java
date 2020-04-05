@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,12 +14,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.bean.Treatment;
-import by.epam.ts.bean.User;
 import by.epam.ts.controller.command.Command;
+import by.epam.ts.controller.constant_attribute.RequestAtribute;
+import by.epam.ts.controller.constant_attribute.SessionAtribute;
 import by.epam.ts.controller.manager.MessageManager;
 import by.epam.ts.controller.manager.NavigationManager;
-import by.epam.ts.service.ServiceException;
 import by.epam.ts.service.UserService;
+import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class ShowTreatmentCommand implements Command {
@@ -34,45 +34,36 @@ public final class ShowTreatmentCommand implements Command {
 		UserService userService = factory.getUserService();
 
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("userData");
-		String id = null;
-		if (user == null) {
-			String message = MessageManager.getProperty("local.main.denied");
-			request.setAttribute("accessdenied", message);
-			page = NavigationManager.getProperty("path.page.main");
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
-			if (requestDispatcher != null) {
-				requestDispatcher.forward(request, response);
-			} else {
-				log.log(Level.ERROR, "requestDispatcher==null");
-				response.sendRedirect(NavigationManager.getProperty("path.page.error"));
-			}
-		} else {
-			id = user.getId();
+		String userId = (String) session.getAttribute(SessionAtribute.USER_ID);
 
+		if (userId == null) {
+			String message = MessageManager.getProperty("local.main.denied");
+			request.setAttribute(RequestAtribute.ACCESS_DENIED, message);
+			page = NavigationManager.getProperty("path.page.main");
+			goForward(request, response, page);
+
+		} else {
 			List<Treatment> prescriptions = new ArrayList<Treatment>();
 			try {
-				prescriptions = userService.getPatientsTreatmentById(id);
+				prescriptions = userService.getPatientsTreatmentById(userId);
 			} catch (ServiceException ex) {
 				log.log(Level.ERROR, "Error during calling method getPatientsTreatmentById() from ShowTreatmentCommand",
 						ex);
-				page = NavigationManager.getProperty("path.page.error");
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
-				requestDispatcher.forward(request, response);
+				String message = MessageManager.getProperty("local.technicalerror");
+				request.setAttribute("techninalErrorMessage", message);
+				response.sendRedirect(request.getContextPath() + "/register?command=show_error_page");
 			}
 
-			if (prescriptions.isEmpty()) {
-				String message = MessageManager.getProperty("local.main.denied");
-				request.setAttribute("accessdenied", message);
-				page = NavigationManager.getProperty("path.page.main");
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
-				requestDispatcher.forward(request, response);
-			} else {
+			if (!prescriptions.isEmpty()) {
 				request.setAttribute("treatment", prescriptions);
 				page = NavigationManager.getProperty("path.page.treatment");
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
-				requestDispatcher.forward(request, response);
+				goForward(request, response, page);
 
+			} else {
+				String message = MessageManager.getProperty("local.main.data.unavailable");
+				request.setAttribute(RequestAtribute.DATA_UNAVAILABLE, message);
+				page = NavigationManager.getProperty("path.page.main");
+				goForward(request, response, page);
 			}
 		}
 
