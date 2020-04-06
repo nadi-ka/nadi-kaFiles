@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
 			for (String data : invalidDataSet) {
 				builder.append(data);
 			}
+			log.log(Level.INFO, "Validation Error during signUp(). Cause: " + builder.toString());
 			throw new ValidationServiceException(builder.toString());
 		}
 		

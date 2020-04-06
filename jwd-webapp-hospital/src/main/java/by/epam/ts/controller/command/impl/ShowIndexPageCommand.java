@@ -13,6 +13,7 @@ public final class ShowIndexPageCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String page = NavigationManager.getProperty("path.page.index");
 		goForward(request, response, page);
 		

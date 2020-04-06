@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandProvider;
@@ -28,9 +27,7 @@ public class RegisterController extends HttpServlet {
 
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession(true);
-		String local = request.getParameter("local");
-		session.setAttribute("local", local);
+	
 		CommandProvider provider = CommandProvider.getInstanse();
 		Command command = provider.defineCommand(request);
 		command.execute(request,response);

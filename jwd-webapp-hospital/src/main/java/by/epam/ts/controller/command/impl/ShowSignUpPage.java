@@ -13,6 +13,7 @@ public final class ShowSignUpPage implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String page = NavigationManager.getProperty("path.page.signUp");
 		goForward(request, response, page);
 		

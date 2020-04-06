@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
+import by.epam.ts.controller.command.impl.ChangeLanguageCommand;
 import by.epam.ts.controller.command.impl.LoginCommand;
 import by.epam.ts.controller.command.impl.LogoutCommand;
 import by.epam.ts.controller.command.impl.ShowErrorPageCommand;
@@ -28,6 +29,7 @@ public final class CommandProvider {
 		repository.put(CommandEnum.SHOW_PATIENT_MAIN_PAGE, new ShowPatientMainPageCommand());
 		repository.put(CommandEnum.SHOW_INDEX_PAGE, new ShowIndexPageCommand());
 		repository.put(CommandEnum.SHOW_SIGNUP_PAGE, new ShowSignUpPage());
+		repository.put(CommandEnum.CHANGE_LANGUAGE, new ChangeLanguageCommand());
 		repository.put(CommandEnum.SHOW_ERROR_PAGE, new ShowErrorPageCommand());
 	}
 	

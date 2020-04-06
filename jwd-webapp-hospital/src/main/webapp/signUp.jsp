@@ -7,6 +7,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
 	
 	<title>SignUp-page</title>
@@ -32,18 +33,20 @@
 <body>
 
 	<form action="register" method="POST">
+		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 
-		<input type="submit" value="${ru_button}" /><br />
+		<button type="button" class="btn btn-dark">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
+		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" /> 
-		<input type="submit" value="${en_button}" /><br />
+		<button type="button" class="btn btn-dark">${en_button}</button>
 	</form>
 
 	<h1>${register}</h1>
 	
-	<img src="img/registration.png" alt="pen and paper image">
+	<img src="img/registration.png" alt="pen and paper image" style="width:3em; height:4em;" />
 	
 	<div class="form">
 

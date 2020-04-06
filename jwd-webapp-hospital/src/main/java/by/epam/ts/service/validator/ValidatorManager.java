@@ -30,8 +30,8 @@ public class ValidatorManager {
 		UserDataValidator validator = new UserDataValidator();
 		Map<String, Boolean> validResults = new HashMap<String, Boolean>();
 		
-		validResults.put(KEY_LOGIN, validator.validSurname(login));
-		validResults.put(KEY_PASSWORD, validator.validName(password));
+		validResults.put(KEY_LOGIN, validator.validLogin(login));
+		validResults.put(KEY_PASSWORD, validator.validPassword(password));
 		validResults.put(KEY_EMAIL, validator.validEmail(email));
 		
 		Set<String> invalidData = checkInvalidData(validResults);
