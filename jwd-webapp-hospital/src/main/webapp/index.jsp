@@ -31,7 +31,6 @@
 
 <body>
 
-
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 

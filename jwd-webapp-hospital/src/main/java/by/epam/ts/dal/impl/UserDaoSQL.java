@@ -240,12 +240,14 @@ public class UserDaoSQL implements UserDao {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
+			log.log(Level.INFO, "UserDaoSQL. try");
 			connection = connectionPool.takeConnection();
 			preparedStatement = connection.prepareStatement(sqlFindTreatmentByPatientId);
 			preparedStatement.setString(1, id);
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
+				log.log(Level.INFO, "UserDaoSQL. while RS.next");
 				int idAppointment = resultSet.getInt("id_appointment");
 				String treatmentType = resultSet.getString("treatment_type");
 				String treatmentName = resultSet.getString("treatment_name");

@@ -145,7 +145,9 @@ public class UserServiceImpl implements UserService {
 
 	public List<Treatment> getPatientsTreatmentById(String id) throws ServiceException {
 		List<Treatment> prescriptions;
+		log.log(Level.INFO, "UserServiceImpl.");
 		try {
+			log.log(Level.INFO, "UserServiceImpl. try");
 			prescriptions = userDao.findPatientsTreatmentById(id);
 		} catch (DaoException ex) {
 			log.log(Level.ERROR, "Treatment wasn't found. id=" + id, ex);
