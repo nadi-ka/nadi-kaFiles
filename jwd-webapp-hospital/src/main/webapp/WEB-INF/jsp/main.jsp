@@ -7,7 +7,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
 
 <title>Main-page</title>
@@ -34,13 +34,13 @@
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 
-		<button type="button" class="btn btn-dark">${ru_button}</button>
+		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" /> 
-		<button type="button" class="btn btn-dark">${en_button}</button>
+		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
   		<h1>${login}, ${welcome}</h1>
@@ -48,12 +48,12 @@
 	
 		<form name="showTreatment" method="GET" action="register">
 			<input type="hidden" name="command" value="show_treatment" /> 
-			<button type="button" class="btn btn-primary">${show_treat}</button>
+			<button type="submit" class="btn btn-primary">${show_treat}</button>
 		</form>
 		
 		<form name="giveConsent" method="POST" action="register">
 			<input type="hidden" name="command" value="get_consent" /> 
-			<button type="button" class="btn btn-primary">${get_consent}</button>
+			<button type="submit" class="btn btn-primary">${get_consent}</button>
 		</form>
 			
 
@@ -70,7 +70,7 @@
 	<form name="LogoutForm" method="POST" action="register">
 
 		<input type="hidden" name="command" value="logout" /> 
-		<button type="button" class="btn btn-link">${logout_button}</button>
+		<button type="submit" class="btn btn-link">${logout_button}</button>
 
 	</form>
 	

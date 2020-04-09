@@ -10,5 +10,6 @@ public final class RequestAtribute {
 	public final static String WRONG_ACTION = "wrong_action";
 	public final static String SUCCESSFUL_REGISTRATION = "regisrt_success";
 	public final static String SUCCESSFUL_LOGOUT = "logout_success";
+	public final static String PRESCRIPTIONS = "prescriptions";
 
 }

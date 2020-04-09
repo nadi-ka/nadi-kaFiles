@@ -50,6 +50,7 @@ public final class ShowTreatmentCommand implements Command {
 			List<Treatment> prescriptions = new ArrayList<Treatment>();
 			try {
 				prescriptions = userService.getPatientsTreatmentById(userId);
+				log.info("After prescriptions = userService.getPatientsTreatmentById(userId); Prescr.isEmpty? " + prescriptions.isEmpty());
 			} catch (ServiceException ex) {
 				log.log(Level.ERROR, "Error during calling method getPatientsTreatmentById() from ShowTreatmentCommand",
 						ex);
@@ -59,8 +60,9 @@ public final class ShowTreatmentCommand implements Command {
 			}
 
 			if (!prescriptions.isEmpty()) {
-				request.setAttribute("treatment", prescriptions);
+				request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
 				page = NavigationManager.getProperty("path.page.treatment");
+				log.info("page=" + page);
 				goForward(request, response, page);
 
 			} else {

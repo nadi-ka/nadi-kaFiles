@@ -7,7 +7,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
 
 	<title>Treatment</title>
@@ -24,11 +24,10 @@
 	<fmt:message bundle="${loc}" key="local.treatment.consent.true" var="agree_radio" />
 	<fmt:message bundle="${loc}" key="local.treatment.consent.false" var="disagree_radio" />
 	<fmt:message bundle="${loc}" key="local.navigate_main" var="navigate_main" />
+	<fmt:message bundle="${loc}" key="local.locbutton.consent" var="give_consent" />
 
-	<fmt:message bundle="${loc}" key="local.locbutton.name.ru"
-	var="ru_button" />
-	<fmt:message bundle="${loc}" key="local.locbutton.name.en"
-	var="en_button" />
+	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
+	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
 </head>
 
 <body>
@@ -36,62 +35,54 @@
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 
-		<button type="button" class="btn btn-dark">${ru_button}</button>
+		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" /> 
-		<button type="button" class="btn btn-dark">${en_button}</button>
+		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
-	<jsp:useBean id="treatment" class="by.epam.ts.bean.Treatment" scope="request"/>
+	<jsp:useBean id="prescriptions" type="java.util.List<by.epam.ts.bean.Treatment>" scope="request"/>
 
-	<c:forEach var="elem" items="${treatment}">
-
-		<table>
+		<table class="table table-bordered">
 			<caption>${treat}</caption>
-			<tr>
-				<th scope="col">${type}</th>
-				<th scope="col">${name}</th>
-				<th scope="col">{doctor}</th>
-				<th scope="col">${date_begin}</th>
-				<th scope="col">${date_finish}</th>
-				<th scope="col">{consent}</th>
-			</tr>
-			<tr>
-				<td>${requestScope.treatment.treatmentType}</td>
-				<td>${requestScope.treatment.treatmentName}</td>
-				<td>${requestScope.treatment.doctorSurname}<br> 
-				${requestScope.treatment.doctorName}</td>
-				<td>${requestScope.treatment.dateBeginning}</td>
-				<td>${requestScope.treatment.dateFinishing}</td>
-				<td>
-					<form name="consentForm" method="POST" action="register">
-						<input type="hidden" name="command" value="getConsent" />
-						
-							<div class="form-check">
- 								 <input class="form-check-input" type="radio" name="consent" 
- 								 id="consent_agree" value="agree_radio" checked>
-  									<label class="form-check-label" for="consent_agree">
-  										${agree_radio}
- 									</label>
-							</div>
-							
-							<div class="form-check">
-  								  <input class="form-check-input" type="radio" name="consent" 
-  								  id="consent_disagree" value="disagree_radio">
-  									  <label class="form-check-label" for="consent_disagree">
-    							      	${disagree_radio}
-  									  </label>
-							</div>
-						 
-					</form>
-				</td>
-			</tr>
+			
+			<thead>
+				<tr>
+					<th scope="col">${type}</th>
+					<th scope="col">${name}</th>
+					<th scope="col">${doctor}</th>
+					<th scope="col">${date_begin}</th>
+					<th scope="col">${date_finish}</th>
+					<th scope="col">${consent}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+			
+			<c:forEach var="treatment" items="${prescriptions}">
+			
+				<tr>
+					<th scope="row">${treatment.treatmentType}</th>
+					<td>${treatment.treatmentName}</td>
+					<td>${treatment.doctorSurname}<br> 
+						${treatment.doctorName}</td>	
+					<td>${treatment.dateBeginning}</td>
+					<td>${treatment.dateFinishing}</td>
+					<td>
+						<form name="consentForm" method="POST" action="register">
+							<input type="hidden" name="command" value="getConsent" />
+							<button type="submit" class="btn btn-primary">${give_consent}</button>	 
+						</form>
+					</td>
+				</tr>
+				
+			</c:forEach>
+			</tbody>
+			
 		</table>
-
-	</c:forEach>
 
 	<a href="main.jsp">${navigate_main}</a>
 

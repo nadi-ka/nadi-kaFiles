@@ -7,7 +7,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
 	
 	<title>SignUp-page</title>
@@ -23,10 +23,8 @@
 <fmt:message bundle="${loc}" key="local.signup.reflogin" var="reflogin" />
 <fmt:message bundle="${loc}" key="local.signup.errordata" var="errordata" />
 
-<fmt:message bundle="${loc}" key="local.locbutton.name.ru"
-	var="ru_button" />
-<fmt:message bundle="${loc}" key="local.locbutton.name.en"
-	var="en_button" />
+<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
+<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
 	
 </head>
 
@@ -35,13 +33,13 @@
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 
-		<button type="button" class="btn btn-dark">${ru_button}</button>
+		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" /> 
-		<button type="button" class="btn btn-dark">${en_button}</button>
+		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 
 	<h1>${register}</h1>

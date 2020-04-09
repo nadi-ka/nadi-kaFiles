@@ -260,6 +260,7 @@ public class UserDaoSQL implements UserDao {
 				treatment = new Treatment(idAppointment, id, treatmentType, treatmentName, doctorSurname, doctorName,
 						dateBeggining, dateFinishing, consent);
 				prescriptions.add(treatment);
+				log.log(Level.INFO, "UserDaoSQL. while RS.next.After Add");
 			}
 		}catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);

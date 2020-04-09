@@ -14,9 +14,9 @@ public final class LogoutCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String mesaage = MessageManager.getProperty("local.login.successfully.logout");
-		request.setAttribute(RequestAtribute.SUCCESSFUL_LOGOUT, mesaage);
 		request.getSession().invalidate();
+		String mesage = MessageManager.getProperty("local.login.successfully.logout");
+		request.setAttribute(RequestAtribute.SUCCESSFUL_LOGOUT, mesage);
         response.sendRedirect(request.getContextPath() + "/register?command=show_index_page");
 		
 	}

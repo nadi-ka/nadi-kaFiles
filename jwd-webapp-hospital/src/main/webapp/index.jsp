@@ -6,7 +6,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
 	
 	<title>Login-page</title>
@@ -19,7 +19,7 @@
 <fmt:message bundle="${loc}" key="local.password" var="password" />
 <fmt:message bundle="${loc}" key="local.login.haveaccount" var="account" />
 <fmt:message bundle="${loc}" key="local.register" var="regist" />
-<fmt:message bundle="${loc}" key="local.login.successfully.logout" var="success_logout"/>
+<fmt:message bundle="${loc}" key="local.login.successfully.logout" var="logout_success"/>
 <fmt:message bundle="${loc}" key="local.login.successfully.registr" var="success_sign_up"/>
 <fmt:message bundle="${loc}" key="local.login.errordata" var="error_data"/>
 
@@ -34,13 +34,13 @@
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 
-		<button type="button" class="btn btn-dark">${ru_button}</button>
+		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" /> 
-		<button type="button" class="btn btn-dark">${en_button}</button>
+		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
 	<h1>${welcome_message}</h1>
@@ -48,19 +48,18 @@
 	
 	<img src="img/hospital_facade.png" class="img-thumbnail" alt="hospital facade image">
 	
-	<h3>
-	<c:if test="${not empty requestScope.logout_success}">
-		<c:out value="${success_logout}"/>
-	</c:if>
+	<h3><c:if test="${not empty requestScope.logout_success}">
+			<c:out value="${logout_success}"/>
+		</c:if>
 	</h3>
 	
-	<h3>
-	<c:if test="${not empty requestScope.regisrt_success}">
-		<c:out value="${success_sign_up}"/>
-	</c:if>
+	<h3><c:if test="${not empty requestScope.regisrt_success}">
+			<c:out value="${success_sign_up}"/>
+		</c:if>
 	</h3>
+			
 	
-	<div class="form">
+	<div class="form">	
 	
 		<form name="loginForm" method="POST" action="register">
 			<input type="hidden" name="command" value="login" />
@@ -87,7 +86,7 @@
 				
 				<div class="form-button">
 				
-					<button type="submit" class="btn">${login_button}</button>
+					<button type="submit" class="btn btn-secondary">${login_button}</button>
 					
 				</div>
 

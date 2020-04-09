@@ -81,12 +81,12 @@ public class Treatment implements Serializable {
 		this.doctorName = doctorName;
 	}
 
-	public Date getDateBeggining() {
+	public Date getDateBeginning() {
 		return dateBeginning;
 	}
 
-	public void setDateBeggining(Date dateBeggining) {
-		this.dateBeginning = dateBeggining;
+	public void setDateBeginning(Date dateBeginning) {
+		this.dateBeginning = dateBeginning;
 	}
 
 	public Date getDateFinishing() {
@@ -140,7 +140,7 @@ public class Treatment implements Serializable {
 						&& (doctorSurname != null && doctorSurname.equals(other.getDoctorSurname())))
 				&& (doctorName == other.doctorName || (doctorName != null && doctorName.equals(other.getDoctorName())))
 				&& (dateBeginning == other.dateBeginning
-						|| (dateBeginning != null && dateBeginning.equals(other.getDateBeggining())))
+						|| (dateBeginning != null && dateBeginning.equals(other.getDateBeginning())))
 				&& (dateFinishing == other.dateFinishing
 						|| (dateFinishing != null && dateFinishing.equals(other.getDateFinishing())));
 
