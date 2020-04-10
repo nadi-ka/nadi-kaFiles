@@ -1,7 +1,16 @@
 <%@ page isErrorPage="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored = "false"%>
 
 <html>
-<head><title>Error-page</title>
+<head>
+
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/style.css"/>
+	
+	<title>Error-page</title>
+	
 </head>
 
 <body>
@@ -13,11 +22,14 @@
 	<br/>
 	Exception: ${pageContext.errorData.throwable}
 	
-	<br/>
-	${requestScope.technical_error}
-	<br/>
-	${requestScope.wrong_action}
-	<br/>
+	<div class="alert alert-danger" role="alert">
+	
+		<h5><c:if test="${param.message == 'error_data'}">
+				<c:out value="${param.message}"/>
+			</c:if>
+		</h5>
+		
+	</div>
 	
 	<a href="${pageContext.request.contextPath}/index.jsp">Navigate to the start-page</a>
 	

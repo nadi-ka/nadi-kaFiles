@@ -21,7 +21,7 @@
 <fmt:message bundle="${loc}" key="local.signup.button" var="signup_btn" />
 <fmt:message bundle="${loc}" key="local.signup.account" var="account" />
 <fmt:message bundle="${loc}" key="local.signup.reflogin" var="reflogin" />
-<fmt:message bundle="${loc}" key="local.signup.errordata" var="errordata" />
+<fmt:message bundle="${loc}" key="local.signup.errordata" var="error_data" />
 
 <fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 <fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
@@ -73,11 +73,14 @@
 				<input type="email" name="email" value="" /> 
 					
 			</div>
+			
+			<div class="alert alert-danger" role="alert">
+	
+				<h5><c:if test="${param.message == 'error_data'}">
+						<c:out value="${error_data}"/>
+					</c:if>
+				</h5>
 		
-			<div class="form-message">	
-				<c:if test="${not empty requestScope.errordata}">
-					<c:out value="${error_data}"/>
-				</c:if>
 			</div>
 			
 			<div class="form-button">

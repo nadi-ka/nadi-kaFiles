@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.controller.command.Command;
+import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.SessionAtribute;
 
 public class ChangeLanguageCommand implements Command{
@@ -19,13 +20,13 @@ public class ChangeLanguageCommand implements Command{
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.info("Change language command");
 		
 		HttpSession session = request.getSession(true);
 		String local = request.getParameter(SessionAtribute.LOCALIZATION);
 		session.setAttribute(SessionAtribute.LOCALIZATION, local);
 		
-		String command = (String) request.getAttribute("command");
+		String command = (String) request.getParameter(RequestAtribute.COMMAND);
+		log.info("Change language command. Command=" + command);
 
         if (command != null) {
             response.sendRedirect(request.getContextPath() + "/register?command=" + command);

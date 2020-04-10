@@ -10,7 +10,7 @@ import by.epam.ts.controller.command.impl.LogoutCommand;
 import by.epam.ts.controller.command.impl.ShowErrorPageCommand;
 import by.epam.ts.controller.command.impl.ShowIndexPageCommand;
 import by.epam.ts.controller.command.impl.ShowPatientMainPageCommand;
-import by.epam.ts.controller.command.impl.ShowSignUpPage;
+import by.epam.ts.controller.command.impl.ShowSignUpPageCommand;
 import by.epam.ts.controller.command.impl.ShowTreatmentCommand;
 import by.epam.ts.controller.command.impl.SignUpCommand;
 import by.epam.ts.controller.command.impl.WrongRequestCommand;
@@ -28,7 +28,7 @@ public final class CommandProvider {
 		repository.put(CommandEnum.WRONG_REQUEST, new WrongRequestCommand());
 		repository.put(CommandEnum.SHOW_PATIENT_MAIN_PAGE, new ShowPatientMainPageCommand());
 		repository.put(CommandEnum.SHOW_INDEX_PAGE, new ShowIndexPageCommand());
-		repository.put(CommandEnum.SHOW_SIGNUP_PAGE, new ShowSignUpPage());
+		repository.put(CommandEnum.SHOW_SIGNUP_PAGE, new ShowSignUpPageCommand());
 		repository.put(CommandEnum.CHANGE_LANGUAGE, new ChangeLanguageCommand());
 		repository.put(CommandEnum.SHOW_ERROR_PAGE, new ShowErrorPageCommand());
 	}

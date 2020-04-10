@@ -19,8 +19,8 @@
 <fmt:message bundle="${loc}" key="local.password" var="password" />
 <fmt:message bundle="${loc}" key="local.login.haveaccount" var="account" />
 <fmt:message bundle="${loc}" key="local.register" var="regist" />
-<fmt:message bundle="${loc}" key="local.login.successfully.logout" var="logout_success"/>
-<fmt:message bundle="${loc}" key="local.login.successfully.registr" var="success_sign_up"/>
+<fmt:message bundle="${loc}" key="local.login.successfully.logout" var="successful_logout"/>
+<fmt:message bundle="${loc}" key="local.login.successfully.registr" var="successful_sign_up"/>
 <fmt:message bundle="${loc}" key="local.login.errordata" var="error_data"/>
 
 <fmt:message bundle="${loc}" key="local.login.button" var="login_button" />
@@ -48,15 +48,19 @@
 	
 	<img src="img/hospital_facade.png" class="img-thumbnail" alt="hospital facade image">
 	
-	<h3><c:if test="${not empty requestScope.logout_success}">
-			<c:out value="${logout_success}"/>
-		</c:if>
-	</h3>
+	<div class="alert alert-primary" role="alert">
 	
-	<h3><c:if test="${not empty requestScope.regisrt_success}">
-			<c:out value="${success_sign_up}"/>
-		</c:if>
-	</h3>
+		<h5><c:if test="${param.message == 'successful_logout'}">
+				<c:out value="${successful_logout}"/>
+			</c:if>
+		</h5>
+	
+		<h5><c:if test="${param.message == 'successful_registration'}">
+				<c:out value="${successful_sign_up}"/>
+			</c:if>
+		</h5>
+		
+	</div>
 			
 	
 	<div class="form">	

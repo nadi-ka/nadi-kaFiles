@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
-import by.epam.ts.controller.manager.MessageManager;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
@@ -40,26 +39,22 @@ public final class SignUpCommand implements Command {
 			updatedRows = userService.signUp(email, login, password);
 		} catch (ValidationServiceException ex) {
 			log.log(Level.INFO, "Validation error during calling method signUp()", ex);
-			String message = MessageManager.getProperty("local.signup.errordata");
-			request.setAttribute(RequestAtribute.ERROR_DATA, message);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_signup_page");
+			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
+			response.sendRedirect(request.getContextPath() + "/register?command=show_signup_page&message=error_data");
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method signUp() from SignUpCommand", ex);
-			String message = MessageManager.getProperty("local.technicalerror");
-			request.setAttribute(RequestAtribute.TECHNICAL_ERROR, message);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_error_page");
+			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.TECHNICAL_ERROR);
+			response.sendRedirect(request.getContextPath() + "/register?command=show_error_page&message=technical_error");
 		}
 		if (updatedRows != 0) {
-			String message = MessageManager.getProperty("local.login.successfully.registr");
-			request.setAttribute(RequestAtribute.SUCCESSFUL_REGISTRATION, message);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_index_page");
+			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.SUCCESSFUL_REGISTRATION);
+			response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=successful_registration");
 
 		} else {
 			// update rows == null means, that user with given e-mail was found neither in
 			// staff- nor in patient-table;
-			String message = MessageManager.getProperty("local.signup.wrong.email");
-			request.setAttribute(RequestAtribute.ERROR_DATA, message);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_signup_page");
+			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
+			response.sendRedirect(request.getContextPath() + "/register?command=show_signup_page&message=error_data");
 		}
 
 	}
