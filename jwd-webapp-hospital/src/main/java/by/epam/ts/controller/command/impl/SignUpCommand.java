@@ -37,6 +37,19 @@ public final class SignUpCommand implements Command {
 		int updatedRows = 0;
 		try {
 			updatedRows = userService.signUp(email, login, password);
+			
+			if (updatedRows != 0) {
+				request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.SUCCESSFUL_REGISTRATION);
+				response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=successful_registration");
+
+			} else {
+				/* update rows == null means, that user with given e-mail was found neither in
+				 staff- nor in patient-table;
+				 */
+				request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
+				response.sendRedirect(request.getContextPath() + "/register?command=show_signup_page&message=error_data");
+			}
+			
 		} catch (ValidationServiceException ex) {
 			log.log(Level.INFO, "Validation error during calling method signUp()", ex);
 			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
@@ -45,16 +58,6 @@ public final class SignUpCommand implements Command {
 			log.log(Level.ERROR, "Error during calling method signUp() from SignUpCommand", ex);
 			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.TECHNICAL_ERROR);
 			response.sendRedirect(request.getContextPath() + "/register?command=show_error_page&message=technical_error");
-		}
-		if (updatedRows != 0) {
-			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.SUCCESSFUL_REGISTRATION);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=successful_registration");
-
-		} else {
-			// update rows == null means, that user with given e-mail was found neither in
-			// staff- nor in patient-table;
-			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_signup_page&message=error_data");
 		}
 
 	}

@@ -1,6 +1,7 @@
 package by.epam.ts.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
@@ -146,15 +147,30 @@ public class UserServiceImpl implements UserService {
 
 	public List<Treatment> getPatientsTreatmentById(String id) throws ServiceException {
 		List<Treatment> prescriptions;
-		log.log(Level.INFO, "UserServiceImpl.");
 		try {
-			log.log(Level.INFO, "UserServiceImpl. try");
 			prescriptions = userDao.findPatientsTreatmentById(id);
 		} catch (DaoException ex) {
 			log.log(Level.ERROR, "Treatment wasn't found. id=" + id, ex);
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
 		return prescriptions;
+	}
+	
+	public void getPatientsConsent(Map<Integer, Boolean> consentMap) throws ServiceException {
+		int[] consent;
+		try {
+			consent = userDao.updateConsent(consentMap);
+		}catch (DaoException ex) {
+			log.log(Level.ERROR, "Error during calling getPatientsConsent() from UserServiceImpl", ex);
+			throw new ServiceException("Error during reading from DB. Consent wasn't updated.", ex);
+		}
+		//check if consent for every procedure was changed successfully;
+		for (int i = 0; i < consent.length; i++) {
+			if (consent[i] == 0) {
+				log.log(Level.ERROR, "Error during calling getPatientsConsent() from UserServiceImpl. Consent for one of procedures wasn't changed.");
+				throw new ServiceException("Error during calling getPatientsConsent() from UserServiceImpl. Consent for one of procedures wasn't changed.");
+			}
+		} 
 	}
 
 }

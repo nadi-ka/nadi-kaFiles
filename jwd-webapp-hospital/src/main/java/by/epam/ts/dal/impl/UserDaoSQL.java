@@ -1,12 +1,15 @@
 package by.epam.ts.dal.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -32,10 +35,12 @@ public class UserDaoSQL implements UserDao {
 	private static final String sqlFindUserByLoginPassword = "SELECT * FROM users WHERE login=(?) AND password=(?);";
 	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, `data_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?);";
 	private static final String sqlFindLogin = "SELECT login FROM users WHERE login=(?);";
-	
+	private static final String sqlUpdateConsent = "UPDATE treatment SET consent=(?) WHERE id_appointment=(?);";
+	private static final String sqlAddPatient = "INSERT INTO patients VALUES (?,?,?,?,?);";
+	private static final String sqlFindPatientBySurname = "SELECT * FROM patients WHERE surname=(?);";
+
 	private static final Logger log = LogManager.getLogger(UserDaoSQL.class);
-	
-	
+
 	public UserDaoSQL(ConnectionPool connectionPool) {
 		this.connectionPool = connectionPool;
 	}
@@ -57,7 +62,7 @@ public class UserDaoSQL implements UserDao {
 			insertedRows = signUpPatient.executeUpdate();
 		} catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
-			throw new DaoException("Error during taking connection from  pool");
+			throw new DaoException("Error during taking connection from  pool", ex);
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Error during preparing/executing INSERT Statement", ex);
 			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
@@ -90,7 +95,7 @@ public class UserDaoSQL implements UserDao {
 			insertedRows = signUpStaff.executeUpdate();
 		} catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
-			throw new DaoException("Error during taking connection from pool");
+			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Error during preparing/executing INSERT Statement", ex);
 			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
@@ -126,9 +131,9 @@ public class UserDaoSQL implements UserDao {
 			String surname = staffResultSet.getString(3);
 			String name = staffResultSet.getString(4);
 			medicalStaff = new MedicalStaff(id, specialty, surname, name, email);
-		}catch (ConnectionPoolException ex) {
+		} catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
-			throw new DaoException("Error during taking connection from pool");
+			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
@@ -160,16 +165,14 @@ public class UserDaoSQL implements UserDao {
 				return patient;
 			}
 
-			String id = patientResultSet.getString(1);
-			String surname = patientResultSet.getString(2);
-			String name = patientResultSet.getString(3);
-			int age = patientResultSet.getInt(4);
-			Date entryDate = patientResultSet.getDate(5);
-			Date dischargeDate = patientResultSet.getDate(6);
-			patient = new Patient(id, surname, name, age, entryDate, dischargeDate, email);
-		}catch (ConnectionPoolException ex) {
+			String id = patientResultSet.getString("id");
+			String surname = patientResultSet.getString("surname");
+			String name = patientResultSet.getString("name");
+			Date dateOfBirth = patientResultSet.getDate("birth_date");
+			patient = new Patient(id, surname, name, dateOfBirth, email);
+		} catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
-			throw new DaoException("Error during taking connection from  pool");
+			throw new DaoException("Error during taking connection from  pool", ex);
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
@@ -211,12 +214,12 @@ public class UserDaoSQL implements UserDao {
 			}
 			int role = userResultSet.getInt(6);
 			boolean userStatus = userResultSet.getBoolean(7);
-			
+
 			user = new User(idUser, login, role, userStatus);
-			
-		}catch (ConnectionPoolException ex) {
+
+		} catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
-			throw new DaoException("Error during taking connection from pool");
+			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
@@ -240,14 +243,12 @@ public class UserDaoSQL implements UserDao {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			log.log(Level.INFO, "UserDaoSQL. try");
 			connection = connectionPool.takeConnection();
 			preparedStatement = connection.prepareStatement(sqlFindTreatmentByPatientId);
 			preparedStatement.setString(1, id);
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				log.log(Level.INFO, "UserDaoSQL. while RS.next");
 				int idAppointment = resultSet.getInt("id_appointment");
 				String treatmentType = resultSet.getString("treatment_type");
 				String treatmentName = resultSet.getString("treatment_name");
@@ -260,11 +261,10 @@ public class UserDaoSQL implements UserDao {
 				treatment = new Treatment(idAppointment, id, treatmentType, treatmentName, doctorSurname, doctorName,
 						dateBeggining, dateFinishing, consent);
 				prescriptions.add(treatment);
-				log.log(Level.INFO, "UserDaoSQL. while RS.next.After Add");
 			}
-		}catch (ConnectionPoolException ex) {
+		} catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
-			throw new DaoException("Error during taking connection from pool");
+			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
@@ -280,8 +280,8 @@ public class UserDaoSQL implements UserDao {
 		}
 		return prescriptions;
 	}
-	
-	public String findLogin(String login) throws DaoException{
+
+	public String findLogin(String login) throws DaoException {
 		Connection connection = null;
 		String resultLogin = null;
 		PreparedStatement preparedStatement = null;
@@ -291,16 +291,16 @@ public class UserDaoSQL implements UserDao {
 			preparedStatement = connection.prepareStatement(sqlFindLogin);
 			preparedStatement.setString(1, login);
 			resultSet = preparedStatement.executeQuery();
-			
-			//if set is empty, users login is unique;
+
+			// if set is empty, users login is unique;
 
 			if (!resultSet.next()) {
 				return resultLogin;
-			}		
-			
-		}catch (ConnectionPoolException ex) {
+			}
+
+		} catch (ConnectionPoolException ex) {
 			log.log(Level.ERROR, "Error during taking connection from pool", ex);
-			throw new DaoException("Error during taking connection from pool");
+			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
@@ -314,10 +314,122 @@ public class UserDaoSQL implements UserDao {
 			}
 			connectionPool.releaseConnection(connection);
 		}
-		
-		//returning the login means that users login isn't unique;
+
+		// returning the login means that users login isn't unique;
 		return login;
-		
+	}
+
+	public int[] updateConsent(Map<Integer, Boolean> consentMap) throws DaoException {
+		int[] count;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlUpdateConsent);
+			connection.setAutoCommit(false);
+
+			for (Map.Entry<Integer, Boolean> entry : consentMap.entrySet()) {
+				preparedStatement.setBoolean(1, entry.getValue().booleanValue());
+				preparedStatement.setInt(2, entry.getKey());
+				preparedStatement.addBatch();
+			}
+			count = preparedStatement.executeBatch();
+			connection.commit();
+		} catch (ConnectionPoolException ex) {
+			log.log(Level.ERROR, "Error during taking connection from pool", ex);
+			throw new DaoException("Error during taking connection from pool", ex);
+		} catch (SQLException ex) {
+			log.log(Level.ERROR, "Error during reading from DB.", ex);
+			throw new DaoException("Error during reading from DB.", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return count;
+	}
+
+	public int addNewPatient(Patient patient) throws DaoException {
+		int insertedRows = 0;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+
+			preparedStatement = connection.prepareStatement(sqlAddPatient);
+			String id = UUID.randomUUID().toString();
+			preparedStatement.setString(1, id);
+			preparedStatement.setString(2, patient.getSurname());
+			preparedStatement.setString(3, patient.getName());
+			preparedStatement.setDate(4, patient.getDateOfBirth(),Calendar.getInstance());
+			preparedStatement.setString(5, patient.getEmail());
+
+			insertedRows = preparedStatement.executeUpdate();
+
+		} catch (ConnectionPoolException ex) {
+			log.log(Level.ERROR, "Error during taking connection from pool", ex);
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			log.log(Level.ERROR, "Error during preparing/executing INSERT Statement", ex);
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
+	public List<Patient> findPatientBySurname(String surname) throws DaoException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Patient> patients = new ArrayList<Patient>();
+
+		try {
+			connection = connectionPool.takeConnection();
+
+			preparedStatement = connection.prepareStatement(sqlFindPatientBySurname);
+			preparedStatement.setString(1, surname);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String name = resultSet.getString("name");
+				Date dateOfBirth = resultSet.getDate("birth_date");
+				String email = resultSet.getString("email");
+				Patient patient = new Patient(id, surname, name, dateOfBirth, email);
+				patients.add(patient);
+			}
+		} catch (ConnectionPoolException ex) {
+			log.log(Level.ERROR, "Error during taking connection from pool", ex);
+			throw new DaoException("Error during taking connection from pool", ex);
+		} catch (SQLException ex) {
+			log.log(Level.ERROR, "Error during reading from DB.", ex);
+			throw new DaoException("Error during reading from DB.", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return patients;
 	}
 	
 }

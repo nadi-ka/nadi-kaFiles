@@ -22,10 +22,8 @@
 <fmt:message bundle="${loc}" key="local.main.denied" var="access_denied" />
 <fmt:message bundle="${loc}" key="local.main.data.unavailable" var="data_unavailable" />
 
-<fmt:message bundle="${loc}" key="local.locbutton.name.ru"
-	var="ru_button" />
-<fmt:message bundle="${loc}" key="local.locbutton.name.en"
-	var="en_button" />
+<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
+<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
 	
 </head>
 
@@ -33,13 +31,15 @@
 	
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="ru" /> 
+		<input type="hidden" name="local" value="ru" />
+		<input type="hidden" name="redirect_command" value="show_patient_main_page"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="en" /> 
+		<input type="hidden" name="local" value="en" />
+		<input type="hidden" name="redirect_command" value="show_patient_main_page"/> 
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	

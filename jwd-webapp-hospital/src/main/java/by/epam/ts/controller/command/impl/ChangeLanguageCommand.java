@@ -25,11 +25,11 @@ public class ChangeLanguageCommand implements Command{
 		String local = request.getParameter(SessionAtribute.LOCALIZATION);
 		session.setAttribute(SessionAtribute.LOCALIZATION, local);
 		
-		String command = (String) request.getParameter(RequestAtribute.COMMAND);
-		log.info("Change language command. Command=" + command);
+		String redirectCommand = (String) request.getParameter(RequestAtribute.REDIRECT_COMMAND);
+		log.info("Change language command. RedirectCommand=" + redirectCommand);
 
-        if (command != null) {
-            response.sendRedirect(request.getContextPath() + "/register?command=" + command);
+        if (redirectCommand != null) {
+            response.sendRedirect(request.getContextPath() + "/register?command=" + redirectCommand);
         } else {
             response.sendRedirect(request.getContextPath());
         }

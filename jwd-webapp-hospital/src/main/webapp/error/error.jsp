@@ -24,8 +24,8 @@
 	
 	<div class="alert alert-danger" role="alert">
 	
-		<h5><c:if test="${param.message == 'error_data'}">
-				<c:out value="${param.message}"/>
+		<h5><c:if test="${param.message == 'technical_error'}">
+				<c:out value = "Sorry, the web-site is undergoing technical work." />
 			</c:if>
 		</h5>
 		

@@ -1,6 +1,7 @@
 package by.epam.ts.dal;
 
 import java.util.List;
+import java.util.Map;
 
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
@@ -23,5 +24,7 @@ public interface UserDao {
 	List<Treatment> findPatientsTreatmentById(String id) throws DaoException;
 	
 	String findLogin(String login) throws DaoException;
+	
+	int[] updateConsent(Map<Integer, Boolean> consentMap) throws DaoException;
 	
 }

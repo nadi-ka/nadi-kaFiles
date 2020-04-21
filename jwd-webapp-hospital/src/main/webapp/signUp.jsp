@@ -32,42 +32,41 @@
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="ru" /> 
+		<input type="hidden" name="local" value="ru" />
+		<input type="hidden" name="redirect_command" value="show_signup_page"/>
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="en" /> 
+		<input type="hidden" name="local" value="en" />
+		<input type="hidden" name="redirect_command" value="show_signup_page"/> 
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 
 	<h1>${register}</h1>
 	
-	<img src="img/registration.png" alt="pen and paper image" style="width:3em; height:4em;" />
-	
-	<div class="form">
+	<img class="rounded float-right" src="img/registration.png" 
+		 alt="pen and paper image" style="width:4em; height:5em;" />
 
 	<form name="registerForm" method="POST" action="register">
 		<input type="hidden" name="command" value="sign_up" />
-
-		<fieldset>
 			
-			<div class="form-field">
+			<div class="form-group">
 				
 				<label class="field-label">${login}</label>
 				<input type="text" name="login" value="" /> 
 					
 			</div>
 			
-			<div class="form-field">
+			<div class="form-group">
 				
 				<label class="field-label">${password}</label>
 				<input type="password" name="password" value="" /> 
 					
 			</div>
 			
-			<div class="form-field">
+			<div class="form-group">
 				
 				<label class="field-label">${email}</label>
 				<input type="email" name="email" value="" /> 
@@ -82,18 +81,10 @@
 				</h5>
 		
 			</div>
-			
-			<div class="form-button">
 
-				<input type="submit"  name="btn_signup" value="${signup_btn}" /><br/>
-				
-			</div>
-			
-		</fieldset>
+			<button type="submit" class="btn btn-primary" name="btn_signup">${signup_btn}</button>
 
 	</form>
-	
-	</div>
 
 	<h3>
 		<c:out value="${account}" /> <a href="index.jsp">${reflogin}</a>

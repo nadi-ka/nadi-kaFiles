@@ -33,13 +33,15 @@
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="ru" /> 
+		<input type="hidden" name="local" value="ru" />
+		<input type="hidden" name="redirect_command" value="show_index_page"/> 
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="en" /> 
+		<input type="hidden" name="local" value="en" />
+		<input type="hidden" name="redirect_command" value="show_index_page"/> 
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
@@ -82,10 +84,13 @@
 					
 				</div>
 				
-				<div class="form-message">	
-					<c:if test="${not empty requestScope.errordata}">
-						<c:out value="${error_data}"/>
-					</c:if>
+				<div class="alert alert-danger" role="alert">
+				
+					<h5><c:if test="${param.message == 'error_data'}">
+							<c:out value="${error_data}"/>
+						</c:if>
+					</h5>
+				
 				</div>
 				
 				<div class="form-button">

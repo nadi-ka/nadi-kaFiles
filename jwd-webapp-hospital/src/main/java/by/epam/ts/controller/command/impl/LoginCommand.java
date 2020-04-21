@@ -24,32 +24,21 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 public final class LoginCommand implements Command {
 	private static final String PARAM_NAME_LOGIN = "login";
 	private static final String PARAM_NAME_PASSWORD = "password";
-	private static final Logger log = LogManager.getLogger(LoginCommand.class);
+	private static final int ROLE_PATIENT = 3;
 	
+	private static final Logger log = LogManager.getLogger(LoginCommand.class);
+
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			String login = request.getParameter(PARAM_NAME_LOGIN);
-			String password = request.getParameter(PARAM_NAME_PASSWORD);
+		String login = request.getParameter(PARAM_NAME_LOGIN);
+		String password = request.getParameter(PARAM_NAME_PASSWORD);
 
-			ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
-			UserService userService = factory.getUserService();
-			User user = null;
+		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		UserService userService = factory.getUserService();
+		User user = null;
 
-			try {
-				user = userService.logIn(login, password);
-			}catch (ValidationServiceException ex) {
-				log.log(Level.INFO, "Validation error during calling method logIn()", ex);
-				String message = MessageManager.getProperty("local.login.errordata");
-				request.setAttribute(RequestAtribute.ERROR_DATA, message);
-				response.sendRedirect(request.getContextPath() + "/register?command=show_index_page");
-			
-			} catch (ServiceException ex) {
-				log.log(Level.ERROR, "Error during calling method logIn() from LoginCommand.", ex);
-				String message = MessageManager.getProperty("local.technicalerror");
-				request.setAttribute(RequestAtribute.TECHNICAL_ERROR, message);
-				response.sendRedirect(request.getContextPath() + "/register?command=show_error_page");
-			}
-			
+		try {
+			user = userService.logIn(login, password);
 			if (user != null) {
 				HttpSession session = request.getSession(true);
 				// User stores parameters: id, login, role, userStatus;
@@ -57,14 +46,31 @@ public final class LoginCommand implements Command {
 				session.setAttribute(SessionAtribute.USER_LOGIN, user.getLogin());
 				session.setAttribute(SessionAtribute.USER_ROLE, user.getRole());
 				session.setAttribute(SessionAtribute.USER_STATUS, user.isUserStatus());
-				response.sendRedirect(request.getContextPath() + "/register?command=show_patient_main_page");
-			}else {
-				String message = MessageManager.getProperty("local.login.errordata");
-				request.setAttribute(RequestAtribute.ERROR_DATA, message);
-				response.sendRedirect(request.getContextPath() + "/register?command=show_index_page");
 				
+				if (user.getRole() == ROLE_PATIENT) {
+					response.sendRedirect(request.getContextPath() + "/register?command=show_patient_main_page");
+				}
+				else {
+					response.sendRedirect(request.getContextPath() + "/register?command=show_staff_main_page");
+				}
+				
+			} else {
+				request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
+				response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=error_data");
 			}
-		
+			
+		} catch (ValidationServiceException ex) {
+			log.log(Level.INFO, "Validation error during calling method logIn()", ex);
+			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
+			response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=error_data");
+
+		} catch (ServiceException ex) {
+			log.log(Level.ERROR, "Error during calling method logIn() from LoginCommand.", ex);
+			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.TECHNICAL_ERROR);
+			response.sendRedirect(
+					request.getContextPath() + "/register?command=show_error_page&message=technical_error");
+		}
+
 	}
 
 }

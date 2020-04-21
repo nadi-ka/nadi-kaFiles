@@ -21,10 +21,13 @@
 	<fmt:message bundle="${loc}" key="local.treatment.datebegin" var="date_begin" />
 	<fmt:message bundle="${loc}" key="local.treatment.datefinish" var="date_finish" />
 	<fmt:message bundle="${loc}" key="local.treatment.consent" var="consent" />
-	<fmt:message bundle="${loc}" key="local.treatment.consent.true" var="agree_radio" />
-	<fmt:message bundle="${loc}" key="local.treatment.consent.false" var="disagree_radio" />
+	<fmt:message bundle="${loc}" key="local.treatment.consent.true" var="agree" />
+	<fmt:message bundle="${loc}" key="local.treatment.consent.false" var="disagree" />
+	<fmt:message bundle="${loc}" key="local.treatment.consent.indefined" var="indefined" />
+	<fmt:message bundle="${loc}" key="local.treatment.consent.general" var="general_consent" />
 	<fmt:message bundle="${loc}" key="local.navigate_main" var="navigate_main" />
-	<fmt:message bundle="${loc}" key="local.locbutton.consent" var="give_consent" />
+	<fmt:message bundle="${loc}" key="local.treatment.button.consent" var="give_consent" />
+	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_button" />
 
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
@@ -34,13 +37,15 @@
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="ru" /> 
+		<input type="hidden" name="local" value="ru" />
+		<input type="hidden" name="redirect_command" value="show_treatment"/> 
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="en" /> 
+		<input type="hidden" name="local" value="en" />
+		<input type="hidden" name="redirect_command" value="show_treatment"/>  
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
@@ -72,10 +77,37 @@
 					<td>${treatment.dateBeginning}</td>
 					<td>${treatment.dateFinishing}</td>
 					<td>
+						<c:choose> 
+							<c:when test="${treatment.consent == true}">
+								<strong><c:out value="${agree}"/></strong>
+							</c:when>
+							<c:when test="${treatment.consent == false}">
+								<strong><c:out value="${disagree}"/></strong>
+							</c:when>
+							<c:otherwise>
+								<strong><c:out value="${indefined}"/></strong>
+							</c:otherwise>
+						</c:choose>
+						
 						<form name="consentForm" method="POST" action="register">
-							<input type="hidden" name="command" value="getConsent" />
-							<button type="submit" class="btn btn-primary">${give_consent}</button>	 
+						
+						<input type="hidden" name="command" value="give_consent" />
+						<input type="hidden" name="id_appointment" value="${treatment.idAppointment}" />
+						
+							<div class="form-check">
+          						<input class="form-check-input" type="radio" name="consent" value=true>
+          						<label class="form-check-label">${agree}</label>
+        					</div>
+        					
+        					<div class="form-check">
+          						<input class="form-check-input" type="radio" name="consent" value=false checked>
+          						<label class="form-check-label">${disagree}</label>
+          					</div>
+          					
+          					<button type="submit" class="btn btn-primary">${submit_button}</button>	 
+          						
 						</form>
+						
 					</td>
 				</tr>
 				
@@ -83,8 +115,6 @@
 			</tbody>
 			
 		</table>
-
-	<a href="main.jsp">${navigate_main}</a>
 
 </body>
 </html>
