@@ -1,0 +1,41 @@
+<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name ="stringSurname">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-zA-Z-]{3,20}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="patients">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="patient" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="stringSurname" name="surname"/>		
+              <xs:element type="xs:string" name="name"/>
+              <xs:element type="xs:date" name="date-of-birth"/>
+              <xs:element name="prescriptions">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="treatment" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:integer" name="id-appointment"/>
+                          <xs:element type="xs:string" name="treatment-name"/>
+                          <xs:element type="xs:string" name="doctor-surname"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" use="required" type="xs:ID"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
