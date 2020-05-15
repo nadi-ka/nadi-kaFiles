@@ -27,6 +27,12 @@
 		<h5><c:if test="${param.message == 'technical_error'}">
 				<c:out value = "Sorry, the web-site is undergoing technical work." />
 			</c:if>
+			<c:if test="${param.message == 'wrong_request'}">
+				<c:out value = "Sorry, this comand is not allowed." />
+			</c:if>
+			<c:if test="${param.message == 'access_denied'}">
+				<c:out value = "Sorry, you haven't appropriate rights for this operation." />
+			</c:if>
 		</h5>
 		
 	</div>

@@ -35,6 +35,16 @@
     <url-pattern>/register</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>FontController</servlet-name>
+  	<servlet-class>by.epam.ts.controller.FontController</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>FontController</servlet-name>
+    <url-pattern>/font</url-pattern>
+  </servlet-mapping>
+  
   <session-config>
     <session-timeout>30</session-timeout>
   </session-config>

@@ -14,25 +14,27 @@ import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.SessionAtribute;
 
-public class ChangeLanguageCommand implements Command{
-	
+public class ChangeLanguageCommand implements Command {
+
 	private static final Logger log = LogManager.getLogger(ChangeLanguageCommand.class);
-	
+
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		HttpSession session = request.getSession(true);
 		String local = request.getParameter(SessionAtribute.LOCALIZATION);
 		session.setAttribute(SessionAtribute.LOCALIZATION, local);
-		
+
 		String redirectCommand = (String) request.getParameter(RequestAtribute.REDIRECT_COMMAND);
+		String queryString = (String) request.getParameter(RequestAtribute.QUERY_STRING);
 		log.info("Change language command. RedirectCommand=" + redirectCommand);
 
-        if (redirectCommand != null) {
-            response.sendRedirect(request.getContextPath() + "/register?command=" + redirectCommand);
-        } else {
-            response.sendRedirect(request.getContextPath());
-        }
+		if (redirectCommand != null) {
+			response.sendRedirect(request.getContextPath() + "/font?command=" + redirectCommand + "&"
+					+ RequestAtribute.QUERY_STRING + queryString);
+		} else {
+			response.sendRedirect(request.getContextPath());
+		}
 
 	}
 }

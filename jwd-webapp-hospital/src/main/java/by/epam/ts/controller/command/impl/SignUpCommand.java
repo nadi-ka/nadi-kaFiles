@@ -19,17 +19,14 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class SignUpCommand implements Command {
 
-	private static final String PARAM_NAME_LOGIN = "login";
-	private static final String PARAM_NAME_PASSWORD = "password";
-	private static final String PARAM_NAME_EMAIL = "email";
 	private static final Logger log = LogManager.getLogger(SignUpCommand.class);
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String login = request.getParameter(PARAM_NAME_LOGIN);
-		String password = request.getParameter(PARAM_NAME_PASSWORD);
-		String email = request.getParameter(PARAM_NAME_EMAIL);
+		String login = request.getParameter(RequestAtribute.USER_LOGIN);
+		String password = request.getParameter(RequestAtribute.USER_PASSWORD);
+		String email = request.getParameter(RequestAtribute.EMAIL);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();

@@ -1,7 +1,8 @@
 package by.epam.ts.bean;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Comparator;
 
 public class Treatment implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,27 +11,36 @@ public class Treatment implements Serializable {
 	private String idPatient;
 	private String treatmentType;
 	private String treatmentName;
+	private String doctorId;
 	private String doctorSurname;
 	private String doctorName;
-	private Date dateBeginning;
-	private Date dateFinishing;
+	private LocalDate dateBeginning;
+	private LocalDate dateFinishing;
 	private boolean consent;
 
 	public Treatment() {
 	}
 
-	public Treatment(int idAppointment, String idPatient, String treatmentType, String treatmentName,
-			String doctorSurname, String doctorName, Date dateBeggining, Date dateFinishing, boolean consent) {
+	public Treatment(String idPatient, String treatmentType, String treatmentName, String doctorId,
+			LocalDate dateBeginning, LocalDate dateFinishing, boolean consent) {
 
-		this.idAppointment = idAppointment;
 		this.idPatient = idPatient;
 		this.treatmentType = treatmentType;
 		this.treatmentName = treatmentName;
-		this.doctorSurname = doctorSurname;
-		this.doctorName = doctorName;
-		this.dateBeginning = dateBeggining;
+		this.doctorId = doctorId;
+		this.dateBeginning = dateBeginning;
 		this.dateFinishing = dateFinishing;
 		this.consent = consent;
+	}
+
+	public Treatment(int idAppointment, String idPatient, String treatmentType, String treatmentName, String doctorId,
+			String doctorSurname, String doctorName, LocalDate dateBeginning, LocalDate dateFinishing,
+			boolean consent) {
+
+		this(idPatient, treatmentType, treatmentName, doctorId, dateBeginning, dateFinishing, consent);
+		this.idAppointment = idAppointment;
+		this.doctorSurname = doctorSurname;
+		this.doctorName = doctorName;
 	}
 
 	public int getIdAppointment() {
@@ -65,6 +75,14 @@ public class Treatment implements Serializable {
 		this.treatmentName = treatmentName;
 	}
 
+	public String getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(String doctorId) {
+		this.doctorId = doctorId;
+	}
+
 	public String getDoctorSurname() {
 		return doctorSurname;
 	}
@@ -81,19 +99,19 @@ public class Treatment implements Serializable {
 		this.doctorName = doctorName;
 	}
 
-	public Date getDateBeginning() {
+	public LocalDate getDateBeginning() {
 		return dateBeginning;
 	}
 
-	public void setDateBeginning(Date dateBeginning) {
+	public void setDateBeginning(LocalDate dateBeginning) {
 		this.dateBeginning = dateBeginning;
 	}
 
-	public Date getDateFinishing() {
+	public LocalDate getDateFinishing() {
 		return dateFinishing;
 	}
 
-	public void setDateFinishing(Date dateFinishing) {
+	public void setDateFinishing(LocalDate dateFinishing) {
 		this.dateFinishing = dateFinishing;
 	}
 
@@ -104,7 +122,16 @@ public class Treatment implements Serializable {
 	public void setConsent(boolean consent) {
 		this.consent = consent;
 	}
-
+	
+	public static Comparator<Treatment> treatmentDateComparator = new Comparator<Treatment>() {
+		@Override
+		public int compare(Treatment o1, Treatment o2) {
+			LocalDate date1 = o1.getDateBeginning();
+			LocalDate date2 = o2.getDateBeginning();
+			return date2.compareTo(date1);
+		}
+	};
+ 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -114,6 +141,7 @@ public class Treatment implements Serializable {
 		result = prime * result + ((dateBeginning == null) ? 0 : dateBeginning.hashCode());
 		result = prime * result + ((dateFinishing == null) ? 0 : dateFinishing.hashCode());
 		result = prime * result + idAppointment;
+		result = prime * result + ((doctorId == null) ? 0 : doctorId.hashCode());
 		result = prime * result + ((doctorSurname == null) ? 0 : doctorSurname.hashCode());
 		result = prime * result + ((doctorName == null) ? 0 : doctorName.hashCode());
 		result = prime * result + ((treatmentName == null) ? 0 : treatmentName.hashCode());
@@ -136,6 +164,7 @@ public class Treatment implements Serializable {
 						|| (treatmentType != null && treatmentType.equals(other.getTreatmentType())))
 				&& (treatmentName == other.treatmentName
 						|| (treatmentName != null && treatmentName.equals(other.getTreatmentName())))
+				&& (doctorId == other.doctorId || (doctorId != null && doctorId.equals(other.getDoctorId())))
 				&& (doctorSurname == other.doctorSurname
 						&& (doctorSurname != null && doctorSurname.equals(other.getDoctorSurname())))
 				&& (doctorName == other.doctorName || (doctorName != null && doctorName.equals(other.getDoctorName())))
@@ -149,9 +178,9 @@ public class Treatment implements Serializable {
 	@Override
 	public String toString() {
 		return getClass().getName() + "@[idAppointment=" + idAppointment + ", treatmentType=" + treatmentType
-				+ ", treatmentName=" + treatmentName + ", doctorSurname=" + doctorSurname + ", doctorName = "
-				+ doctorName + ", dateBeggining=" + dateBeginning + ", dateFinishing=" + dateFinishing + ", consent="
-				+ consent + "]";
+				+ ", treatmentName=" + treatmentName + ", doctorId=" + doctorId + ", doctorSurname=" + doctorSurname
+				+ ", doctorName = " + doctorName + ", dateBeggining=" + dateBeginning.toString() + ", dateFinishing="
+				+ dateFinishing.toString() + ", consent=" + consent + "]";
 	}
 
 }

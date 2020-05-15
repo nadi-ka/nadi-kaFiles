@@ -28,7 +28,7 @@ public class RegisterController extends HttpServlet {
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 	
-		CommandProvider provider = CommandProvider.getInstanse();
+		CommandProvider provider = CommandProvider.getInstance();
 		Command command = provider.defineCommand(request);
 		command.execute(request,response);
 

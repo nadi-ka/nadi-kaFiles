@@ -1,8 +1,8 @@
 package by.epam.ts.bean;
 
 import java.io.Serializable;
-import java.sql.Date;
-
+import java.time.LocalDate;
+import java.util.List;
 
 public class Patient implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,18 +10,27 @@ public class Patient implements Serializable {
 	private String id;
 	private String surname;
 	private String name;
-	private Date dateOfBirth;
+	private LocalDate dateOfBirth;
 	private String email;
+	private List<PatientDiagnosis> diagnosisList;
+	private List<Treatment> prescriptions;
 
 	public Patient() {
 	}
 
-	public Patient(String id, String surname, String name, Date dateOfBirth, String email) {
+	public Patient(String id, String surname, String name, LocalDate dateOfBirth, String email) {
 		this.id = id;
 		this.surname = surname;
 		this.name = name;
 		this.dateOfBirth = dateOfBirth;
 		this.email = email;
+	}
+
+	public Patient(String id, String surname, String name, LocalDate dateOfBirth, String email,
+			List<PatientDiagnosis> diagnosisList, List<Treatment> prescriptions) {
+		this(id, surname, name, dateOfBirth, email);
+		this.diagnosisList = diagnosisList;
+		this.prescriptions = prescriptions;
 	}
 
 	public String getId() {
@@ -48,11 +57,11 @@ public class Patient implements Serializable {
 		this.name = name;
 	}
 
-	public Date getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -64,14 +73,32 @@ public class Patient implements Serializable {
 		this.email = email;
 	}
 
+	public List<PatientDiagnosis> getDiagnosisList() {
+		return diagnosisList;
+	}
+
+	public void setDiagnosisList(List<PatientDiagnosis> diagnosisList) {
+		this.diagnosisList = diagnosisList;
+	}
+
+	public List<Treatment> getPrescriptions() {
+		return prescriptions;
+	}
+
+	public void setPrescriptions(List<Treatment> prescriptions) {
+		this.prescriptions = prescriptions;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((dateOfBirth == null ? 0 : dateOfBirth.hashCode()));
+		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
+		result = prime * result + ((diagnosisList == null) ? 0 : diagnosisList.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((prescriptions == null) ? 0 : prescriptions.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
 		return result;
 	}
@@ -91,7 +118,11 @@ public class Patient implements Serializable {
 				&& (name == other.name || (name != null && name.equals(other.getName())))
 				&& (dateOfBirth == other.dateOfBirth
 						|| (dateOfBirth != null && dateOfBirth.equals(other.getDateOfBirth())))
-				&& (email == other.email || (email != null && email.equals(other.getEmail())));
+				&& (email == other.email || (email != null && email.equals(other.getEmail())))
+				&& (prescriptions == other.prescriptions
+						|| (prescriptions != null && prescriptions.equals(other.getPrescriptions())))
+				&& (diagnosisList == other.diagnosisList
+						|| (diagnosisList != null && diagnosisList.equals(other.getDiagnosisList())));
 	}
 
 	@Override

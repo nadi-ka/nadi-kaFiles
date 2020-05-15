@@ -2,6 +2,9 @@ package by.epam.ts.bean;
 
 import java.io.Serializable;
 
+import by.epam.ts.bean.role.UserRole;
+
+
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -9,13 +12,13 @@ public class User implements Serializable {
 	private String id;
 	private String login;
 	private String password;
-	private int role;
+	private UserRole role;
 	private boolean userStatus;
 
 	public User() {
 	}
 
-	public User(String id, String login, int role, boolean userStatus) {
+	public User(String id, String login, UserRole role, boolean userStatus) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -23,7 +26,7 @@ public class User implements Serializable {
 		this.userStatus = userStatus;
 	}
 
-	public User(String id, String login, String password, int role, boolean userStatus) {
+	public User(String id, String login, String password, UserRole role, boolean userStatus) {
 		this(id, login, role, userStatus);
 		this.password = password;
 	}
@@ -52,11 +55,11 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public int getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 
-	public void setRole(int role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 
@@ -78,7 +81,7 @@ public class User implements Serializable {
 		}
 		User user = (User) object;
 
-		return role == user.role && userStatus == user.userStatus
+		return userStatus == user.userStatus && role == user.role
 				&& (id == user.id || (id != null && id.equals(user.getId())))
 				&& (login == user.login || (login != null && login.equals(user.getLogin())))
 				&& (password == user.password || (password != null && password.equals(user.getPassword())));
@@ -91,7 +94,7 @@ public class User implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + role;
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		result = prime * result + (userStatus ? 1 : 0);
 		return result;
 	}
@@ -99,7 +102,7 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return getClass().getName() + "@[id = " + id + ", login = " + login + ", password = " + password + ", role = "
-				+ role + ", userstatus = " + userStatus + "]";
+				+ role.toString() + ", userstatus = " + userStatus + "]";
 	}
 
 }

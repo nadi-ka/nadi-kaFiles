@@ -29,8 +29,6 @@ public final class ShowTreatmentCommand implements Command {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String page = null;
-		
-		log.log(Level.INFO, "From ShowTreat");
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
@@ -39,18 +37,15 @@ public final class ShowTreatmentCommand implements Command {
 		String userId = (String) session.getAttribute(SessionAtribute.USER_ID);
 
 		if (userId == null) {
-			log.log(Level.INFO, "From ShowTreat. UserId==null");
 			String message = MessageManager.getProperty("local.main.denied");
 			request.setAttribute(RequestAtribute.ACCESS_DENIED, message);
 			page = NavigationManager.getProperty("path.page.main");
 			goForward(request, response, page);
 
 		} else {
-			log.log(Level.INFO, "From ShowTreat. Else");
 			List<Treatment> prescriptions = new ArrayList<Treatment>();
 			try {
 				prescriptions = userService.getPatientsTreatmentById(userId);
-				log.info("After prescriptions = userService.getPatientsTreatmentById(userId); Prescr.isEmpty? " + prescriptions.isEmpty());
 			} catch (ServiceException ex) {
 				log.log(Level.ERROR, "Error during calling method getPatientsTreatmentById() from ShowTreatmentCommand",
 						ex);
@@ -62,7 +57,6 @@ public final class ShowTreatmentCommand implements Command {
 			if (!prescriptions.isEmpty()) {
 				request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
 				page = NavigationManager.getProperty("path.page.treatment");
-				log.info("page=" + page);
 				goForward(request, response, page);
 
 			} else {

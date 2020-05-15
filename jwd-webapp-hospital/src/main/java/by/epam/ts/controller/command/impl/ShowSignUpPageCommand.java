@@ -19,8 +19,6 @@ public final class ShowSignUpPageCommand implements Command{
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		log.info("ShowSignUpPageCommand. Message=" + request.getParameter("message"));
-		
 		String page = NavigationManager.getProperty("path.page.signUp");
 		goForward(request, response, page);
 		

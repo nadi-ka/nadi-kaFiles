@@ -7,18 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import by.epam.ts.controller.command.Command;
-import by.epam.ts.controller.constant_attribute.RequestAtribute;
-import by.epam.ts.controller.manager.MessageManager;
-import by.epam.ts.controller.manager.NavigationManager;
 
 public final class WrongRequestCommand implements Command{
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String message = MessageManager.getProperty("local.wrongcommand");
-		request.setAttribute(RequestAtribute.WRONG_ACTION, message);
-		String page = NavigationManager.getProperty("path.page.error");
-		response.sendRedirect(page);
+		
+		response.sendRedirect(
+				request.getContextPath() + "/register?command=show_error_page&message=wrong_request");
 		
 	}
 

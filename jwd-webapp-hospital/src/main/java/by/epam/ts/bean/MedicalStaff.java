@@ -2,18 +2,21 @@ package by.epam.ts.bean;
 
 import java.io.Serializable;
 
-public class MedicalStaff implements Serializable{
+import by.epam.ts.bean.specialty.Specialty;
+
+public class MedicalStaff implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String id;
-	private String specialty;
+	private Specialty specialty;
 	private String surname;
 	private String name;
 	private String email;
-	
-	public MedicalStaff() {}
 
-	public MedicalStaff(String id, String specialty, String surname, String name, String email) {
+	public MedicalStaff() {
+	}
+
+	public MedicalStaff(String id, Specialty specialty, String surname, String name, String email) {
 		super();
 		this.id = id;
 		this.specialty = specialty;
@@ -30,11 +33,11 @@ public class MedicalStaff implements Serializable{
 		this.id = id;
 	}
 
-	public String getSpecialty() {
+	public Specialty getSpecialty() {
 		return specialty;
 	}
 
-	public void setSpecialty(String specialty) {
+	public void setSpecialty(Specialty specialty) {
 		this.specialty = specialty;
 	}
 
@@ -83,22 +86,16 @@ public class MedicalStaff implements Serializable{
 			return false;
 		}
 		MedicalStaff other = (MedicalStaff) obj;
-		return (id == other.id || (id != null && id.equals(other.getId()))) &&
-				(surname == other.surname || 
-				(surname != null && surname.equals(other.getSurname()))) &&
-				(name == other.name || (name != null && name.equals(other.getName()))) &&
-				(specialty == other.specialty || 
-				(specialty != null && specialty.equals(other.getSpecialty()))) &&
-				(email == other.email || (email != null && email.equals(other.getEmail())));
+		return specialty == other.specialty && (id == other.id || (id != null && id.equals(other.getId())))
+				&& (surname == other.surname || (surname != null && surname.equals(other.getSurname())))
+				&& (name == other.name || (name != null && name.equals(other.getName())))
+				&& (email == other.email || (email != null && email.equals(other.getEmail())));
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "@[id = " + id + 
-				", specialty = " + specialty + 
-				", surname = " + surname + 
-				", name = " + name + 
-				", email = " + email + "]";
+		return getClass().getName() + "@[id = " + id + ", specialty = " + specialty.toString() + ", surname = " + surname
+				+ ", name = " + name + ", email = " + email + "]";
 	}
-	
+
 }

@@ -9,16 +9,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.epam.ts.bean.Diagnosis;
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
+import by.epam.ts.bean.PatientDiagnosis;
 import by.epam.ts.bean.Treatment;
 import by.epam.ts.bean.User;
+import by.epam.ts.bean.role.UserRole;
+import by.epam.ts.bean.specialty.Specialty;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.pool.ConnectionPool;
@@ -33,11 +36,18 @@ public class UserDaoSQL implements UserDao {
 	private static final String sqlFindStaffByEmail = "SELECT * FROM `medical-staff` WHERE email=(?);";
 	private static final String sqlFindPatientByEmail = "SELECT * FROM patients WHERE email=(?);";
 	private static final String sqlFindUserByLoginPassword = "SELECT * FROM users WHERE login=(?) AND password=(?);";
-	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, `data_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?);";
+	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?);";
+	private static final String sqlFindDiagnosisByPatientId = "SELECT code_diagnosis, is_primary, setting_date, diagnosis.name FROM `id-m2m-code` JOIN diagnosis ON `id-m2m-code`.code_diagnosis=diagnosis.code WHERE id_patient=(?);";
 	private static final String sqlFindLogin = "SELECT login FROM users WHERE login=(?);";
 	private static final String sqlUpdateConsent = "UPDATE treatment SET consent=(?) WHERE id_appointment=(?);";
 	private static final String sqlAddPatient = "INSERT INTO patients VALUES (?,?,?,?,?);";
 	private static final String sqlFindPatientBySurname = "SELECT * FROM patients WHERE surname=(?);";
+	private static final String sqlFindPatientById = "SELECT * FROM patients WHERE id=(?);";
+	private static final String sqlGetAllFromDiagnosis = "SELECT * FROM diagnosis;";
+	private static final String sqlAddDiagnosis = "INSERT INTO diagnosis VALUES (?,?,?);";
+	private static final String sqlAddPatientsDiagnosis = "INSERT INTO `id-m2m-code` VALUES (?,?,?,?);";
+	private static final String sqlAddPatientTreatment = "INSERT INTO treatment (id_patient, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent) VALUES (?,?,?,?,?,?,?);";
+	private static final String sqlAddNewStaff = "INSERT INTO `medical-staff` VALUES (?,?,?,?,?);";
 
 	private static final Logger log = LogManager.getLogger(UserDaoSQL.class);
 
@@ -45,7 +55,7 @@ public class UserDaoSQL implements UserDao {
 		this.connectionPool = connectionPool;
 	}
 
-	public int addUserPatient(User user) throws DaoException {
+	public int createUserPatient(User user) throws DaoException {
 		int insertedRows = 0;
 		Connection connection = null;
 		PreparedStatement signUpPatient = null;
@@ -57,14 +67,13 @@ public class UserDaoSQL implements UserDao {
 			signUpPatient.setString(1, user.getId());
 			signUpPatient.setString(2, user.getLogin());
 			signUpPatient.setString(3, user.getPassword());
-			signUpPatient.setInt(4, user.getRole());
+
+			signUpPatient.setInt(4, user.getRole().getRoleValue());
 			signUpPatient.setBoolean(5, user.isUserStatus());
 			insertedRows = signUpPatient.executeUpdate();
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from  pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during preparing/executing INSERT Statement", ex);
 			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
 		} finally {
 			if (signUpPatient != null) {
@@ -79,7 +88,7 @@ public class UserDaoSQL implements UserDao {
 		return insertedRows;
 	}
 
-	public int addUserStaff(User user) throws DaoException {
+	public int createUserStaff(User user) throws DaoException {
 		int insertedRows = 0;
 		Connection connection = null;
 		PreparedStatement signUpStaff = null;
@@ -90,14 +99,12 @@ public class UserDaoSQL implements UserDao {
 			signUpStaff.setString(1, user.getId());
 			signUpStaff.setString(2, user.getLogin());
 			signUpStaff.setString(3, user.getPassword());
-			signUpStaff.setInt(4, user.getRole());
+			signUpStaff.setInt(4, user.getRole().getRoleValue());
 			signUpStaff.setBoolean(5, user.isUserStatus());
 			insertedRows = signUpStaff.executeUpdate();
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during preparing/executing INSERT Statement", ex);
 			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
 		} finally {
 			if (signUpStaff != null) {
@@ -127,15 +134,14 @@ public class UserDaoSQL implements UserDao {
 			}
 
 			String id = staffResultSet.getString(1);
-			String specialty = staffResultSet.getString(2);
+			String specialtyString = staffResultSet.getString(2);
+			Specialty specialty = Specialty.getSpecialty(specialtyString);
 			String surname = staffResultSet.getString(3);
 			String name = staffResultSet.getString(4);
 			medicalStaff = new MedicalStaff(id, specialty, surname, name, email);
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
 			if (findStaffByEmail != null) {
@@ -169,12 +175,10 @@ public class UserDaoSQL implements UserDao {
 			String surname = patientResultSet.getString("surname");
 			String name = patientResultSet.getString("name");
 			Date dateOfBirth = patientResultSet.getDate("birth_date");
-			patient = new Patient(id, surname, name, dateOfBirth, email);
+			patient = new Patient(id, surname, name, dateOfBirth.toLocalDate(), email);
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from  pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
 			if (findPatientByEmail != null) {
@@ -213,15 +217,14 @@ public class UserDaoSQL implements UserDao {
 				idUser = idPatient;
 			}
 			int role = userResultSet.getInt(6);
+			UserRole userRole = UserRole.getUserRole(role);
 			boolean userStatus = userResultSet.getBoolean(7);
 
-			user = new User(idUser, login, role, userStatus);
+			user = new User(idUser, login, userRole, userStatus);
 
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
 			if (preparedStatement != null) {
@@ -252,21 +255,20 @@ public class UserDaoSQL implements UserDao {
 				int idAppointment = resultSet.getInt("id_appointment");
 				String treatmentType = resultSet.getString("treatment_type");
 				String treatmentName = resultSet.getString("treatment_name");
-				Date dateBeggining = resultSet.getDate("data_begin/holding");
+				String doctorId = resultSet.getString("id_assigned_by");
+				Date dateBeggining = resultSet.getDate("date_begin/holding");
 				Date dateFinishing = resultSet.getDate("date_finish");
 				boolean consent = resultSet.getBoolean("consent");
 				String doctorSurname = resultSet.getString("surname");
 				String doctorName = resultSet.getString("name");
 
-				treatment = new Treatment(idAppointment, id, treatmentType, treatmentName, doctorSurname, doctorName,
-						dateBeggining, dateFinishing, consent);
+				treatment = new Treatment(idAppointment, id, treatmentType, treatmentName, doctorId, doctorSurname,
+						doctorName, dateBeggining.toLocalDate(), dateFinishing.toLocalDate(), consent);
 				prescriptions.add(treatment);
 			}
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
 			if (preparedStatement != null) {
@@ -279,6 +281,45 @@ public class UserDaoSQL implements UserDao {
 			connectionPool.releaseConnection(connection);
 		}
 		return prescriptions;
+	}
+
+	public List<PatientDiagnosis> findPatientsDiagnosisById(String id) throws DaoException {
+		Connection connection = null;
+		PatientDiagnosis patientDiagnosis = null;
+		List<PatientDiagnosis> diagnosisList = new ArrayList<PatientDiagnosis>();
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlFindDiagnosisByPatientId);
+			preparedStatement.setString(1, id);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				String codeDiagnosis = resultSet.getString("code_diagnosis");
+				String nameDiagnosis = resultSet.getString("name");
+				boolean isPrimary = resultSet.getBoolean("is_primary");
+				Date settingDate = resultSet.getDate("setting_date");
+
+				patientDiagnosis = new PatientDiagnosis(id, codeDiagnosis, isPrimary, settingDate.toLocalDate(),
+						nameDiagnosis);
+				diagnosisList.add(patientDiagnosis);
+			}
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during reading from DB.", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return diagnosisList;
 	}
 
 	public String findLogin(String login) throws DaoException {
@@ -299,10 +340,8 @@ public class UserDaoSQL implements UserDao {
 			}
 
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
 			if (preparedStatement != null) {
@@ -337,10 +376,8 @@ public class UserDaoSQL implements UserDao {
 			count = preparedStatement.executeBatch();
 			connection.commit();
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
 			if (preparedStatement != null) {
@@ -355,7 +392,7 @@ public class UserDaoSQL implements UserDao {
 		return count;
 	}
 
-	public int addNewPatient(Patient patient) throws DaoException {
+	public int createNewPatient(Patient patient) throws DaoException {
 		int insertedRows = 0;
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -364,20 +401,17 @@ public class UserDaoSQL implements UserDao {
 			connection = connectionPool.takeConnection();
 
 			preparedStatement = connection.prepareStatement(sqlAddPatient);
-			String id = UUID.randomUUID().toString();
-			preparedStatement.setString(1, id);
+			preparedStatement.setString(1, patient.getId());
 			preparedStatement.setString(2, patient.getSurname());
 			preparedStatement.setString(3, patient.getName());
-			preparedStatement.setDate(4, patient.getDateOfBirth(),Calendar.getInstance());
+			preparedStatement.setDate(4, Date.valueOf(patient.getDateOfBirth()), Calendar.getInstance());
 			preparedStatement.setString(5, patient.getEmail());
 
 			insertedRows = preparedStatement.executeUpdate();
 
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from  pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during preparing/executing INSERT Statement", ex);
 			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
 		} finally {
 			if (preparedStatement != null) {
@@ -410,14 +444,12 @@ public class UserDaoSQL implements UserDao {
 				String name = resultSet.getString("name");
 				Date dateOfBirth = resultSet.getDate("birth_date");
 				String email = resultSet.getString("email");
-				Patient patient = new Patient(id, surname, name, dateOfBirth, email);
+				Patient patient = new Patient(id, surname, name, dateOfBirth.toLocalDate(), email);
 				patients.add(patient);
 			}
 		} catch (ConnectionPoolException ex) {
-			log.log(Level.ERROR, "Error during taking connection from pool", ex);
 			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Error during reading from DB.", ex);
 			throw new DaoException("Error during reading from DB.", ex);
 		} finally {
 			if (preparedStatement != null) {
@@ -431,5 +463,243 @@ public class UserDaoSQL implements UserDao {
 		}
 		return patients;
 	}
-	
+
+	public Patient findPatientById(String id) throws DaoException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		Patient patient = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlFindPatientById);
+			preparedStatement.setString(1, id);
+			resultSet = preparedStatement.executeQuery();
+
+			if (!resultSet.next()) {
+				return patient;
+			}
+			String surname = resultSet.getString("surname");
+			String name = resultSet.getString("name");
+			Date dateOfBirth = resultSet.getDate("birth_date");
+			String email = resultSet.getString("email");
+			patient = new Patient(id, surname, name, dateOfBirth.toLocalDate(), email);
+
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during reading from DB.", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return patient;
+	}
+
+	public List<Diagnosis> readAllDiagnosis() throws DaoException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Diagnosis> diagnosisList = new ArrayList<Diagnosis>();
+
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlGetAllFromDiagnosis);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				String codeByICD = resultSet.getString("code");
+				String diseaseName = resultSet.getString("name");
+				int averageBedDays = resultSet.getInt("bed_days");
+				Diagnosis diagnosis = new Diagnosis(codeByICD, diseaseName, averageBedDays);
+				diagnosisList.add(diagnosis);
+			}
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during reading from DB.", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return diagnosisList;
+
+	}
+
+	public int createNewDiagnosis(Diagnosis diagnosis) throws DaoException {
+		int insertedRows = 0;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlAddDiagnosis);
+			preparedStatement.setString(1, diagnosis.getCodeByICD());
+			preparedStatement.setString(2, diagnosis.getDiseaseName());
+			int averageBedDays = diagnosis.getAverageBedDays();
+			if (averageBedDays != 0) {
+				preparedStatement.setInt(3, averageBedDays);
+			} else {
+				preparedStatement.setInt(3, 0);
+			}
+			insertedRows = preparedStatement.executeUpdate();
+
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
+	public int[] createPatientDiagnosis(List<PatientDiagnosis> diagnosisList) throws DaoException {
+		int[] insertedRows;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+
+			preparedStatement = connection.prepareStatement(sqlAddPatientsDiagnosis);
+			connection.setAutoCommit(false);
+			for (PatientDiagnosis diagnosis : diagnosisList) {
+				preparedStatement.setString(1, diagnosis.getIdPatient());
+				preparedStatement.setString(2, diagnosis.getCodeByICD());
+				preparedStatement.setBoolean(3, diagnosis.isPrimary());
+				preparedStatement.setDate(4, Date.valueOf(diagnosis.getSettingDate()), Calendar.getInstance());
+				preparedStatement.addBatch();
+			}
+
+			insertedRows = preparedStatement.executeBatch();
+			connection.commit();
+
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
+	public int createPatientTreatment(Treatment treatment) throws DaoException {
+
+		int insertedRows;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlAddPatientTreatment);
+
+			preparedStatement.setString(1, treatment.getIdPatient());
+			preparedStatement.setString(2, treatment.getTreatmentType());
+			preparedStatement.setString(3, treatment.getTreatmentName());
+			preparedStatement.setString(4, treatment.getDoctorId());
+			preparedStatement.setDate(5, Date.valueOf(treatment.getDateBeginning()), Calendar.getInstance());
+			preparedStatement.setDate(6, Date.valueOf(treatment.getDateFinishing()), Calendar.getInstance());
+			preparedStatement.setBoolean(7, treatment.isConsent());
+			preparedStatement.addBatch();
+
+			insertedRows = preparedStatement.executeUpdate();
+
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
+	public int createNewStaff(MedicalStaff medicalStaff) throws DaoException {
+		int insertedRows;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlAddNewStaff);
+			preparedStatement.setString(1, medicalStaff.getId());
+			preparedStatement.setString(2, medicalStaff.getSpecialty().getSpecialtyValue());
+			preparedStatement.setString(3, medicalStaff.getSurname());
+			preparedStatement.setString(4, medicalStaff.getName());
+			preparedStatement.setString(5, medicalStaff.getEmail());
+
+			insertedRows = preparedStatement.executeUpdate();
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
+//	public static void main(String[] args) {
+//		ConnectionPool connectionPool = new ConnectionPool();
+//
+//		try {
+//			connectionPool.initializePoolData();
+//			UserDaoSQL userDaoSQL = new UserDaoSQL(connectionPool);
+//			
+//			MedicalStaff staff = new MedicalStaff("77776d07-87c7-4afb-8397-1b20ee624488", "врач", "Зубриц", "Алексай", "zubr@gmail.com");
+//			int rows = userDaoSQL.addNewStaff(staff);
+//			System.out.println(rows);
+//			
+//		} catch (ConnectionPoolException e) {
+//			e.printStackTrace();
+//
+//		} catch (DaoException e) {
+//			e.printStackTrace();
+//		} finally {
+//			connectionPool.dispose();
+//		}
+//
+//	}
 }
