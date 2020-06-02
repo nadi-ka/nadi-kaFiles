@@ -25,15 +25,16 @@ public class ChangeLanguageCommand implements Command {
 		String local = request.getParameter(SessionAtribute.LOCALIZATION);
 		session.setAttribute(SessionAtribute.LOCALIZATION, local);
 
-		String redirectCommand = (String) request.getParameter(RequestAtribute.REDIRECT_COMMAND);
 		String queryString = (String) request.getParameter(RequestAtribute.QUERY_STRING);
-		log.info("Change language command. RedirectCommand=" + redirectCommand);
-
-		if (redirectCommand != null) {
-			response.sendRedirect(request.getContextPath() + "/font?command=" + redirectCommand + "&"
-					+ RequestAtribute.QUERY_STRING + queryString);
+		if (queryString == null || queryString.isEmpty()) {
+			String redirectCommand = (String) request.getParameter(RequestAtribute.REDIRECT_COMMAND);
+			String patientId = (String) request.getParameter(RequestAtribute.PATIENT_ID);
+			String message = (String) request.getParameter(RequestAtribute.MESSAGE);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + redirectCommand + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
+					+ RequestAtribute.MESSAGE + "=" + message);
 		} else {
-			response.sendRedirect(request.getContextPath());
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + queryString);
 		}
 
 	}

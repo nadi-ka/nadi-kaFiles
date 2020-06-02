@@ -3,9 +3,10 @@ package by.epam.ts.bean.role;
 public enum UserRole {
 
 	ADMINISTRATOR(1), 
-	STAFF(2), 
-	PATIENT(3);
-
+	DOCTOR(2), 
+	PATIENT(3),
+	NURSE(4);
+	
 	private final int roleValue;
 
 	private UserRole(int roleValue) {

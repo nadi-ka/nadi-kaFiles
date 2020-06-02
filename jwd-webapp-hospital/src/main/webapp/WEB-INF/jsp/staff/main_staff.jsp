@@ -25,6 +25,7 @@
 	<fmt:message bundle="${loc}" key="local.staff.main.patients_data" var="patients_data" />
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
 	<fmt:message bundle="${loc}" key="local.staff.main.not_found" var="not_found" />
+	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	
 	<fmt:message bundle="${loc}" key="local.staff.main.button.add" var="submit_btn" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
@@ -34,35 +35,48 @@
 
 <body>
 
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
+
     <!-- Change language buttons -->
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="get_staff_main_page"/>  
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="get_staff_main_page"/> 
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="get_staff_main_page"/> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="get_staff_main_page"/>  
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
 	<!-- Navigation menu -->
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  		
-  		<form class="form-inline" action="font" method="post">
-  			<input type="hidden" name="command" value="get_staff_data_page" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${add_staff}</button>
-        </form>
+	
+		<!-- Next button will be visible only for user-administrator -->
+	
+		<c:if test="${sessionScope.role == 'ADMINISTRATOR'}">	
+  			<form class="form-inline" action="font" method="GET">
+  				<input type="hidden" name="command" value="get_staff_data_page" />
+  				<button type="submit" class="btn btn-sm btn-outline-secondary">${add_staff}</button>
+        	</form>
+    	</c:if>
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0">
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
         	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_string" 
-      			placeholder="Surname" aria-label="Search the patient">
+      		<input class="form-control mr-sm-2" type="search" name="query_search" 
+      			placeholder="${surname}" aria-label="Search the patient">
       		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
     	</form>
 
@@ -78,41 +92,41 @@
 	
 	<!-- Form for adding new patient -->
 	
-	<h3>${add_patient}</h3>
+	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">
 	
-	<form name="patients_data" action="font" method="POST">
-	<input type="hidden" name="command" value="add_new_patient" />
-	<p><b>${patients_data}</b></p>
+		<form name="patients_data" action="font" method="POST">
+			<input type="hidden" name="command" value="add_new_patient" />
+			<p><b>${patients_data}</b></p>
 	
-		<div class="form-group">
-    		<label for="surname">${surname}</label>
-    		<input type="text" class="form-control" style="width: 60%" name="surname" value="">
-  		</div>
+				<div class="form-group">
+    				<label for="surname">${surname}:</label>
+    				<input type="text" name="surname" value="">
+  				</div>
   		
-  		<div class="form-group">
-    		<label for="name">${name}</label>
-    		<input type="text" class="form-control" style="width: 60%" name="name" value="">
-  		</div>
+  				<div class="form-group">
+    				<label for="name">${name}</label>
+    				<input type="text" name="name" value="">
+  				</div>
   		
-  		<div class="form-group">
-  			<label for="date">${date_of_birth}</label>
-  			<input type="date" name="date_of_birth" value="" >
-		</div>
+  				<div class="form-group">
+  					<label for="date">${date_of_birth}</label>
+  					<input type="date" name="date_of_birth" value="" >
+				</div>
 	
-  		<div class="form-group">
-  			<label for="email">${email}</label>
-    		<input type="email" class="form-control" style="width: 60%" name="email" value="" >
-  		</div>
+  				<div class="form-group">
+  					<label for="email">${email}</label>
+    				<input type="email" name="email" value="" >
+  				</div>
   		
-  		<c:if test="${param.message == 'error_data'}">
-			<div class="alert alert-danger" role="alert">
-				<c:out value="${error_data}"/>
-			</div>
-		</c:if>
+  				<c:if test="${param.message == 'error_data'}">
+					<div class="alert alert-danger" role="alert">
+						<c:out value="${error_data}"/>
+					</div>
+				</c:if>
 
-		<button type="submit" class="btn btn-primary" name="btn_signup">${submit_btn}</button>
-
-	</form>
+			<button type="submit" class="btn btn-primary" name="btn_signup">${submit_btn}</button>
+		</form>
+	</div>
   		
 </body>
 </html>

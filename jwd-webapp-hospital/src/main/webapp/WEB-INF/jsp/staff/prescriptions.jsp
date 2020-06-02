@@ -17,8 +17,11 @@
 	
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_btn"/>
 	<fmt:message bundle="${loc}" key="local.staff.main.button.new_patient" var="add_patient" />
+	<fmt:message bundle="${loc}" key="local.staff.main.button.make_diagnosis" var="make_diagnosis" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.nav_hospitalization" var="set_hospitalization" />
+	<fmt:message bundle="${loc}" key="local.staff.main.button.get_current" var="get_current_patient" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.perform_treatment" var="perform_treatment" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
-	
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.make_treatment" var="make_treatment" />
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.type" var="treatment_type" />
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.name" var="treatment_name" />
@@ -30,6 +33,8 @@
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.not_obvious" var="field_not_obvious" />
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.treatment_successfully" var="treatment_successfully"/>
+	<fmt:message bundle="${loc}" key="local.surname" var="surname" />
+	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
@@ -37,37 +42,72 @@
 </head>
 <body>
 
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
+
 	<!-- Change language buttons -->
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="get_prescriptions_page"/>
-		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>    
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>  
+		<input type="hidden" name="redirect_command" value="get_prescriptions_page"/>     
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="get_prescriptions_page"/>
-		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>   
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>  
+		<input type="hidden" name="redirect_command" value="get_prescriptions_page"/>    
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
+	
+	<c:out value="${requestScope['javax.servlet.forward.query_string']}"/>
 	
 	<!-- Navigation menu -->
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
   		
-  		<form class="form-inline" action="font" method="post">
+  		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${add_patient}</button>
+        </form>
+        
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_hospitalization_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${set_hospitalization}</button>
+        </form>
+        
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_diagnosis_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${make_diagnosis}</button>
+        </form>
+        
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_current_patient_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
+        </form>
+        
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_treat_performance_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${perform_treatment}</button>
         </form>      
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0">
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
         	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_string" 
-      			placeholder="Surname" aria-label="Search the patient">
+      		<input class="form-control mr-sm-2" type="search" name="query_search" 
+      			placeholder="${surname}" aria-label="Search the patient">
       		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
     	</form>
 
@@ -77,7 +117,7 @@
 	
 	<c:if test="${param.message == 'treatment_added_successfully'}">
 		<div class="alert alert-primary" role="alert">
-			<c:out value="${treatment_successfully}"/>
+			<c:out value="${treatment_successfully} ${param.treatment_name}"/>
 		</div>
 	</c:if>
 	

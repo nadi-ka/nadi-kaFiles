@@ -14,12 +14,16 @@
 	
 	<fmt:setLocale value="${sessionScope.local}" />
 	<fmt:setBundle basename="localization.locale" var="loc" />
+	
 	<fmt:message bundle="${loc}" key="local.staff.patient_data.added_successfully" var="added_successfully"/>
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.diagnosis_successfully" var="diagnosis_successfully"/>
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.hospit_successfully" var="hospit_successfully"/>
 	<fmt:message bundle="${loc}" key="local.date_of_birth" var="date_of_birth"/>
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.data" var="current_patient"/>
 	<fmt:message bundle="${loc}" key="local.staff.main.button.new_patient" var="add_patient" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.make_diagnosis" var="make_diagnosis" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.prescribe_treatment" var="prescribe_treatment" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.perform_treatment" var="perform_treatment" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.treatment" var="treatment" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.date_begin" var="date_begin" />
@@ -32,6 +36,13 @@
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.treatment" var="treatment_heading" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.setting_date" var="setting_date" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.is_primary" var="is_primary" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.hospitalization" var="hospitalization" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.med_history" var="medical_history_num" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.entry_date" var="entry_date" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.discharge_date" var="discharge_date" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.nav_hospitalization" var="set_hospitalization" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.no_current_treat" var="no_current_treatment" />
+	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
@@ -39,12 +50,18 @@
 </head>
 <body>
 
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
+
 	<!-- Change language buttons -->
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="get_current_patient_page"/>
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
@@ -52,37 +69,46 @@
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="get_current_patient_page"/>
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
-	</form>
-	
-	
+	</form>	
 	
 	<!-- Navigation menu -->
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
   		
-  		<form class="form-inline" action="font" method="post">
+  		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${add_patient}</button>
         </form>
         
-        <form class="form-inline" action="font" method="post">
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_hospitalization_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${set_hospitalization}</button>
+        </form>
+        
+        <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_diagnosis_page" />
   			<input type="hidden" name="patient_id" value="${param.patient_id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${make_diagnosis}</button>
         </form>
 
-        <form class="form-inline" action="font" method="post">
+        <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_prescriptions_page" />
   			<input type="hidden" name="patient_id" value="${param.patient_id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${prescribe_treatment}</button>
         </form>
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0">
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_treat_performance_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${perform_treatment}</button>
+        </form>
+        
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
         	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_string" 
+      		<input class="form-control mr-sm-2" type="search" name="query_search" 
       			placeholder="Surname" aria-label="Search the patient">
       		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
     	</form>
@@ -91,28 +117,72 @@
 	
 	<!-- Alerts -->
 	
-	<div class="alert alert-primary" role="alert">
-  		<c:if test="${param.message == 'added_successfully'}">
+  	<c:if test="${param.message == 'added_successfully'}">
+  		<div class="alert alert-primary" role="alert">
 			<c:out value="${added_successfully}"/>
-		</c:if>
-	</div>
+		</div>
+	</c:if>
+	
+	<c:if test="${param.message == 'diagnosis_added_successfully'}">
+		<div class="alert alert-primary" role="alert">
+			<c:out value="${diagnosis_successfully}"/>
+		</div>
+	</c:if>
+	
+	<c:if test="${param.message == 'hospit_added_successfully'}">
+		<div class="alert alert-primary" role="alert">
+			<c:out value="${hospit_successfully}"/>
+		</div>
+	</c:if>
+	
+	<c:if test="${param.message == 'no_current_treatment'}">
+		<div class="alert alert-warning" role="alert">
+			<c:out value="${no_current_treatment}"/>
+		</div>
+	</c:if>		
 	
 	<!-- Displaying of the current patient's data -->
 	
 	<h2>${current_patient}</h2>
-	<ul class="list-group">
 	
 		<!-- personal data -->
-	
-		<li class="list-group-item list-group-item-info">
-			<h3>${patient.surname} ${patient.name}</h3>  
+		
+		<div class="p-3 mb-2 bg-success text-white">${patient.surname} ${patient.name}</div>
 			<ul class="list-group">
-  				<li class="list-group-item">${date_of_birth} ${patient.dateOfBirth}</li>
-  				<li class="list-group-item">${e_mail} ${patient.email}</li>  
+  				<li class="list-group-item list-group-item-light">${date_of_birth} ${patient.dateOfBirth}</li>
+  				<li class="list-group-item list-group-item-light">${e_mail} ${patient.email}</li>  
 			</ul>         	
-		</li>
+		
+		<!-- hospitalizations -->
+		
+		<c:if test="${!empty patient.hospitalizations}">
+		<h3>${hospitalization}</h3>
+		
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col">${medical_history_num}</th>
+					<th scope="col">${entry_date}</th>
+					<th scope="col">${discharge_date}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<c:forEach items="${patient.hospitalizations}" var="hospital">
+					<tr>
+						<th scope="row">${hospital.idMedicalHistory}</th>
+						<td>${hospital.entryDate}</td>	
+						<td>${hospital.dischargeDate}</td>
+					</tr>	
+				</c:forEach>
+			</tbody>
+		</table>
+		
+		</c:if>
 		
 		<!-- diagnosis -->
+		
+		<ul class="list-group">
 		
 		<c:if test="${!empty patient.diagnosisList}">
 		
@@ -138,7 +208,7 @@
 		
 		<c:forEach items="${patient.prescriptions}" var="treatment">
 			<li class="list-group-item list-group-item-secondary">
-				${treatment_heading} ${treatment.treatmentType} ${treatment.treatmentName}
+				${treatment_heading} ${treatment.treatmentType} - ${treatment.treatmentName}
 				<ul class="list-group">
   					<li class="list-group-item">${date_begin} ${treatment.dateBeginning}</li>
   					<li class="list-group-item">${date_end} ${treatment.dateFinishing}</li>

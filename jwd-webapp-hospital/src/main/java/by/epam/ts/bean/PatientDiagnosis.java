@@ -22,8 +22,9 @@ public class PatientDiagnosis implements Serializable {
 		this.primary = primary;
 		this.settingDate = settingDate;
 	}
-	
-	public PatientDiagnosis(String idPatient, String codeByICD, boolean isPrimary, LocalDate settingDate, String diagnosisName) {
+
+	public PatientDiagnosis(String idPatient, String codeByICD, boolean isPrimary, LocalDate settingDate,
+			String diagnosisName) {
 		this(idPatient, codeByICD, isPrimary, settingDate);
 		this.diagnosisName = diagnosisName;
 	}
@@ -59,22 +60,22 @@ public class PatientDiagnosis implements Serializable {
 	public void setSettingDate(LocalDate settingDate) {
 		this.settingDate = settingDate;
 	}
-	
-	public String getDiagnosisName () {
+
+	public String getDiagnosisName() {
 		return diagnosisName;
 	}
-	
+
 	public void setDiagnosisName(String diagnosisName) {
 		this.diagnosisName = diagnosisName;
 	}
-	
+
 	public static Comparator<PatientDiagnosis> primaryDiagnosisComparator = new Comparator<PatientDiagnosis>() {
 		@Override
 		public int compare(PatientDiagnosis o1, PatientDiagnosis o2) {
 			return Boolean.compare(o2.isPrimary(), o1.isPrimary());
 		}
 	};
-	
+
 	public static Comparator<PatientDiagnosis> diagnosisDateComparator = new Comparator<PatientDiagnosis>() {
 		@Override
 		public int compare(PatientDiagnosis o1, PatientDiagnosis o2) {
@@ -145,7 +146,7 @@ public class PatientDiagnosis implements Serializable {
 	@Override
 	public String toString() {
 		return "PatientDiagnosis [codeByICD=" + codeByICD + ", idPatient=" + idPatient + ", primary=" + primary
-				+ ", settingDate=" + settingDate + ",diagnosisName=" + diagnosisName + "]";
+				+ ", settingDate=" + settingDate + ", diagnosisName=" + diagnosisName + "]";
 	}
 
 }

@@ -12,13 +12,10 @@ public final class RequestAtribute {
 	public final static String NAME = "name";
 	public final static String EMAIL = "email";
 	public final static String DATE_OF_BIRTH = "date_of_birth";
-	public final static String ACCESS_DENIED = "access_denied";
 	public final static String DATA_UNAVAILABLE = "data_unavailable";
 	public final static String ERROR_DATA = "error_data";
-	public final static String TECHNICAL_ERROR = "technical_error";
-	public final static String WRONG_ACTION = "wrong_action";
+	public final static String INVALID_PARAMETERS = "invalid_parameters";
 	public final static String SUCCESSFUL_REGISTRATION = "successful_registration";
-	public final static String SUCCESSFUL_LOGOUT = "successful_logout";
 	public final static String SUCCESSFUL_PROCEDURE = "successful_procedure";
 	public final static String PRESCRIPTIONS = "prescriptions";
 	public final static String REDIRECT_COMMAND = "redirect_command";
@@ -42,7 +39,12 @@ public final class RequestAtribute {
 	public final static String CONSENT = "consent";
 	public final static String STAFF_ID = "staff_id";
 	public final static String SPECIALTY = "specialty";
+	public final static String MEDICAL_STAFF = "medical_staff";
+	public final static String QUERY_SEARCH = "query_search";
+	public final static String HOSPITALIZATION = "hospitalization";
+	public final static String HOSPITALIZATION_LIST = "hospitalizations";
+	public final static String ID_MEDICAL_HYSTORY = "id_history";
+	public final static String ID_APPOINTMENT = "id_appointment";
+	public final static String TREATMENT_STATUS = "status";
 	
-	
-
 }

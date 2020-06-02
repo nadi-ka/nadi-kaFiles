@@ -7,15 +7,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import by.epam.ts.controller.command.Command;
+import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
+import by.epam.ts.controller.constant_attribute.RequestMessage;
 
 public final class LogoutCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getSession().invalidate();
-		request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.SUCCESSFUL_LOGOUT);
-        response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=successful_logout");
+        response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER + RequestAtribute.COMMAND
+				+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
+				+ RequestAtribute.MESSAGE + "=" + RequestMessage.SUCCESSFUL_LOGOUT);
 		
 	}
 

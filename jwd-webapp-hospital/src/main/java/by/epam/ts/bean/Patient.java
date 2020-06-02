@@ -14,6 +14,7 @@ public class Patient implements Serializable {
 	private String email;
 	private List<PatientDiagnosis> diagnosisList;
 	private List<Treatment> prescriptions;
+	private List<Hospitalization> hospitalizations;
 
 	public Patient() {
 	}
@@ -27,10 +28,12 @@ public class Patient implements Serializable {
 	}
 
 	public Patient(String id, String surname, String name, LocalDate dateOfBirth, String email,
-			List<PatientDiagnosis> diagnosisList, List<Treatment> prescriptions) {
+			List<PatientDiagnosis> diagnosisList, List<Treatment> prescriptions,
+			List<Hospitalization> hospitalizations) {
 		this(id, surname, name, dateOfBirth, email);
 		this.diagnosisList = diagnosisList;
 		this.prescriptions = prescriptions;
+		this.hospitalizations = hospitalizations;
 	}
 
 	public String getId() {
@@ -89,6 +92,14 @@ public class Patient implements Serializable {
 		this.prescriptions = prescriptions;
 	}
 
+	public List<Hospitalization> getHospitalizations() {
+		return hospitalizations;
+	}
+
+	public void setHospitalizations(List<Hospitalization> hospitalizations) {
+		this.hospitalizations = hospitalizations;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -100,6 +111,7 @@ public class Patient implements Serializable {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((prescriptions == null) ? 0 : prescriptions.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
+		result = prime * result + ((hospitalizations == null) ? 0 : hospitalizations.hashCode());
 		return result;
 	}
 
@@ -122,7 +134,9 @@ public class Patient implements Serializable {
 				&& (prescriptions == other.prescriptions
 						|| (prescriptions != null && prescriptions.equals(other.getPrescriptions())))
 				&& (diagnosisList == other.diagnosisList
-						|| (diagnosisList != null && diagnosisList.equals(other.getDiagnosisList())));
+						|| (diagnosisList != null && diagnosisList.equals(other.getDiagnosisList())))
+				&& (hospitalizations == other.hospitalizations
+						|| (hospitalizations != null && hospitalizations.equals(other.getHospitalizations())));
 	}
 
 	@Override

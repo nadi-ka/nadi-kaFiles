@@ -32,14 +32,14 @@
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="show_patient_main_page"/>  
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/> 
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="show_patient_main_page"/> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	

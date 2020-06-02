@@ -28,6 +28,9 @@
 	<fmt:message bundle="${loc}" key="local.navigate_main" var="navigate_main" />
 	<fmt:message bundle="${loc}" key="local.treatment.button.consent" var="give_consent" />
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_button" />
+	<fmt:message bundle="${loc}" key="local.main.calc_hospitalization" var="calc_hospitalization" />
+	<fmt:message bundle="${loc}" key="local.hospital_plan.nav_main" var="navigate_main" />
+	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
@@ -35,21 +38,48 @@
 
 <body>
 
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
+
+	<!--  Change language buttons -->
+
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="show_treatment"/> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/> 
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="show_treatment"/>  
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/> 
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
+	<!-- Navigation menu -->
+	
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	
+		<form class="form-inline" name="navigate_main" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_patient_main_page" />
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${navigate_main}</button>
+        </form>
+		
+		<form class="form-inline" name="calc_hospitalization" method="GET" action="font">
+			<input type="hidden" name="command" value="get_hospitalization_plan" /> 
+			<button type="submit" class="btn btn-sm btn-outline-secondary">${calc_hospitalization}</button>
+		</form>
+		
+	</nav>
+	
 	<jsp:useBean id="prescriptions" type="java.util.List<by.epam.ts.bean.Treatment>" scope="request"/>
+	
+	<!--  Table 'Treatment' -->
 
 		<table class="table table-bordered">
 			<caption>${treat}</caption>
@@ -88,6 +118,8 @@
 								<strong><c:out value="${indefined}"/></strong>
 							</c:otherwise>
 						</c:choose>
+						
+						<!-- Change consent form -->
 						
 						<form name="consentForm" method="POST" action="register">
 						

@@ -18,6 +18,8 @@
 	<fmt:message bundle="${loc}" key="local.staff.main.button.new_patient" var="add_patient" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.new_staff" var="add_staff" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
+	<fmt:message bundle="${loc}" key="local.staff.data.added_successfully" var="added_successfully"/>
+	<fmt:message bundle="${loc}" key="local.staff.data.was_added" var="added"/>
 	<fmt:message bundle="${loc}" key="local.surname" var="surname" />
 	<fmt:message bundle="${loc}" key="local.name" var="name" />
 	<fmt:message bundle="${loc}" key="local.email" var="email" />
@@ -34,39 +36,72 @@
 </head>
 <body>
 
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
+
     <!-- Change language buttons -->
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
-		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="get_staff_data_page"/>  
+		<input type="hidden" name="local" value="ru" /> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="get_staff_data_page">   
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="get_staff_data_page"/> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="get_staff_data_page">  
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
+	
+	<c:out value="URI: ${requestScope['javax.servlet.forward.query_string']}"/>
 	
 	<!-- Navigation menu -->
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
   		
-  		<form class="form-inline" action="font" method="post">
+  		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${add_patient}</button>
         </form>
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0">
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
         	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_string" 
-      			placeholder="Surname" aria-label="Search the patient">
+      		<input class="form-control mr-sm-2" type="search" name="query_search" 
+      			placeholder="${surname}" aria-label="Search the patient">
       		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
     	</form>
 
 	</nav>
+	
+	<!-- Alerts -->
+	
+	<div class="alert alert-primary" role="alert">
+  		<c:if test="${param.message == 'added_successfully'}">
+			<c:out value="${added_successfully}"/>
+		</c:if>
+	</div>
+	
+	<!-- Displaying of the new staff data -->
+	
+	<h5>${added}</h5>
+
+	<c:if test="${!empty medical_staff}">
+		<li class="list-group-item list-group-item-info">
+			<h3>${medical_staff.surname} ${medical_staff.name}</h3>  
+			<ul class="list-group">
+  				<li class="list-group-item">${specialty} ${medical_staff.specialty.getSpecialtyValue()}</li>
+  				<li class="list-group-item">${email} ${medical_staff.email}</li>  
+			</ul>         	
+		</li>
+	</c:if>
 	
 	<!-- Form for adding new staff -->
 	
@@ -86,7 +121,7 @@
 			</div>
 	
 			<div class="form-group">
-    		<label for="surname">${surname}</label>
+    		<label for="surname">${surname}:</label>
     			<input type="text" name="surname" value="">
   			</div>
   		

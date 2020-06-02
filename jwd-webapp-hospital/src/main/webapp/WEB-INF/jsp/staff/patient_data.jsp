@@ -22,6 +22,9 @@
 	<fmt:message bundle="${loc}" key="local.staff.patient_data.patients_found" var="patients_found"/>
 	<fmt:message bundle="${loc}" key="local.staff.patient_data.choose" var="choose"/>
 	<fmt:message bundle="${loc}" key="local.email" var="e_mail"/>
+	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.nav_main" var="nav_main"/>
+	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
 	
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
@@ -29,12 +32,18 @@
 
 <body>
 
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
+
 	<!-- Change language buttons -->
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="get_patient_data_page"/>
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
@@ -42,12 +51,29 @@
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="get_patient_data_page"/>
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
-	<c:out value="${requestScope['javax.servlet.forward.query_string']}"/>
+	<!-- Navigation menu -->
+	
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  		
+  		<form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_staff_main_page" />
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${nav_main}</button>
+        </form>
+        
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
+        	<input type="hidden" name="command" value="search_patient"/>
+      		<input class="form-control mr-sm-2" type="search" name="query_search" 
+      			placeholder="Surname" aria-label="Search the patient">
+      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
+    	</form>
+
+	</nav>	
+	
+	<!-- Alert -->
 	
 	<c:if test="${requestScope.message == 'patients_found'}">
 		<div class="alert alert-primary" role="alert">
@@ -74,7 +100,7 @@
 				</li>
 				<li class="list-group-item">
 		
-            <!-- Button, which obviously add current patient without checking, if he already exists -->
+            <!-- Button, which obviously add current patient without checking, if such surname already exists -->
             
             	<form name="add_patient" action="font" method="POST">
 					<input type="hidden" name="command" value="add_new_patient" />
@@ -101,7 +127,7 @@
 		</div>
 	</c:if>
 	
-	<!-- Displaying of the List of patients with the same surnames, if they exist -->
+	<!-- Displaying of the List of patients with the same surnames -->
 		
 	<ul class="list-group">
 		<c:if test="${!empty patients}">

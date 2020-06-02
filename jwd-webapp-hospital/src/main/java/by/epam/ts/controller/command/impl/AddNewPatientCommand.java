@@ -32,7 +32,7 @@ public class AddNewPatientCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// Checking of the user rights;
-		boolean staffRights = checkStaffRights(request, response);
+		boolean staffRights = checkDoctorRights(request, response);
 		if (!staffRights) {
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
@@ -59,7 +59,7 @@ public class AddNewPatientCommand implements Command {
 						+ CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
 						+ "=" + RequestMessage.ADDED_SUCCESSFULY + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
 			} else {
-				// show existing patients with the same surnames;
+				// show existing patients with the same surnames and add to request current patients data, which were entered in form;
 				request.setAttribute(RequestAtribute.LIST_PATIENTS, patients);
 				request.setAttribute(RequestAtribute.SURNAME, surname);
 				request.setAttribute(RequestAtribute.NAME, name);
@@ -73,14 +73,12 @@ public class AddNewPatientCommand implements Command {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewPatient(patient) from  AddNewPatientCommand. Invalid parameters:",
 					e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ERROR_DATA);
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "The patient wasn't added", e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}

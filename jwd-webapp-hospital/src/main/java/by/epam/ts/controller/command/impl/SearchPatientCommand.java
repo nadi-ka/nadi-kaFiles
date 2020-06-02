@@ -28,28 +28,27 @@ public final class SearchPatientCommand implements Command {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Checking of the user rights;
-		boolean staffRights = checkStaffRights(request, response);
+		boolean staffRights = checkDoctorRights(request, response);
 		if (!staffRights) {
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ACCESS_DENIED);
 			return;
 		}
-		String query = request.getParameter(RequestAtribute.QUERY_STRING);
-		log.info("surname=" + query);
+		String query = request.getParameter(RequestAtribute.QUERY_SEARCH);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		try {
 			List<Patient> patients = userService.getPatientBySurname(query);
 			if (patients.isEmpty()) {
-				log.info("isEmpty:" + patients.isEmpty());
-				response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 						+ CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 						+ RequestMessage.NOT_FOUND);
 			} else {
 				request.setAttribute(RequestAtribute.LIST_PATIENTS, patients);
 				request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.PATIENTS_FOUND);
+//				request.setAttribute(RequestAtribute.QUERY_SEARCH, query);
 				String page = NavigationManager.getProperty("path.page.staff.patient_data");
 				goForward(request, response, page);
 			}
@@ -57,7 +56,7 @@ public final class SearchPatientCommand implements Command {
 			log.log(Level.ERROR,
 					"Error when calling userService.getPatientBySurname(surname) from SearchPatientCommand", e);
 			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}

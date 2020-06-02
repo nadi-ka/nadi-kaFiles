@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -12,7 +11,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.epam.ts.bean.CurrentTreatment;
 import by.epam.ts.bean.Diagnosis;
+import by.epam.ts.bean.Hospitalization;
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.bean.Patient;
 import by.epam.ts.bean.PatientDiagnosis;
@@ -20,16 +21,18 @@ import by.epam.ts.bean.Treatment;
 import by.epam.ts.bean.User;
 import by.epam.ts.bean.role.UserRole;
 import by.epam.ts.bean.specialty.Specialty;
+import by.epam.ts.bean.treat_status.TreatmentStatus;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.factory.DaoFactory;
 import by.epam.ts.dal.factory.impl.DaoFactoryImpl;
+import by.epam.ts.dal.pool.ConnectionPool;
+import by.epam.ts.dal.pool.ConnectionPoolException;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.constant.ValidationConstant;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.validator.ValidationManager;
-import by.epam.ts.service.validator.core.PersonalDataValidator;
 
 public class UserServiceImpl implements UserService {
 	private DaoFactory daoFactory = DaoFactoryImpl.getInstance();
@@ -68,7 +71,7 @@ public class UserServiceImpl implements UserService {
 
 		// if id was found in the table staff;
 		if (idStaff != null) {
-			user = new User(idStaff, login, password, UserRole.STAFF, userStatus);
+			user = new User(idStaff, login, password, UserRole.DOCTOR, userStatus);
 			try {
 				updatedRows = userDao.createUserStaff(user);
 			} catch (DaoException ex) {
@@ -136,7 +139,7 @@ public class UserServiceImpl implements UserService {
 		return id;
 	}
 
-	public List<Treatment> getPatientsTreatmentById(String id) throws ServiceException {
+	public List<Treatment> getSortedPatientsTreatmentById(String id) throws ServiceException {
 		List<Treatment> prescriptions;
 		try {
 			prescriptions = userDao.findPatientsTreatmentById(id);
@@ -159,20 +162,45 @@ public class UserServiceImpl implements UserService {
 		return diagnosisList;
 	}
 
-	public void getPatientsConsent(Map<Integer, Boolean> consentMap) throws ServiceException {
-		int[] consent;
-		try {
-			consent = userDao.updateConsent(consentMap);
-		} catch (DaoException ex) {
-			throw new ServiceException("Error when calling userDao.updateConsent(consentMap). Consent wasn't updated.",
-					ex);
+	public List<PatientDiagnosis> getCurrentDiagnosisSorted(String id, String entryDate) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateHospitalizationData(id, entryDate);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
 		}
-		// check if consent for every procedure was changed successfully;
-		for (int i = 0; i < consent.length; i++) {
-			if (consent[i] == 0) {
+		LocalDate date = LocalDate.parse(entryDate);
+		List<PatientDiagnosis> diagnosisList;
+		try {
+			diagnosisList = userDao.findCurrentDiagnosisById(id, date);
+			Collections.sort(diagnosisList, PatientDiagnosis.primaryDiagnosisComparator);
+		} catch (DaoException ex) {
+			throw new ServiceException("Error when calling userDao.findPatientsDiagnosisById(id)", ex);
+		}
+		return diagnosisList;
+	}
+
+	public void getPatientsConsent(String idAppointment, String consent) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateConsent(idAppointment, consent);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		int numAppointment = Integer.parseInt(idAppointment);
+		boolean consentBool = Boolean.parseBoolean(consent);
+		int updatedRows = 0;
+		try {
+			updatedRows = userDao.updateConsent(numAppointment, consentBool);
+			// check if consent was updated successfully;
+			if (updatedRows == 0) {
 				throw new ServiceException(
-						"Error during calling getPatientsConsent() from UserServiceImpl. Consent for one of procedures wasn't changed.");
+						"Error when calling getPatientsConsent() from UserServiceImpl. The consent wasn't updated.");
 			}
+		} catch (DaoException ex) {
+			throw new ServiceException("Error when calling userDao.updateConsent(). Consent wasn't updated.", ex);
 		}
 	}
 
@@ -196,12 +224,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public Patient getPatientById(String id) throws ServiceException {
-		Patient patient;
-		PersonalDataValidator validator = new PersonalDataValidator();
-		if (!validator.validID(id)) {
-			throw new ServiceException(
-					"Error when calling validator.validID(id) from getPatientById from UserServiseImpl");
+
+		if (id == null || id.isEmpty()) {
+			throw new ServiceException("Error when calling getPatientById(String id) from UserServiceImp. id=" + id);
 		}
+		Patient patient;
+
 		try {
 			patient = userDao.findPatientById(id);
 		} catch (DaoException ex) {
@@ -211,7 +239,7 @@ public class UserServiceImpl implements UserService {
 		}
 		if (patient == null) {
 			throw new ServiceException(
-					"When calling userDao.findPatientById(id) from getPatientById from UserServiseImpl - patient with shown id wasn't found");
+					"When calling userDao.findPatientById(id) from method getPatientById from UserServiseImpl - patient  wasn't found");
 		}
 		return patient;
 	}
@@ -357,7 +385,6 @@ public class UserServiceImpl implements UserService {
 					"Error when calling userDao.createPatientTreatment(treatment) from addNewTreatment() from UserServiceImpl",
 					e);
 		}
-
 	}
 
 	public String addNewStaff(String specialty, String surname, String name, String email) throws ServiceException {
@@ -403,6 +430,182 @@ public class UserServiceImpl implements UserService {
 		return id;
 	}
 
+	public MedicalStaff getStaffById(String id) throws ServiceException {
+
+		if (id == null || id.isEmpty()) {
+			throw new ServiceException(
+					"Error when calling getStaffById(String id) from UserServiceImp. id == null/isEmpty.");
+		}
+		MedicalStaff staff = null;
+		try {
+			staff = userDao.findStaffById(id);
+		} catch (DaoException ex) {
+			throw new ServiceException(
+					"Error when calling userDao.findStaffById(id) from method getStaffById(String id) from UserServiseImpl",
+					ex);
+		}
+		if (staff == null) {
+			throw new ServiceException(
+					"When calling userDao.findStaffById(id) from method getStaffById(String id) from UserServiseImpl - staff wasn't found.");
+		}
+		return staff;
+	}
+
+	public void addNewHospitalisation(String idPatient, String entryDate) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateHospitalizationData(idPatient, entryDate);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		// adding of the new hospitalization;
+		LocalDate date = LocalDate.parse(entryDate);
+		Hospitalization hospitalization = new Hospitalization(idPatient, date);
+		int effectedRows = 0;
+		try {
+			effectedRows = userDao.createNewHospitalization(hospitalization);
+			if (effectedRows == 0) {
+				throw new ServiceException(
+						"When calling createNewHospitalization() from addNewHospitalisation() from UserServiceImpl new hospitalization wasn't added. Effected rows == 0");
+			}
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"Error when calling userDao.createNewHospitalization() from addNewHospitalisation() from UserServiceImpl",
+					e);
+		}
+	}
+
+	public void setDischargeDate(String dischargeDate, String entryDate, String idHistory) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateDischargeData(dischargeDate, entryDate, idHistory);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		// setting of the discharge date;
+		LocalDate dateFinishing = LocalDate.parse(dischargeDate);
+		LocalDate dateBeginning = LocalDate.parse(entryDate);
+		// check that dischargeDate follows entryDate, not vice versa;
+		if (dateFinishing.isBefore(dateBeginning)) {
+			throw new ValidationServiceException(ValidationConstant.INVALID_DISCHARGE_DATE);
+		}
+		int historyNum = Integer.parseInt(idHistory);
+		int effectedRows = 0;
+		try {
+			effectedRows = userDao.updateDischargeDate(dateFinishing, historyNum);
+			if (effectedRows == 0) {
+				throw new ServiceException(
+						"When calling userDao.updateDischargeDate() from setDischargeDate() from UserServiceImpl discharge date wasn't set. Effected rows == 0");
+			}
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"Error when calling userDao.updateDischargeDate() from setDischargeDate() from UserServiceImpl", e);
+		}
+	}
+
+	public List<Hospitalization> getAllHospitalizationsById(String id) throws ServiceException {
+		List<Hospitalization> hospitalizations;
+		try {
+			hospitalizations = userDao.findHospitalizationsById(id);
+		} catch (DaoException ex) {
+			throw new ServiceException("Error when calling userDao.findHospitalizationsById(id).", ex);
+		}
+		return hospitalizations;
+	}
+
+	public Hospitalization getLastHospitalizationById(String id) throws ServiceException {
+		Hospitalization hospitalization = null;
+		try {
+			hospitalization = userDao.findLastHospitalizationById(id);
+		} catch (DaoException ex) {
+			throw new ServiceException(
+					"Error when calling userDao.findLastHospitalizationById(id) from getLastHospitalizationById().",
+					ex);
+		}
+		return hospitalization;
+	}
+
+	public void performCurrentTreatment(String consent, String idAppointment, String datePerforming, String idPerformer,
+			String status) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateCurrentTreatmentData(consent, idAppointment, datePerforming,
+				idPerformer, status);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		// check consent;
+		boolean isConsent = Boolean.parseBoolean(consent);
+		if (!isConsent) {
+			throw new ServiceException(
+					"Error when calling performCurrentTreatment() from UserServiceImpl. Procedure is prohibited, the patient hasn't given his consent.");
+		}
+		// perform the treatment;
+		int numAppointment = Integer.parseInt(idAppointment);
+		LocalDate date = LocalDate.parse(datePerforming);
+		TreatmentStatus treatmentStatus = TreatmentStatus.getTreatmentStatus(status);
+		CurrentTreatment treatment = new CurrentTreatment(numAppointment, date, idPerformer, treatmentStatus);
+		int effectedRows = 0;
+		try {
+			effectedRows = userDao.createCurrentTreatment(treatment);
+			if (effectedRows == 0) {
+				throw new ServiceException(
+						"When calling userDao.createCurrentTreatment(treatment) from performeCurrentTreatment() from UserServiceImpl the treatment wasn't performed. Effected rows == 0");
+			}
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"Error when calling userDao.createCurrentTreatment(treatment) from performeCurrentTreatment() from UserServiceImpl",
+					e);
+		}
+	}
+
+	public List<Treatment> getTreatmentDuringLastHospitalization(String idPatient, LocalDate entryDate)
+			throws ServiceException {
+		List<Treatment> prescriptions;
+		try {
+			prescriptions = userDao.findCurrentHospitalizationTreatment(idPatient, entryDate);
+		} catch (DaoException ex) {
+			throw new ServiceException("Error when calling userDao.findPatientsDiagnosisById(id)", ex);
+		}
+		return prescriptions;
+	}
+
+	public List<CurrentTreatment> getCurrentTreatmentByAppointmentId(int idAppointment) throws ServiceException {
+		List<CurrentTreatment> performingList;
+		try {
+			performingList = userDao.findCurrentTreatmentByAppointmentId(idAppointment);
+		} catch (DaoException ex) {
+			throw new ServiceException(
+					"Error when calling userDao.findCurrentTreatmentByAppointmentId(id) from getCurrentTreatmentByAppointmentIdSorted from UserServiceImpl.",
+					ex);
+		}
+		return performingList;
+	}
+	
+	public int getAverageHospitalizationLength(String id, LocalDate hospitalizationDate) throws ServiceException {
+		List<Diagnosis> diagnosisList;
+		int numberBedDays = 0;
+		try {
+			diagnosisList = userDao.findDiagnosisByIdAndDate(id, hospitalizationDate);
+			if (diagnosisList.isEmpty()) {
+				return numberBedDays;
+			}else {
+				for(Diagnosis item: diagnosisList) {
+					if (numberBedDays < item.getAverageBedDays()) {
+						numberBedDays = item.getAverageBedDays();
+					}
+				}
+			}
+		} catch (DaoException ex) {
+			throw new ServiceException("Error when calling getPrimaryDiagnosis() from UserServiceImpl.",
+					ex);
+		}
+		return numberBedDays;
+	}
+
 //	public static void main(String[] args) {
 //		ConnectionPool connectionPool = null;
 //		try {
@@ -411,8 +614,8 @@ public class UserServiceImpl implements UserService {
 //			DaoFactoryImpl.setConnectionPool(connectionPool);
 //			
 //			UserServiceImpl userService = new UserServiceImpl();
-//			List<PatientDiagnosis> list = userService.getSortedPatientDiagnosisById("3d9c83ee-194e-4ebc-a80f-fe1487a237f9");
-//			for(PatientDiagnosis di: list) {
+//			List<PatientDiagnosis> diList = userService.getSortedPatientDiagnosisById("e4a4baa0-25a5-4b60-9856-b55ec84d8c88");
+//			for (PatientDiagnosis di : diList) {
 //				System.out.println(di.toString());
 //			}
 //		} catch (ConnectionPoolException e) {

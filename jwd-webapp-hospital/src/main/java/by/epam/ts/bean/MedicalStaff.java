@@ -94,7 +94,7 @@ public class MedicalStaff implements Serializable {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "@[id = " + id + ", specialty = " + specialty.toString() + ", surname = " + surname
+		return getClass().getName() + "@[id = " + id + ", specialty = " + specialty.getSpecialtyValue() + ", surname = " + surname
 				+ ", name = " + name + ", email = " + email + "]";
 	}
 

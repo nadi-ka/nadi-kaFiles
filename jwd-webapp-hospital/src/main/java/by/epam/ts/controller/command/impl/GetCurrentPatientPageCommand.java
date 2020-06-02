@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.epam.ts.bean.Hospitalization;
 import by.epam.ts.bean.Patient;
 import by.epam.ts.bean.PatientDiagnosis;
 import by.epam.ts.bean.Treatment;
@@ -38,20 +39,21 @@ public final class GetCurrentPatientPageCommand implements Command {
 		Patient patient;
 		List<Treatment> prescriptions;
 		List<PatientDiagnosis> diagnosisList;
+		List<Hospitalization> hospitalizations;
 		try {
-			prescriptions = userService.getPatientsTreatmentById(patientId);
+			prescriptions = userService.getSortedPatientsTreatmentById(patientId);
 			diagnosisList = userService.getSortedPatientDiagnosisById(patientId);
+			hospitalizations = userService.getAllHospitalizationsById(patientId);
 			patient = userService.getPatientById(patientId);
-			log.info("patient.toString:" + patient.toString());
 			patient.setPrescriptions(prescriptions);
 			patient.setDiagnosisList(diagnosisList);
+			patient.setHospitalizations(hospitalizations);
 			request.setAttribute(RequestAtribute.PATIENT, patient);
 			request.setAttribute(RequestAtribute.MESSAGE, message);
 			String page = NavigationManager.getProperty("path.page.staff.current_patient");
 			goForward(request, response, page);
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetCurrentPatientPageCommand", e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);

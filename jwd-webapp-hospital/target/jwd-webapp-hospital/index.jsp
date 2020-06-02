@@ -34,14 +34,16 @@
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="show_index_page"/> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="show_index_page"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="show_index_page"/> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="show_index_page"/>    
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
@@ -63,47 +65,41 @@
 		</h5>
 		
 	</div>
-			
 	
-	<div class="form">	
+	<!-- Displaying of the login-form -->
+	
+	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">	
 	
 		<form name="loginForm" method="POST" action="register">
 			<input type="hidden" name="command" value="login" />
 				
-				<div class="form-field">
+				<div class="form-group">
 				
-					<label class="field-label">${login}</label>
+					<label for="login">${login}</label>
 					<input type="text" name="login" value="" /> 
 					
 				</div>
 				
-				<div class="form-field">
+				<div class="form-group">
 				
-					<label class="field-label">${password}</label>
+					<label for="password">${password}</label>
 					<input type="password" name="password" value="" />  
 					
 				</div>
 				
-				<div class="alert alert-danger" role="alert">
+				<c:if test="${param.message == 'error_data'}">
+					<div class="alert alert-danger" role="alert">	
+						<c:out value="${error_data}"/>
+					</div>
+				</c:if>
 				
-					<h5><c:if test="${param.message == 'error_data'}">
-							<c:out value="${error_data}"/>
-						</c:if>
-					</h5>
-				
-				</div>
-				
-				<div class="form-button">
-				
-					<button type="submit" class="btn btn-secondary">${login_button}</button>
-					
-				</div>
-
+				<button type="submit" class="btn btn-secondary">${login_button}</button>
 	    </form>
-	
 	</div>
 	
-	<h3>${account}<a href="signUp.jsp">${regist}</a></h3>
+	<div>
+		<h3>${account}<a href="signUp.jsp">${regist}</a></h3>
+	</div>
 
 </body>
 </html>

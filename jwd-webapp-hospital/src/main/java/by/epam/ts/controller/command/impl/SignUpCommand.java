@@ -11,7 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.controller.command.Command;
+import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
+import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
@@ -37,24 +39,25 @@ public final class SignUpCommand implements Command {
 			
 			if (updatedRows != 0) {
 				request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.SUCCESSFUL_REGISTRATION);
-				response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=successful_registration");
+				response.sendRedirect(request.getContextPath() + "/register?command=get_index_page&message=successful_registration");
 
 			} else {
 				/* update rows == null means, that user with given e-mail was found neither in
 				 staff- nor in patient-table;
 				 */
 				request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
-				response.sendRedirect(request.getContextPath() + "/register?command=show_signup_page&message=error_data");
+				response.sendRedirect(request.getContextPath() + "/register?command=get_signup_page&message=error_data");
 			}
 			
 		} catch (ValidationServiceException ex) {
 			log.log(Level.INFO, "Validation error during calling method signUp()", ex);
 			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_signup_page&message=error_data");
+			response.sendRedirect(request.getContextPath() + "/register?command=get_signup_page&message=error_data");
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method signUp() from SignUpCommand", ex);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.TECHNICAL_ERROR);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_error_page&message=technical_error");
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
+					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+					+ RequestMessage.TECHNICAL_ERROR);
 		}
 
 	}

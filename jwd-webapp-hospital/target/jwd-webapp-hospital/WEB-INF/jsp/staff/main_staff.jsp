@@ -16,8 +16,7 @@
 	<fmt:setBundle basename="localization.locale" var="loc" />
 	<fmt:message bundle="${loc}" key="local.staff.main.welcome" var="welcome" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.new_patient" var="add_patient" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.make_diagnosis" var="make_diagnosis" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.prescribe_treatment" var="prescribe_treatment" />
+	<fmt:message bundle="${loc}" key="local.staff.main.button.new_staff" var="add_staff" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
 	<fmt:message bundle="${loc}" key="local.surname" var="surname" />
 	<fmt:message bundle="${loc}" key="local.name" var="name" />
@@ -40,40 +39,36 @@
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="get_staff_main_page"/>  
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="get_staff_main_page"/> 
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="get_staff_main_page"/> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="get_staff_main_page"/>  
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
 	<!-- Navigation menu -->
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  		
-  		<form class="form-inline" action="font" method="post">
-  			<input type="hidden" name="command" value="add_new_patient" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${add_patient}</button>
-        </form>
-        
-        <form class="form-inline" action="font" method="post">
-  			<input type="hidden" name="command" value="make_diagnosis" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${make_diagnosis}</button>
-        </form>
-
-        <form class="form-inline" action="font" method="post">
-  			<input type="hidden" name="command" value="prescribe_treatment" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${prescribe_treatment}</button>
-        </form>
+	
+		<!-- Next button will be visible only for user-administrator -->
+	
+		<c:if test="${sessionScope.role == 'ADMINISTRATOR'}">	
+  			<form class="form-inline" action="font" method="post">
+  				<input type="hidden" name="command" value="get_staff_data_page" />
+  				<button type="submit" class="btn btn-sm btn-outline-secondary">${add_staff}</button>
+        	</form>
+    	</c:if>
         
         <form action="font" method="GET" class="form-inline my-2 my-lg-0">
         	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_string" 
-      			placeholder="Surname" aria-label="Search the patient">
+      		<input class="form-control mr-sm-2" type="search" name="query_search" 
+      			placeholder="${surname}" aria-label="Search the patient">
       		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
     	</form>
 
@@ -81,51 +76,49 @@
 	
 	<h1>${welcome}</h1>
 	
-	<div class="alert alert-light" role="alert">
-  		<h5>
-  			<c:if test="${param.message == 'not_found'}">
-				<c:out value="${not_found}"/>
-			</c:if>
-  		</h5>
-	</div>
+  	<c:if test="${param.message == 'not_found'}">
+  		<div class="alert alert-light" role="alert">
+			<c:out value="${not_found}"/>
+		</div>
+	</c:if>
 	
 	<!-- Form for adding new patient -->
 	
-	<form name="patients_data" action="font" method="POST">
-	<input type="hidden" name="command" value="add_new_patient" />
-	<p><b>${patients_data}</b></p>
+	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">
 	
-		<div class="form-group">
-    		<label for="surname">${surname}</label>
-    		<input type="text" class="form-control" style="width: 60%" name="surname" value="">
-  		</div>
-  		
-  		<div class="form-group">
-    		<label for="name">${name}</label>
-    		<input type="text" class="form-control" style="width: 60%" name="name" value="">
-  		</div>
-  		
-  		<div class="form-group">
-  			<label for="date">${date_of_birth}</label>
-  			<input type="date" name="date_of_birth" value="" >
-		</div>
+		<form name="patients_data" action="font" method="POST">
+			<input type="hidden" name="command" value="add_new_patient" />
+			<p><b>${patients_data}</b></p>
 	
-  		<div class="form-group">
-  			<label for="email">${email}</label>
-    		<input type="email" class="form-control" style="width: 60%" name="email" value="" >
-  		</div>
+				<div class="form-group">
+    				<label for="surname">${surname}:</label>
+    				<input type="text" name="surname" value="">
+  				</div>
   		
-  		<div class="alert alert-danger" role="alert">
+  				<div class="form-group">
+    				<label for="name">${name}</label>
+    				<input type="text" name="name" value="">
+  				</div>
+  		
+  				<div class="form-group">
+  					<label for="date">${date_of_birth}</label>
+  					<input type="date" name="date_of_birth" value="" >
+				</div>
 	
-				<h5><c:if test="${param.message == 'error_data'}">
+  				<div class="form-group">
+  					<label for="email">${email}</label>
+    				<input type="email" name="email" value="" >
+  				</div>
+  		
+  				<c:if test="${param.message == 'error_data'}">
+					<div class="alert alert-danger" role="alert">
 						<c:out value="${error_data}"/>
-					</c:if>
-				</h5>
-		</div>
+					</div>
+				</c:if>
 
-		<button type="submit" class="btn btn-primary" name="btn_signup">${submit_btn}</button>
-
-	</form>
+			<button type="submit" class="btn btn-primary" name="btn_signup">${submit_btn}</button>
+		</form>
+	</div>
   		
 </body>
 </html>

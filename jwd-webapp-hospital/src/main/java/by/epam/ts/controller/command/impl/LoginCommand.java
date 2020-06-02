@@ -45,22 +45,22 @@ public final class LoginCommand implements Command {
 				session.setAttribute(SessionAtribute.USER_ROLE, user.getRole());
 				session.setAttribute(SessionAtribute.USER_STATUS, user.isUserStatus());
 				
-				if (user.getRole() == UserRole.STAFF || user.getRole() == UserRole.ADMINISTRATOR) {
+				if (user.getRole() == UserRole.DOCTOR || user.getRole() == UserRole.ADMINISTRATOR) {
 					response.sendRedirect(request.getContextPath() + "/register?command=get_staff_main_page");
 				}
 				else {
-					response.sendRedirect(request.getContextPath() + "/register?command=show_patient_main_page");
+					response.sendRedirect(request.getContextPath() + "/register?command=get_patient_main_page");
 				}
 				
 			} else {
 				request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-				response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=error_data");
+				response.sendRedirect(request.getContextPath() + "/register?command=get_index_page&message=error_data");
 			}
 			
 		} catch (ValidationServiceException ex) {
 			log.log(Level.INFO, "Validation error during calling method logIn()", ex);
 			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + "/register?command=show_index_page&message=error_data");
+			response.sendRedirect(request.getContextPath() + "/register?command=get_index_page&message=error_data");
 
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method logIn() from LoginCommand.", ex);

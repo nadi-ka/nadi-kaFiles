@@ -33,7 +33,7 @@ public final class AddPatientDiagnosisCommand implements Command {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Checking of the user rights;
-		boolean staffRights = checkStaffRights(request, response);
+		boolean staffRights = checkDoctorRights(request, response);
 		if (!staffRights) {
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
@@ -43,6 +43,7 @@ public final class AddPatientDiagnosisCommand implements Command {
 		String idPatient = request.getParameter(RequestAtribute.PATIENT_ID);
 		String codePrimary = request.getParameter(RequestAtribute.PRIMARY_DIAGNOSIS);
 		String[] codeSecondary = request.getParameterValues(RequestAtribute.SECONDARY_DIAGNOSIS);
+		log.info("id:" +idPatient);
 
 		//parsing of the date;
 		String settingDate = request.getParameter(RequestAtribute.SETTING_DATE);

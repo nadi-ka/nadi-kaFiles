@@ -8,16 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import by.epam.ts.bean.role.UserRole;
 import by.epam.ts.controller.constant_attribute.SessionAtribute;
 import by.epam.ts.controller.manager.NavigationManager;
 
 public interface Command {
-
-	static final Logger log = LogManager.getLogger(Command.class);
 
 	void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 
@@ -34,21 +29,40 @@ public interface Command {
 	default boolean checkStaffRights(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(false);
 		UserRole userRole = (UserRole) session.getAttribute(SessionAtribute.USER_ROLE);
-		if (userRole == null
-				|| (userRole != null && (userRole != UserRole.ADMINISTRATOR && userRole != UserRole.STAFF))) {
+		if (userRole == null || (userRole != null
+				&& (userRole != UserRole.ADMINISTRATOR && userRole != UserRole.DOCTOR && userRole != UserRole.NURSE))) {
 			return false;
 		}
 		return true;
 	}
-	
-	default boolean checkAdminRights(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+	default boolean checkDoctorRights(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(false);
 		UserRole userRole = (UserRole) session.getAttribute(SessionAtribute.USER_ROLE);
 		if (userRole == null
-				|| (userRole != null && (userRole != UserRole.ADMINISTRATOR))) {
+				|| (userRole != null && (userRole != UserRole.ADMINISTRATOR && userRole != UserRole.DOCTOR))) {
 			return false;
 		}
 		return true;
+	}
+
+	default boolean checkAdminRights(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession(false);
+		UserRole userRole = (UserRole) session.getAttribute(SessionAtribute.USER_ROLE);
+		if (userRole == null || (userRole != null && (userRole != UserRole.ADMINISTRATOR))) {
+			return false;
+		}
+		return true;
+	}
+
+	default String getUserIdFromSession(HttpServletRequest request) {
+
+		HttpSession session = request.getSession(false);
+		String patientId = null;
+		if (session != null) {
+			patientId = (String) session.getAttribute(SessionAtribute.USER_ID);
+		}
+		return patientId;
 	}
 
 }

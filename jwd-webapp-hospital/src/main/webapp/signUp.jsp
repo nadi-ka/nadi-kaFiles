@@ -33,14 +33,16 @@
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
-		<input type="hidden" name="redirect_command" value="show_signup_page"/>
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="get_signup_page"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
-		<input type="hidden" name="redirect_command" value="show_signup_page"/> 
+		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
+		<input type="hidden" name="redirect_command" value="get_signup_page"/>  
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 
@@ -48,47 +50,46 @@
 	
 	<img class="rounded float-right" src="img/registration.png" 
 		 alt="pen and paper image" style="width:4em; height:5em;" />
-
-	<form name="registerForm" method="POST" action="register">
-		<input type="hidden" name="command" value="sign_up" />
+		 
+		 <div class="border border-secondary w-50 p-3" style="background-color: #eee;">	
+			<form name="registerForm" method="POST" action="register">
+				<input type="hidden" name="command" value="sign_up" />
 			
-			<div class="form-group">
-				
-				<label class="field-label">${login}</label>
-				<input type="text" name="login" value="" /> 
-					
-			</div>
+				<div class="form-group">
+					<label class="field-label">${login}</label>
+					<input type="text" name="login" value="" /> 		
+				</div>
 			
-			<div class="form-group">
-				
-				<label class="field-label">${password}</label>
-				<input type="password" name="password" value="" /> 
-					
-			</div>
+				<div class="form-group">
+					<label class="field-label">${password}</label>
+					<input type="password" name="password" value="" /> 	
+				</div>
 			
-			<div class="form-group">
-				
-				<label class="field-label">${email}</label>
-				<input type="email" name="email" value="" /> 
-					
-			</div>
+				<div class="form-group">
+					<label class="field-label">${email}</label>
+					<input type="email" name="email" value="" /> 	
+				</div>
 			
-			<div class="alert alert-danger" role="alert">
-	
-				<h5><c:if test="${param.message == 'error_data'}">
+				<c:if test="${param.message == 'error_data'}">
+					<div class="alert alert-danger" role="alert">
 						<c:out value="${error_data}"/>
-					</c:if>
-				</h5>
-		
-			</div>
+					</div>
+				</c:if>
 
-			<button type="submit" class="btn btn-primary" name="btn_signup">${signup_btn}</button>
+				<button type="submit" class="btn btn-primary" name="btn_signup">${signup_btn}</button>
 
+			</form>
+		</div>
+	
+	<!-- Go to index-page -->
+
+	<h5>
+		<c:out value="${account}" /> 
+	</h5>
+	<form name="To_index_page" method="GET" action="font" >
+		<input type="hidden" name="command" value="get_index_page" /> 
+		<button type="submit" class="btn btn-link">${reflogin}</button>
 	</form>
-
-	<h3>
-		<c:out value="${account}" /> <a href="index.jsp">${reflogin}</a>
-	</h3>
 
 </body>
 </html>

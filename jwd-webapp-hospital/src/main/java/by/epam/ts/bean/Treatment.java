@@ -3,6 +3,7 @@ package by.epam.ts.bean;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.List;
 
 public class Treatment implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -17,6 +18,7 @@ public class Treatment implements Serializable {
 	private LocalDate dateBeginning;
 	private LocalDate dateFinishing;
 	private boolean consent;
+	private List<CurrentTreatment> performingList;
 
 	public Treatment() {
 	}
@@ -41,6 +43,15 @@ public class Treatment implements Serializable {
 		this.idAppointment = idAppointment;
 		this.doctorSurname = doctorSurname;
 		this.doctorName = doctorName;
+	}
+
+	public Treatment(int idAppointment, String idPatient, String treatmentType, String treatmentName, String doctorId,
+			String doctorSurname, String doctorName, LocalDate dateBeginning, LocalDate dateFinishing, boolean consent,
+			List<CurrentTreatment> performingList) {
+
+		this(idAppointment, idPatient, treatmentType, treatmentName, doctorId, doctorSurname, doctorName, dateBeginning,
+				dateFinishing, consent);
+		this.performingList = performingList;
 	}
 
 	public int getIdAppointment() {
@@ -122,7 +133,15 @@ public class Treatment implements Serializable {
 	public void setConsent(boolean consent) {
 		this.consent = consent;
 	}
-	
+
+	public List<CurrentTreatment> getPerformingList() {
+		return performingList;
+	}
+
+	public void setPerformingList(List<CurrentTreatment> performingList) {
+		this.performingList = performingList;
+	}
+
 	public static Comparator<Treatment> treatmentDateComparator = new Comparator<Treatment>() {
 		@Override
 		public int compare(Treatment o1, Treatment o2) {
@@ -131,7 +150,7 @@ public class Treatment implements Serializable {
 			return date2.compareTo(date1);
 		}
 	};
- 
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -146,6 +165,7 @@ public class Treatment implements Serializable {
 		result = prime * result + ((doctorName == null) ? 0 : doctorName.hashCode());
 		result = prime * result + ((treatmentName == null) ? 0 : treatmentName.hashCode());
 		result = prime * result + ((treatmentType == null) ? 0 : treatmentType.hashCode());
+		result = prime * result + ((performingList == null) ? 0 : performingList.hashCode());
 		return result;
 	}
 
@@ -171,8 +191,9 @@ public class Treatment implements Serializable {
 				&& (dateBeginning == other.dateBeginning
 						|| (dateBeginning != null && dateBeginning.equals(other.getDateBeginning())))
 				&& (dateFinishing == other.dateFinishing
-						|| (dateFinishing != null && dateFinishing.equals(other.getDateFinishing())));
-
+						|| (dateFinishing != null && dateFinishing.equals(other.getDateFinishing())))
+				&& (performingList == other.performingList
+						|| (performingList != null && performingList.equals(other.getPerformingList())));
 	}
 
 	@Override
