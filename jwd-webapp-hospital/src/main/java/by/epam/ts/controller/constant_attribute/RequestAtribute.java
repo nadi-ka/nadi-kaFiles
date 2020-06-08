@@ -11,6 +11,7 @@ public final class RequestAtribute {
 	public final static String SURNAME = "surname";
 	public final static String NAME = "name";
 	public final static String EMAIL = "email";
+	public final static String OLD_EMAIL = "old_email";
 	public final static String DATE_OF_BIRTH = "date_of_birth";
 	public final static String DATA_UNAVAILABLE = "data_unavailable";
 	public final static String ERROR_DATA = "error_data";
@@ -39,7 +40,10 @@ public final class RequestAtribute {
 	public final static String CONSENT = "consent";
 	public final static String STAFF_ID = "staff_id";
 	public final static String SPECIALTY = "specialty";
+	public final static String USER_ROLE = "user_role";
+	public final static String USER_STATUS = "user_status";
 	public final static String MEDICAL_STAFF = "medical_staff";
+	public final static String STAFF_LIST = "staff_list";
 	public final static String QUERY_SEARCH = "query_search";
 	public final static String HOSPITALIZATION = "hospitalization";
 	public final static String HOSPITALIZATION_LIST = "hospitalizations";

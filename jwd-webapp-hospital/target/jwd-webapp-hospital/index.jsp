@@ -17,7 +17,7 @@
 <fmt:message bundle="${loc}" key="local.login.ready.help" var="ready_message"/>
 <fmt:message bundle="${loc}" key="local.login" var="login" />
 <fmt:message bundle="${loc}" key="local.password" var="password" />
-<fmt:message bundle="${loc}" key="local.login.haveaccount" var="account" />
+<fmt:message bundle="${loc}" key="local.login.have_account" var="account" />
 <fmt:message bundle="${loc}" key="local.register" var="regist" />
 <fmt:message bundle="${loc}" key="local.login.successfully.logout" var="successful_logout"/>
 <fmt:message bundle="${loc}" key="local.login.successfully.registr" var="successful_sign_up"/>
@@ -35,7 +35,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="redirect_command" value="show_index_page"/>  
+		<input type="hidden" name="redirect_command" value="get_index_page"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
@@ -43,7 +43,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="redirect_command" value="show_index_page"/>    
+		<input type="hidden" name="redirect_command" value="get_index_page"/>    
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
@@ -54,19 +54,21 @@
 	
 	<div class="alert alert-primary" role="alert">
 	
-		<h5><c:if test="${param.message == 'successful_logout'}">
+		<c:if test="${param.message == 'successful_logout'}">
+			<h5>
 				<c:out value="${successful_logout}"/>
-			</c:if>
-		</h5>
+			</h5>
+		</c:if>
 	
-		<h5><c:if test="${param.message == 'successful_registration'}">
+		<c:if test="${param.message == 'successful_registration'}">
+			<h5>
 				<c:out value="${successful_sign_up}"/>
-			</c:if>
-		</h5>
+			</h5>
+		</c:if>
 		
 	</div>
 	
-	<!-- Displaying of the login-form -->
+	<!-- Login-form -->
 	
 	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">	
 	
@@ -97,8 +99,16 @@
 	    </form>
 	</div>
 	
+	<!-- Go to signUp-page -->
+	
 	<div>
-		<h3>${account}<a href="signUp.jsp">${regist}</a></h3>
+		<h5>
+			<c:out value="${account}" /> 
+		</h5>
+		<form name="To_signup_page" method="GET" action="font" >
+			<input type="hidden" name="command" value="get_signup_page" /> 
+			<button type="submit" class="btn btn-link">${regist}</button>
+		</form>
 	</div>
 
 </body>

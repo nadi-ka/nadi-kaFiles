@@ -6,7 +6,6 @@ import java.net.URLEncoder;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +15,6 @@ import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
-import by.epam.ts.controller.constant_attribute.SessionAtribute;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
@@ -37,11 +35,7 @@ public final class AddNewTreatmentCommand implements Command {
 			return;
 		}
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
-		HttpSession session = request.getSession(false);
-		String staffId = null;
-		if (session != null) {
-			staffId = (String) session.getAttribute(SessionAtribute.USER_ID);
-		}
+		String staffId = getUserIdFromSession(request);
 		String treatmentType = request.getParameter(RequestAtribute.TREATMENT_TYPE);
 		String treatmentName = request.getParameter(RequestAtribute.TREATMENT_NAME);
 		String dateBegin = request.getParameter(RequestAtribute.DATE_BEGINNING);

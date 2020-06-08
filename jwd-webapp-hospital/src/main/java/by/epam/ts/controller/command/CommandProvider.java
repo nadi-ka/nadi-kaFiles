@@ -24,6 +24,7 @@ import by.epam.ts.controller.command.impl.LoginCommand;
 import by.epam.ts.controller.command.impl.LogoutCommand;
 import by.epam.ts.controller.command.impl.PerformTreatmentCommand;
 import by.epam.ts.controller.command.impl.SearchPatientCommand;
+import by.epam.ts.controller.command.impl.SearchStaffCommand;
 import by.epam.ts.controller.command.impl.ShowErrorPageCommand;
 import by.epam.ts.controller.command.impl.GetIndexPageCommand;
 import by.epam.ts.controller.command.impl.GetPatientMainPageCommand;
@@ -31,7 +32,11 @@ import by.epam.ts.controller.command.impl.GetSignUpPageCommand;
 import by.epam.ts.controller.command.impl.GetStaffMainPageCommand;
 import by.epam.ts.controller.command.impl.GetTreatPerformancePageCommand;
 import by.epam.ts.controller.command.impl.GetTreatmentPageCommand;
+import by.epam.ts.controller.command.impl.GetUpdatePersonalDataPageCommand;
 import by.epam.ts.controller.command.impl.SignUpCommand;
+import by.epam.ts.controller.command.impl.UpdatePersonalDataCommand;
+import by.epam.ts.controller.command.impl.UpdateUserRoleCommand;
+import by.epam.ts.controller.command.impl.UpdateUserStatusCommand;
 import by.epam.ts.controller.command.impl.WrongRequestCommand;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 
@@ -53,6 +58,7 @@ public final class CommandProvider {
 		repository.put(CommandEnum.SHOW_ERROR_PAGE, new ShowErrorPageCommand());
 		repository.put(CommandEnum.GIVE_CONSENT, new GiveConsentCommand());
 		repository.put(CommandEnum.SEARCH_PATIENT, new SearchPatientCommand());
+		repository.put(CommandEnum.SEARCH_STAFF, new SearchStaffCommand());
 		repository.put(CommandEnum.ADD_NEW_PATIENT, new AddNewPatientCommand());
 		repository.put(CommandEnum.GET_PATIENT_DATA_PAGE, new GetPatientDataPageCommand());
 		repository.put(CommandEnum.GET_CURRENT_PATIENT_PAGE, new GetCurrentPatientPageCommand());
@@ -69,6 +75,10 @@ public final class CommandProvider {
 		repository.put(CommandEnum.GET_TREAT_PERFORMANCE_PAGE, new GetTreatPerformancePageCommand());
 		repository.put(CommandEnum.PERFORM_TREATMENT, new PerformTreatmentCommand());
 		repository.put(CommandEnum.GET_HOSPITALIZATION_PLAN, new GetHospitalizationPlanCommand());
+		repository.put(CommandEnum.UPDATE_USER_ROLE, new UpdateUserRoleCommand());
+		repository.put(CommandEnum.UPDATE_USER_STATUS, new UpdateUserStatusCommand());
+		repository.put(CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE, new GetUpdatePersonalDataPageCommand());
+		repository.put(CommandEnum.UPDATE_PERSONAL_DATA, new UpdatePersonalDataCommand());
 		repository.put(CommandEnum.WRONG_REQUEST, new WrongRequestCommand());
 	}
 	

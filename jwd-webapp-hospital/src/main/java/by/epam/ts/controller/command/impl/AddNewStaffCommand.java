@@ -29,7 +29,7 @@ public final class AddNewStaffCommand implements Command {
 		// Checking of the user rights;
 		boolean adminRights = checkAdminRights(request, response);
 		if (!adminRights) {
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ACCESS_DENIED);
 			return;
@@ -41,9 +41,10 @@ public final class AddNewStaffCommand implements Command {
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
+		String staffId = null;
 		try {
 
-			String staffId = userService.addNewStaff(specialty, surname, name, email);
+			staffId = userService.addNewStaff(specialty, surname, name, email);
 
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase() + "&"
@@ -54,14 +55,12 @@ public final class AddNewStaffCommand implements Command {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewStaff() from  AddNewStaffCommand. Invalid parameters:",
 					e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ERROR_DATA);
 		} catch (ServiceException e) {
-			log.log(Level.ERROR, "The patient wasn't added", e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			log.log(Level.ERROR, "Error when calling userService.addNewStaff() from  AddNewStaffCommand. The staff wasn't added", e);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}

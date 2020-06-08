@@ -36,7 +36,13 @@ public final class SearchPatientCommand implements Command {
 			return;
 		}
 		String query = request.getParameter(RequestAtribute.QUERY_SEARCH);
-
+		// If query incorrect - show current page again with the message;
+		if (query == null || query.isEmpty()) {
+		response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
+				+ CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+				+ RequestMessage.NOT_FOUND);
+		return;
+		}
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		try {
@@ -48,14 +54,12 @@ public final class SearchPatientCommand implements Command {
 			} else {
 				request.setAttribute(RequestAtribute.LIST_PATIENTS, patients);
 				request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.PATIENTS_FOUND);
-//				request.setAttribute(RequestAtribute.QUERY_SEARCH, query);
 				String page = NavigationManager.getProperty("path.page.staff.patient_data");
 				goForward(request, response, page);
 			}
 		} catch (ServiceException e) {
 			log.log(Level.ERROR,
 					"Error when calling userService.getPatientBySurname(surname) from SearchPatientCommand", e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);

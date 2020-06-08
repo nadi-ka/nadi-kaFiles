@@ -3,7 +3,8 @@ package by.epam.ts.bean.specialty;
 public enum Specialty {
 	
 	DOCTOR("врач"),
-	NURSE("медсестра");
+	NURSE("медсестра"),
+	UNKNOWN("не определена");
 	
 	private final String specialtyValue;
 	
@@ -21,7 +22,11 @@ public enum Specialty {
 				return item;
 			}
 		}
-		throw new IllegalArgumentException();
+		 return getDefault();
+	}
+	
+	public static Specialty getDefault() {
+		return UNKNOWN;
 	}
 
 }

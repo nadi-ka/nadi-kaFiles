@@ -42,8 +42,7 @@ public class UserServiceImpl implements UserService {
 
 	public int signUp(String email, String login, String password) throws ServiceException {
 		int updatedRows = 0;
-
-		// checking, if all coming data are valid;
+		// Data validation;
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateSignUpData(login, password, email);
 		if (!invalidDataSet.isEmpty()) {
@@ -58,17 +57,16 @@ public class UserServiceImpl implements UserService {
 			if (checkedLogin != null) {
 				throw new ValidationServiceException(ValidationConstant.INVALID_LOGIN);
 			}
-			// checking, if person exists in table staff or patient. In other case there's
-			// not allowed to sign up.;
+			// checking, if the person exists in the table staff or patient. In other case
+			// there's
+			// not allowed to sign up;
 			idStaff = getStaffIdByEmail(email);
 			idPatient = getPatientsIdByEmail(email);
 		} catch (DaoException ex) {
 			throw new ServiceException("Procedure of checking login, if it's unique, failed.", ex);
 		}
-
 		boolean userStatus = true;
 		User user;
-
 		// if id was found in the table staff;
 		if (idStaff != null) {
 			user = new User(idStaff, login, password, UserRole.DOCTOR, userStatus);
@@ -96,6 +94,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public User logIn(String login, String password) throws ServiceException {
+		// Data validation;
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateLoginData(login, password);
 		if (!invalidDataSet.isEmpty()) {
@@ -265,25 +264,49 @@ public class UserServiceImpl implements UserService {
 		}
 		// (otherPatient != null) means that the e-mail already exists in DB;
 		if (otherPatient != null) {
-			throw new ValidationServiceException(ValidationConstant.INVALID_EMAIL);
+			throw new ValidationServiceException(ValidationConstant.NOT_UNIQUE_EMAIL);
 		}
 		// adding of new patient. Generating of unique ID;
 		String id = UUID.randomUUID().toString();
 		LocalDate birthday = LocalDate.parse(dateBirth);
 		Patient patient = new Patient(id, surname, name, birthday, email);
-		patient.setId(id);
 		int effectedRows = 0;
 		try {
 			effectedRows = userDao.createNewPatient(patient);
 		} catch (DaoException ex) {
 			throw new ServiceException(
-					"Error when calling userDao.createNewPatient(patient) from method addNewPatient(Patient patient)");
+					"Error when calling userDao.createNewPatient(patient) from method addNewPatient(Patient patient) from UserServiceImpl.");
 		}
 		if (effectedRows == 0) {
 			throw new ServiceException(
-					"The patient wasn't added. EffectedRows, when calling userDao.createNewPatient(patient), == 0");
+					"The patient wasn't added. EffectedRows, when calling userDao.createNewPatient(patient) from UserServiceImpl, == 0");
 		}
 		return id;
+	}
+
+	public void setPatientPersonalData(String id, String surname, String name, String dateBirth, String email)
+			throws ServiceException {
+		// Validation of personal data;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validatePatientPersonalData(surname, name, email, dateBirth);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		// update patient's personal data;
+		LocalDate birthday = LocalDate.parse(dateBirth);
+		Patient patient = new Patient(id, surname, name, birthday, email);
+		int effectedRows = 0;
+		try {
+			effectedRows = userDao.updatePatientPersonalData(patient);
+			if (effectedRows == 0) {
+				throw new ServiceException(
+						"The patient wasn't updated. EffectedRows, when calling userDao.updatePatientPersonalData() from UserServiceImpl, == 0");
+			}
+		} catch (DaoException ex) {
+			throw new ServiceException(
+					"Error when calling userDao.updatePatientPersonalData(patient) from method addNewPatient(Patient patient) from UserServiceImpl.");
+		}
 	}
 
 	// Getting full sorted by disease names List of possible diagnosis from DB;
@@ -408,7 +431,7 @@ public class UserServiceImpl implements UserService {
 		}
 		// (other != null) means that the e-mail already exists in DB;
 		if (other != null) {
-			throw new ValidationServiceException(ValidationConstant.INVALID_EMAIL);
+			throw new ValidationServiceException(ValidationConstant.NOT_UNIQUE_EMAIL);
 		}
 		// Adding of the new staff;
 		Specialty spec = Specialty.getSpecialty(specialty);
@@ -430,11 +453,48 @@ public class UserServiceImpl implements UserService {
 		return id;
 	}
 
+	public void setStaffPersonalData(String surname, String name, String newEmail, String oldEmail, String id) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateStaffPersonalData(surname, name, newEmail);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		// check, if the new e-mail is unique in case if old and new e-mails are different;
+		if (!newEmail.equals(oldEmail)) {
+			MedicalStaff other;
+			try {
+				other = userDao.findStaffByEmail(newEmail);
+			} catch (DaoException ex) {
+				throw new ServiceException(
+						"Error when calling userDao.findStaffByEmail(email) from method setStaffPersonalData() from UserServiceImpl.");
+			}
+			// (other != null) means that the e-mail already exists in DB;
+			if (other != null) {
+				throw new ValidationServiceException(ValidationConstant.NOT_UNIQUE_EMAIL);
+			}	
+		}
+		// Update staff's personal data;
+		int effectedRows = 0;
+		try {
+			effectedRows = userDao.updateStaffPersonalData(surname, name, newEmail, id);
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"Error when calling userDao.updateStaffPersonalData() from the method setStaffPersonalData() from UserServiceImpl",
+					e);
+		}
+		if (effectedRows == 0) {
+			throw new ServiceException(
+					"When calling setStaffPersonalData() from UserServiceImpl staff's personal data wasn't updated. Effected rows == 0");
+		}
+	}
+
 	public MedicalStaff getStaffById(String id) throws ServiceException {
 
 		if (id == null || id.isEmpty()) {
 			throw new ServiceException(
-					"Error when calling getStaffById(String id) from UserServiceImp. id == null/isEmpty.");
+					"Error when calling getStaffById(String id) from UserServiceImp. id=" + id);
 		}
 		MedicalStaff staff = null;
 		try {
@@ -449,6 +509,16 @@ public class UserServiceImpl implements UserService {
 					"When calling userDao.findStaffById(id) from method getStaffById(String id) from UserServiseImpl - staff wasn't found.");
 		}
 		return staff;
+	}
+
+	public List<MedicalStaff> getUserStaffBySurname(String surname) throws ServiceException {
+		List<MedicalStaff> staffList;
+		try {
+			staffList = userDao.findUserStaffBySurname(surname);
+		} catch (DaoException ex) {
+			throw new ServiceException("Error when calling getStaffBySurname() from UserServiseImpl", ex);
+		}
+		return staffList;
 	}
 
 	public void addNewHospitalisation(String idPatient, String entryDate) throws ServiceException {
@@ -584,7 +654,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return performingList;
 	}
-	
+
 	public int getAverageHospitalizationLength(String id, LocalDate hospitalizationDate) throws ServiceException {
 		List<Diagnosis> diagnosisList;
 		int numberBedDays = 0;
@@ -592,18 +662,61 @@ public class UserServiceImpl implements UserService {
 			diagnosisList = userDao.findDiagnosisByIdAndDate(id, hospitalizationDate);
 			if (diagnosisList.isEmpty()) {
 				return numberBedDays;
-			}else {
-				for(Diagnosis item: diagnosisList) {
+			} else {
+				for (Diagnosis item : diagnosisList) {
 					if (numberBedDays < item.getAverageBedDays()) {
 						numberBedDays = item.getAverageBedDays();
 					}
 				}
 			}
 		} catch (DaoException ex) {
-			throw new ServiceException("Error when calling getPrimaryDiagnosis() from UserServiceImpl.",
-					ex);
+			throw new ServiceException("Error when calling getPrimaryDiagnosis() from UserServiceImpl.", ex);
 		}
 		return numberBedDays;
+	}
+
+	public void setStaffUserRole(String role, String id) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateUserRole(role, id);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		int userRole = UserRole.valueOf(role).getRoleValue();
+		int effectedRows = 0;
+		try {
+			effectedRows = userDao.updateStaffUserRole(userRole, id);
+			if (effectedRows == 0) {
+				throw new ServiceException(
+						"When calling userDao.updateStaffUserRole() from setStaffUserRole() from UserServiceImpl, the role wasn't updated. Effected rows == 0.");
+			}
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"Error when calling userDao.updateStaffUserRole() from setStaffUserRole() from UserServiceImpl.", e);
+		}
+	}
+	
+	public void setUserStatus(String userStatus, String id) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateUserStatus(userStatus, id);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		boolean status = Boolean.parseBoolean(userStatus);
+		int effectedRows = 0;
+		try {
+			effectedRows = userDao.updateUserStatus(status, id);
+			if (effectedRows == 0) {
+				throw new ServiceException(
+						"When calling userDao.updateUserStatus() from setUserStatus() from UserServiceImpl status wasn't updated. Effected rows == 0.");
+			}
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"Error when calling userDao.updateUserStatus() from setUserStatus() from UserServiceImpl.", e);
+		}
 	}
 
 //	public static void main(String[] args) {
@@ -614,10 +727,8 @@ public class UserServiceImpl implements UserService {
 //			DaoFactoryImpl.setConnectionPool(connectionPool);
 //			
 //			UserServiceImpl userService = new UserServiceImpl();
-//			List<PatientDiagnosis> diList = userService.getSortedPatientDiagnosisById("e4a4baa0-25a5-4b60-9856-b55ec84d8c88");
-//			for (PatientDiagnosis di : diList) {
-//				System.out.println(di.toString());
-//			}
+//			userService.setUserStatus("true", "4dc191b9-3477-423c-8493-cfa531bc2b0b");
+//	
 //		} catch (ConnectionPoolException e) {
 //			e.printStackTrace();
 //

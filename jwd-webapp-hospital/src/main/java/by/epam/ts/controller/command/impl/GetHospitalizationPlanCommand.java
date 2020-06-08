@@ -29,7 +29,7 @@ public final class GetHospitalizationPlanCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String patientId = getUserIdFromSession(request);
-		if (patientId == null || patientId.isEmpty()) {
+		if ((patientId == null) || patientId.isEmpty()) {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ACCESS_DENIED);

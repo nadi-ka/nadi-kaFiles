@@ -16,6 +16,7 @@
 <fmt:setBundle basename="localization.locale" var="loc" />
 <fmt:message bundle="${loc}" key="local.main.showtreat" var="show_treat" />
 <fmt:message bundle="${loc}" key="local.main.get.consent" var="get_consent" />
+<fmt:message bundle="${loc}" key="local.main.calc_hospitalization" var="calc_hospitalization" />
 <fmt:message bundle="${loc}" key="local.main.welcome" var="welcome" />
 <fmt:message bundle="${loc}" key="local.main.navigate_login" var="navigate_login" />
 <fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
@@ -28,6 +29,15 @@
 </head>
 
 <body>
+
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
+
+	 <!-- Change language buttons -->
 	
 	<form action="register" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
@@ -43,19 +53,23 @@
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
-  		<h1>${login}, ${welcome}</h1>
+	<!-- Navigation menu -->
 	
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 	
-		<form name="showTreatment" method="GET" action="register">
-			<input type="hidden" name="command" value="show_treatment" /> 
-			<button type="submit" class="btn btn-primary">${show_treat}</button>
+		<form class="form-inline" name="get_treatment" method="GET" action="font">
+			<input type="hidden" name="command" value="get_treatment_page" /> 
+			<button type="submit" class="btn btn-sm btn-outline-secondary">${show_treat}</button>
 		</form>
 		
-		<form name="giveConsent" method="POST" action="register">
-			<input type="hidden" name="command" value="get_consent" /> 
-			<button type="submit" class="btn btn-primary">${get_consent}</button>
+		<form class="form-inline" name="calc_hospitalization" method="GET" action="font">
+			<input type="hidden" name="command" value="get_hospitalization_plan" /> 
+			<button type="submit" class="btn btn-sm btn-outline-secondary">${calc_hospitalization}</button>
 		</form>
-			
+		
+	</nav>
+	
+  		<h1>${login}, ${welcome}!</h1>		
 
 		<c:if test="${not empty requestScope.access_denied}">
 			<c:out value="${access_denied}"/>
@@ -64,17 +78,6 @@
 		<c:if test="${not empty requestScope.data_unavailable}">
 			<c:out value="${data_unavailable}"/>
 		</c:if>
-		
-	<div class="fixed-bottom">	
-
-	<form name="LogoutForm" method="POST" action="register">
-
-		<input type="hidden" name="command" value="logout" /> 
-		<button type="submit" class="btn btn-link">${logout_button}</button>
-
-	</form>
-	
-	</div>
 
 </body>
 </html>

@@ -111,11 +111,8 @@
 							<c:when test="${treatment.consent == true}">
 								<strong><c:out value="${agree}"/></strong>
 							</c:when>
-							<c:when test="${treatment.consent == false}">
-								<strong><c:out value="${disagree}"/></strong>
-							</c:when>
 							<c:otherwise>
-								<strong><c:out value="${indefined}"/></strong>
+								<strong><c:out value="${disagree}"/></strong>
 							</c:otherwise>
 						</c:choose>
 						

@@ -11,6 +11,11 @@ public class PersonalDataValidator {
 	 private static final String SURNAME_PATTERN = "^([\\p{L}]|[-]){2,45}$";
 	 private static final String DATE_OF_BIRTH_PATTERN = "^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$";
 	 private static final String PATIENT_ID_PATTERN = "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
+	 private static final String POSITIVE_USER_STATUS = "true";
+	 private static final String NEGATIVE_USER_STATUS = "false";
+	 private static final String USER_ROLE_DOCTOR = "DOCTOR";
+	 private static final String USER_ROLE_ADMINISTRATOR = "ADMINISTRATOR";
+	 
 	
 	public boolean validLogin(String login) {
 		return (login != null) && (login.matches(LOGIN_PATTERN));	
@@ -47,6 +52,14 @@ public class PersonalDataValidator {
 			}
 		}
 		return false;
+	}
+	
+	public boolean validUserStatus(String status) {
+		return ((status.equals(POSITIVE_USER_STATUS)) || (status.equals(NEGATIVE_USER_STATUS)));
+	}
+	
+	public boolean validStaffUserRole(String role) {
+		return ((role.equals(USER_ROLE_DOCTOR)) || (role.equals(USER_ROLE_ADMINISTRATOR)));
 	}
 
 }

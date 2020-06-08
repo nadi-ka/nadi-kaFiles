@@ -37,6 +37,8 @@ public interface UserDao {
 	
 	int createNewPatient(Patient patient) throws DaoException;
 	
+	int updatePatientPersonalData(Patient patient) throws DaoException;
+	
 	List<Patient> findPatientBySurname(String surname) throws DaoException;
 	
 	Patient findPatientById(String id) throws DaoException;
@@ -51,7 +53,11 @@ public interface UserDao {
 	
 	int createNewStaff(MedicalStaff medicalStaff) throws DaoException;
 	
+	int updateStaffPersonalData(String surname, String name, String email, String id) throws DaoException;
+	
 	MedicalStaff findStaffById(String id) throws DaoException;
+	
+	List<MedicalStaff> findUserStaffBySurname(String surname) throws DaoException;
 	
 	int createNewHospitalization(Hospitalization hospitalization) throws DaoException;
 	
@@ -68,5 +74,11 @@ public interface UserDao {
 	List<CurrentTreatment> findCurrentTreatmentByAppointmentId(int idAppointment) throws DaoException;
 	
 	List<Diagnosis> findDiagnosisByIdAndDate(String id, LocalDate hospitalizationDate) throws DaoException;
+	
+	int updateStaffUserRole(int newRole, String id) throws DaoException;
+	
+	int updateUserStatus(boolean newStatus, String id) throws DaoException;
+	
+	
 	
 }

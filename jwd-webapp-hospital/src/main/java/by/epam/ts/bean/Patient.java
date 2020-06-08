@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Patient implements Serializable {
+public class Patient extends User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
@@ -17,9 +17,11 @@ public class Patient implements Serializable {
 	private List<Hospitalization> hospitalizations;
 
 	public Patient() {
+		super();
 	}
 
 	public Patient(String id, String surname, String name, LocalDate dateOfBirth, String email) {
+		super();
 		this.id = id;
 		this.surname = surname;
 		this.name = name;

@@ -31,7 +31,6 @@ public final class GetCurrentPatientPageCommand implements Command {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
-		log.info("id:" + patientId);
 		String message = request.getParameter(RequestAtribute.MESSAGE);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
@@ -54,7 +53,7 @@ public final class GetCurrentPatientPageCommand implements Command {
 			goForward(request, response, page);
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetCurrentPatientPageCommand", e);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}

@@ -1,3 +1,5 @@
-
+.another-element {
+  @include float-right;
+}
 
 

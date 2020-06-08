@@ -18,6 +18,8 @@ public class ValidationManager {
 	private static final String KEY_EMAIL = "email";
 	private static final String KEY_LOGIN = "login";
 	private static final String KEY_PASSWORD = "password";
+	private static final String KEY_USER_STATUS = "user_status";
+	private static final String KEY_USER_ROLE = "user_role";
 	private static final String KEY_DATE_OF_BIRTH = "date_of_birth";
 	private static final String KEY_ID = "id";
 	private static final String KEY_CODE = "code";
@@ -70,6 +72,28 @@ public class ValidationManager {
 		Set<String> invalidData = checkInvalidData(validResults);
 		return invalidData;
 	}
+	
+	public Set<String> validateUserStatus(String status, String id) {
+		PersonalDataValidator validator = new PersonalDataValidator();
+		Map<String, Boolean> validResults = new HashMap<String, Boolean>();
+
+		validResults.put(KEY_USER_STATUS, validator.validUserStatus(status));
+		validResults.put(KEY_ID, validator.validID(id));
+
+		Set<String> invalidData = checkInvalidData(validResults);
+		return invalidData;
+	}
+	
+	public Set<String> validateUserRole(String role, String id) {
+		PersonalDataValidator validator = new PersonalDataValidator();
+		Map<String, Boolean> validResults = new HashMap<String, Boolean>();
+		
+		validResults.put(KEY_USER_ROLE, validator.validStaffUserRole(role));
+		validResults.put(KEY_ID, validator.validID(id));
+
+		Set<String> invalidData = checkInvalidData(validResults);
+		return invalidData;
+	}
 
 	public Set<String> validatePatientPersonalData(String surname, String name, String email, String dateOfBirth) {
 		PersonalDataValidator validator = new PersonalDataValidator();
@@ -83,7 +107,7 @@ public class ValidationManager {
 		Set<String> invalidData = checkInvalidData(validResults);
 		return invalidData;
 	}
-
+	
 	public Set<String> validatePatientDiagnosisData(String patientId, String codeDisease, LocalDate settingDate) {
 		DiagnosisValidator validator = new DiagnosisValidator();
 		Map<String, Boolean> validResults = new HashMap<String, Boolean>();
@@ -130,6 +154,18 @@ public class ValidationManager {
 		Map<String, Boolean> validResults = new HashMap<String, Boolean>();
 
 		validResults.put(KEY_SPECIALTY, validator.validSpecialty(specialty));
+		validResults.put(KEY_SURNAME, validator.validSurname(surname));
+		validResults.put(KEY_NAME, validator.validName(name));
+		validResults.put(KEY_EMAIL, validator.validEmail(email));
+
+		Set<String> invalidData = checkInvalidData(validResults);
+		return invalidData;
+	}
+	
+	public Set<String> validateStaffPersonalData(String surname, String name, String email) {
+		PersonalDataValidator validator = new PersonalDataValidator();
+		Map<String, Boolean> validResults = new HashMap<String, Boolean>();
+
 		validResults.put(KEY_SURNAME, validator.validSurname(surname));
 		validResults.put(KEY_NAME, validator.validName(name));
 		validResults.put(KEY_EMAIL, validator.validEmail(email));

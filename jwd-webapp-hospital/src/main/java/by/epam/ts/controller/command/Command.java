@@ -58,11 +58,11 @@ public interface Command {
 	default String getUserIdFromSession(HttpServletRequest request) {
 
 		HttpSession session = request.getSession(false);
-		String patientId = null;
+		String userId = null;
 		if (session != null) {
-			patientId = (String) session.getAttribute(SessionAtribute.USER_ID);
+			userId = (String) session.getAttribute(SessionAtribute.USER_ID);
 		}
-		return patientId;
+		return userId;
 	}
 
 }

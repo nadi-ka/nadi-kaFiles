@@ -60,7 +60,6 @@ public final class PerformTreatmentCommand implements Command {
 		String consent = request.getParameter(RequestAtribute.CONSENT);
 		String datePerforming = request.getParameter(RequestAtribute.SETTING_DATE);
 		String status = request.getParameter(RequestAtribute.TREATMENT_STATUS);
-		log.info(status + " " + datePerforming);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();

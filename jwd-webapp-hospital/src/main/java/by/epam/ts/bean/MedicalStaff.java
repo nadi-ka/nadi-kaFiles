@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import by.epam.ts.bean.specialty.Specialty;
 
-public class MedicalStaff implements Serializable {
+public class MedicalStaff extends User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
@@ -14,6 +14,7 @@ public class MedicalStaff implements Serializable {
 	private String email;
 
 	public MedicalStaff() {
+		super();
 	}
 
 	public MedicalStaff(String id, Specialty specialty, String surname, String name, String email) {

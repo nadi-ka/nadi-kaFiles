@@ -15,8 +15,8 @@
 	<fmt:setLocale value="${sessionScope.local}" />
 	<fmt:setBundle basename="localization.locale" var="loc" />
 	<fmt:message bundle="${loc}" key="local.staff.main.welcome" var="welcome" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.new_patient" var="add_patient" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.new_staff" var="add_staff" />
+	<fmt:message bundle="${loc}" key="local.main.update_personal_data" var="update_personal_data" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
 	<fmt:message bundle="${loc}" key="local.surname" var="surname" />
 	<fmt:message bundle="${loc}" key="local.name" var="name" />
@@ -25,14 +25,22 @@
 	<fmt:message bundle="${loc}" key="local.staff.main.patients_data" var="patients_data" />
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
 	<fmt:message bundle="${loc}" key="local.staff.main.not_found" var="not_found" />
+	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	
-	<fmt:message bundle="${loc}" key="local.staff.main.button.add" var="submit_btn" />
+	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_btn" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
 	
 </head>
 
 <body>
+
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
 
     <!-- Change language buttons -->
 
@@ -59,13 +67,18 @@
 		<!-- Next button will be visible only for user-administrator -->
 	
 		<c:if test="${sessionScope.role == 'ADMINISTRATOR'}">	
-  			<form class="form-inline" action="font" method="post">
+  			<form class="form-inline" action="font" method="GET">
   				<input type="hidden" name="command" value="get_staff_data_page" />
   				<button type="submit" class="btn btn-sm btn-outline-secondary">${add_staff}</button>
         	</form>
     	</c:if>
+    	
+    	<form class="form-inline" action="font" method="GET">
+  				<input type="hidden" name="command" value="get_update_personal_data_page" />
+  				<button type="submit" class="btn btn-sm btn-outline-secondary">${update_personal_data}</button>
+        </form>
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0">
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
         	<input type="hidden" name="command" value="search_patient"/>
       		<input class="form-control mr-sm-2" type="search" name="query_search" 
       			placeholder="${surname}" aria-label="Search the patient">
@@ -75,6 +88,8 @@
 	</nav>
 	
 	<h1>${welcome}</h1>
+	
+	<!-- Alert -->
 	
   	<c:if test="${param.message == 'not_found'}">
   		<div class="alert alert-light" role="alert">

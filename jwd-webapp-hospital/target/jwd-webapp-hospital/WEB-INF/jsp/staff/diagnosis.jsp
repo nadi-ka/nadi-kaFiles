@@ -24,6 +24,9 @@
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.nothing_selected" var="nothing_selected" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.new_patient" var="add_patient" />
+	<fmt:message bundle="${loc}" key="local.staff.main.button.prescribe_treatment" var="prescribe_treatment" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.nav_hospitalization" var="set_hospitalization" />
+	<fmt:message bundle="${loc}" key="local.staff.main.button.get_current" var="get_current_patient" />
 	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.missing_diagnosis" var="missing_diagnosis" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.add_here" var="add_here" />
@@ -33,12 +36,20 @@
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.bed_days" var="bed_days" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.not_obvious" var="field_not_obvious" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.diagnosis_successfully" var="diagnosis_successfully"/>
+	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
 
 </head>
 <body>
+
+	<!-- Logout button -->
+		
+	<form name="Logout_form" method="POST" action="register" class="float-right">
+		<input type="hidden" name="command" value="logout" /> 
+		<button type="submit" class="btn btn-link">${logout_button}</button>
+	</form>
 
 	<!-- Change language buttons -->
 
@@ -64,12 +75,30 @@
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
   		
-  		<form class="form-inline" action="font" method="post">
+  		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${add_patient}</button>
-        </form>      
+        </form>
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0">
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_hospitalization_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${set_hospitalization}</button>
+        </form>
+        
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_prescriptions_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${prescribe_treatment}</button>
+        </form>
+        
+        <form class="form-inline" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_current_patient_page" />
+  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
+        </form>        
+        
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
         	<input type="hidden" name="command" value="search_patient"/>
       		<input class="form-control mr-sm-2" type="search" name="query_search" 
       			placeholder="Surname" aria-label="Search the patient">
@@ -93,7 +122,7 @@
 		</div>
 	</c:if>
 	
-	<!-- Displaying of the form with possible diagnosis to choose from -->
+	<!-- Form with possible diagnosis to choose from -->
 	
 	<div class="border border-secondary w-50 p-3" style="background-color: #eee;"> 
 		<form name="patients_diagnosis" action="font" method="POST">
@@ -130,12 +159,12 @@
 		</form>
 	</div>
 	
-	<div class="p-3 mb-2 bg-white text-dark">>
+	<div class="p-3 mb-2 bg-white text-dark">
    			<h5>${missing_diagnosis}</h5>
 			<p>${add_here}</p>
 	</div>
 	
-	<!-- Displaying of the form for adding new diagnosis to the list of possible diagnosis -->
+	<!-- Form for adding new diagnosis to the list of possible diagnosis -->
 	
 	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">
 	 
@@ -143,12 +172,6 @@
 			<p><b>${enter_diagnosis}</b></p>
 			<input type="hidden" name="command" value="add_new_diagnosis"/>
 			<input type="hidden" name="patient_id" value="${patient_id}"/>
-			
-			<div class="alert alert-primary" role="alert">
-				<c:if test="${param.message == 'diagnosis_added_successfully'}">
-					<c:out value="${diagnosis_successfully}"/>
-				</c:if>
-			</div>
 			
 			<div class="form-group">
 				<label for="code">${code}</label>
@@ -163,6 +186,12 @@
 			<div class="form-group">
 				<label for="bed_days">${bed_days}</label>
 				<input type="text" class="form-control" style="width: 60%" name="bed_days" value="">
+			</div>
+			
+			<div class="alert alert-primary" role="alert">
+				<c:if test="${param.message == 'diagnosis_added_successfully'}">
+					<c:out value="${diagnosis_successfully}"/>
+				</c:if>
 			</div>
 
 			<button type="submit"  class="btn btn-primary">${submit_btn}</button>

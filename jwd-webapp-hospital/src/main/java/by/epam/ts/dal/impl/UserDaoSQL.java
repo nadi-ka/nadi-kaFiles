@@ -52,6 +52,7 @@ public class UserDaoSQL implements UserDao {
 	private static final String sqlAddPatientTreatment = "INSERT INTO treatment (id_patient, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent) VALUES (?,?,?,?,?,?,?);";
 	private static final String sqlAddNewStaff = "INSERT INTO `medical-staff` VALUES (?,?,?,?,?);";
 	private static final String sqlFindStaffById = "SELECT * FROM `medical-staff` WHERE id=(?);";
+	private static final String sqlFindUserStaffBySurname = "SELECT `medical-staff`.*, users.role, users.user_status FROM `medical-staff` JOIN users ON `medical-staff`.id=users.id_medical_staff WHERE surname=(?);";
 	private static final String sqlAddHospitalization = "INSERT INTO hospitalization (id_patient, entry_date) VALUES (?,?);";
 	private static final String sqlFinishHospitalization = "UPDATE hospitalization SET discharge_date = (?) WHERE id_history = (?);";
 	private static final String sqlFindHospitalizationsByPatientId = "SELECT * FROM hospitalization WHERE id_patient = (?) ORDER BY entry_date DESC;";
@@ -61,7 +62,11 @@ public class UserDaoSQL implements UserDao {
 	private static final String sqlFindCurrentTreatmentByAppointmentId = "SELECT id_procedure, date, id_performer, status, surname, name FROM `current-treatment` JOIN `medical-staff` ON `current-treatment`.id_performer=`medical-staff`.id WHERE id_appointment=(?) ORDER BY date DESC;";
 	private static final String sqlFindTreatmentDuringCurrentHospitalization = "SELECT id_appointment, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?) AND `date_begin/holding` >= (?);";
 	private static final String sqlFindDiagnosisByIdAndDate = "SELECT code_diagnosis, diagnosis.name, diagnosis.bed_days FROM `id-m2m-code` JOIN diagnosis ON `id-m2m-code`.code_diagnosis=diagnosis.code WHERE id_patient=(?) AND is_primary=true AND setting_date >= (?);";
-	
+	private static final String sqlUpdateUserRole = "UPDATE users SET role = (?) WHERE id_medical_staff = (?);";
+	private static final String sqlUpdateUserStatus = "UPDATE users SET user_status = (?) WHERE id_medical_staff = (?);";
+	private static final String sqlUpdateStaffPersonalData = "UPDATE `medical-staff` SET surname = (?), name = (?), email = (?) WHERE id = (?);";
+	private static final String sqlUpdatePatientPersonalData = "UPDATE patients SET surname = (?), name = (?), birth_date = (?), email = (?) WHERE id = (?);";
+
 	private static final Logger log = LogManager.getLogger(UserDaoSQL.class);
 
 	public UserDaoSQL(ConnectionPool connectionPool) {
@@ -474,6 +479,40 @@ public class UserDaoSQL implements UserDao {
 		return insertedRows;
 	}
 
+	public int updatePatientPersonalData(Patient patient) throws DaoException {
+		int insertedRows = 0;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+
+			preparedStatement = connection.prepareStatement(sqlUpdatePatientPersonalData);
+			preparedStatement.setString(1, patient.getSurname());
+			preparedStatement.setString(2, patient.getName());
+			preparedStatement.setDate(3, Date.valueOf(patient.getDateOfBirth()), Calendar.getInstance());
+			preparedStatement.setString(4, patient.getEmail());
+			preparedStatement.setString(5, patient.getId());
+
+			insertedRows = preparedStatement.executeUpdate();
+
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
 	public List<Patient> findPatientBySurname(String surname) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -728,6 +767,37 @@ public class UserDaoSQL implements UserDao {
 		return insertedRows;
 	}
 
+	public int updateStaffPersonalData(String surname, String name, String email, String id) throws DaoException {
+		int insertedRows;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlUpdateStaffPersonalData);
+			preparedStatement.setString(1, surname);
+			preparedStatement.setString(2, name);
+			preparedStatement.setString(3, email);
+			preparedStatement.setString(4, id);
+
+			insertedRows = preparedStatement.executeUpdate();
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
 	public MedicalStaff findStaffById(String id) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -764,6 +834,50 @@ public class UserDaoSQL implements UserDao {
 			connectionPool.releaseConnection(connection);
 		}
 		return staff;
+	}
+
+	public List<MedicalStaff> findUserStaffBySurname(String surname) throws DaoException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		MedicalStaff staff = null;
+		List<MedicalStaff> staffList = new ArrayList<MedicalStaff>();
+
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlFindUserStaffBySurname);
+			preparedStatement.setString(1, surname);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String specialty = resultSet.getString("specialty");
+				String name = resultSet.getString("name");
+				String email = resultSet.getString("email");
+				int role = resultSet.getInt("role");
+				System.out.println("intRole:" + role);
+				System.out.println("UserRole:" + UserRole.getUserRole(role));
+				boolean userStatus = resultSet.getBoolean("user_status");
+				staff = new MedicalStaff(id, Specialty.getSpecialty(specialty), surname, name, email);
+				staff.setRole(UserRole.getUserRole(role));
+				staff.setUserStatus(userStatus);
+				staffList.add(staff);
+			}
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during reading from DB.", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return staffList;
 	}
 
 	public int createNewHospitalization(Hospitalization hospitalization) throws DaoException {
@@ -1021,7 +1135,7 @@ public class UserDaoSQL implements UserDao {
 		}
 		return treatmentList;
 	}
-	
+
 	public List<Diagnosis> findDiagnosisByIdAndDate(String id, LocalDate hospitalizationDate) throws DaoException {
 		Connection connection = null;
 		Diagnosis diagnosis = null;
@@ -1060,6 +1174,62 @@ public class UserDaoSQL implements UserDao {
 		return diagnosisList;
 	}
 
+	public int updateStaffUserRole(int newRole, String id) throws DaoException {
+		int insertedRows;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlUpdateUserRole);
+			preparedStatement.setInt(1, newRole);
+			preparedStatement.setString(2, id);
+
+			insertedRows = preparedStatement.executeUpdate();
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
+	public int updateUserStatus(boolean newStatus, String id) throws DaoException {
+		int insertedRows;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = connectionPool.takeConnection();
+			preparedStatement = connection.prepareStatement(sqlUpdateUserStatus);
+			preparedStatement.setBoolean(1, newStatus);
+			preparedStatement.setString(2, id);
+
+			insertedRows = preparedStatement.executeUpdate();
+		} catch (ConnectionPoolException ex) {
+			throw new DaoException("Error during taking connection from  pool", ex);
+		} catch (SQLException ex) {
+			throw new DaoException("Error during preparing/executing INSERT Statement", ex);
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					log.log(Level.ERROR, "Error during closing the statement", ex);
+				}
+			}
+			connectionPool.releaseConnection(connection);
+		}
+		return insertedRows;
+	}
+
 //	public static void main(String[] args) {
 //		ConnectionPool connectionPool = new ConnectionPool();
 //
@@ -1067,9 +1237,9 @@ public class UserDaoSQL implements UserDao {
 //			connectionPool.initializePoolData();
 //			UserDaoSQL userDaoSQL = new UserDaoSQL(connectionPool);
 //			
-//			List<Diagnosis> treat = userDaoSQL.findDiagnosisByIdAndDate("e4a4baa0-25a5-4b60-9856-b55ec84d8c88", LocalDate.parse("2019-07-23"));
-//			for (Diagnosis di: treat) {
-//				System.out.println(di.toString());
+//			List<MedicalStaff> staffs = userDaoSQL.findUserStaffBySurname("Хаддад");
+//			for (MedicalStaff st: staffs) {
+//				System.out.println(st.getRole());
 //			}
 //			
 //		} catch (ConnectionPoolException e) {

@@ -32,6 +32,9 @@ public interface UserService {
 	Patient getPatientById(String id) throws ServiceException;
 
 	String addNewPatient(String surname, String name, String dateBirth, String email) throws ServiceException;
+	
+	void setPatientPersonalData(String id, String surname, String name, String dateBirth, String email)
+			throws ServiceException;
 
 	List<Diagnosis> getAllDiagnosisSorted() throws ServiceException;
 
@@ -43,8 +46,12 @@ public interface UserService {
 			String dateBegin, String dateFinish) throws ServiceException;
 
 	String addNewStaff(String specialty, String surname, String name, String email) throws ServiceException;
+	
+	void setStaffPersonalData(String surname, String name, String newEmail, String oldEmail, String id) throws ServiceException;
 
 	MedicalStaff getStaffById(String id) throws ServiceException;
+	
+	List<MedicalStaff> getUserStaffBySurname(String surname) throws ServiceException;
 
 	void addNewHospitalisation(String idPatient, String entryDate) throws ServiceException;
 
@@ -63,5 +70,9 @@ public interface UserService {
 	List<CurrentTreatment> getCurrentTreatmentByAppointmentId(int idAppointment) throws ServiceException;
 	
 	int getAverageHospitalizationLength(String id, LocalDate hospitalizationDate) throws ServiceException;
+	
+	void setStaffUserRole(String role, String id) throws ServiceException;
+	
+	void setUserStatus(String userStatus, String id) throws ServiceException;
 
 }

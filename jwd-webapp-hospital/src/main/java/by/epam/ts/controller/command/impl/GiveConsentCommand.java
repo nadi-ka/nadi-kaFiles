@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
+import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
@@ -35,8 +36,9 @@ public final class GiveConsentCommand implements Command {
 					+ "=" + CommandEnum.GET_TREATMENT_PAGE.toString().toLowerCase());
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method execute from GiveConsentCommand", ex);
-			response.sendRedirect(
-					request.getContextPath() + "/register?command=show_error_page&message=technical_error");
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+					+ RequestMessage.TECHNICAL_ERROR);
 		}
 
 	}

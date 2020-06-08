@@ -29,7 +29,6 @@ public final class GetStaffDataPageCommand implements Command {
 		
 		String newAddedStaffId = request.getParameter(RequestAtribute.STAFF_ID);
 		String message = request.getParameter(RequestAtribute.MESSAGE);
-		log.info("id staff:" + newAddedStaffId);
 		
 		if (newAddedStaffId != null) {
 			ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
@@ -45,7 +44,6 @@ public final class GetStaffDataPageCommand implements Command {
 		        log.info("Staff obj:" + medicalStaff.toString());
 			}catch (ServiceException e) {
 				log.log(Level.ERROR, "Error when calling execute() from GetStaffDataPageCommand", e);
-				request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
 				response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 						+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 						+ RequestMessage.TECHNICAL_ERROR);

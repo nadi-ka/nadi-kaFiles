@@ -3,7 +3,7 @@ package by.epam.ts.service.validator.core;
 public class TreatmentHospitalizationValidator {
 	
 	private static final String ID_PATTERN = "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
-	private static final String TREATMENT_TYPE_PATTERN = "^([\\p{L}]){5,20}$";
+	private static final String TREATMENT_TYPE_PATTERN = "^([a-zA-Z\\s]){5,20}$";
 	private static final String DATE_PATTERN = "^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$";
 	private static final String MEDICAL_HISTORY_PATTERN = "^[1-9]\\d*$";
 	private static final int MAX_LENGTH_TREATMENT = 255;
