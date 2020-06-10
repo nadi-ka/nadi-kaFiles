@@ -8,7 +8,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="style/style.css"/>
 
 	<title>Current-patient-page</title>
 	
@@ -71,7 +71,7 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
   		
   		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />
@@ -84,7 +84,7 @@
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
         </form>
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
         	<input type="hidden" name="command" value="search_patient"/>
       		<input class="form-control mr-sm-2" type="search" name="query_search" 
       			placeholder="Surname" aria-label="Search the patient">

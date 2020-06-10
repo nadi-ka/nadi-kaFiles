@@ -11,19 +11,20 @@
 	<link rel="stylesheet" href="style/style.css"/>
 	<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 	
-	<title>Staff-data-page</title>
+	<title>Patient-data-page</title>
 	
 	<fmt:setLocale value="${sessionScope.local}" />
 	<fmt:setBundle basename="localization.locale" var="loc" />
 	
-	<fmt:message bundle="${loc}" key="local.staff.treat_perform.nav_main" var="nav_main"/>
-	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
-	<fmt:message bundle="${loc}" key="local.staff.data.update_staff" var="update_staff" />
+	<fmt:message bundle="${loc}" key="local.main.showtreat" var="show_treat" />
+	<fmt:message bundle="${loc}" key="local.hospital_plan.nav_main" var="navigate_main" />
+	<fmt:message bundle="${loc}" key="local.main.calc_hospitalization" var="calc_hospitalization" />
 	<fmt:message bundle="${loc}" key="local.surname" var="surname" />
 	<fmt:message bundle="${loc}" key="local.name" var="name" />
 	<fmt:message bundle="${loc}" key="local.email" var="email" />
-	<fmt:message bundle="${loc}" key="local.staff.data.specialty" var="specialty" />
+	<fmt:message bundle="${loc}" key="local.date_of_birth" var="date_of_birth" />
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
+	<fmt:message bundle="${loc}" key="local.update_patient.update_heading" var="update_heading" />
 
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_btn" />
@@ -46,7 +47,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="redirect_command" value="get_update_personal_data_page">   
+		<input type="hidden" name="redirect_command" value="get_update_patient_data_page">   
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
@@ -54,7 +55,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="redirect_command" value="get_update_personal_data_page">  
+		<input type="hidden" name="redirect_command" value="get_update_patient_data_page">  
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
@@ -62,54 +63,62 @@
 	
 	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
   		
-  		<form class="form-inline" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_staff_main_page" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${nav_main}</button>
+  		<form class="form-inline" name="navigate_main" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_patient_main_page" />
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${navigate_main}</button>
         </form>
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
-        	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_search" 
-      			placeholder="${surname}" aria-label="Search the patient">
-      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
-    	</form>
+        <form class="form-inline" name="get_treatment" action="font" method="GET">
+			<input type="hidden" name="command" value="get_treatment_page" /> 
+			<button type="submit" class="btn btn-sm btn-outline-secondary">${show_treat}</button>
+		</form>
+		
+		<form class="form-inline" name="calc_hospitalization" method="GET" action="font">
+			<input type="hidden" name="command" value="get_hospitalization_plan" /> 
+			<button type="submit" class="btn btn-sm btn-outline-secondary">${calc_hospitalization}</button>
+		</form>
 
 	</nav>
 	
 	<!-- Displaying of the current personal data -->
 
-	<c:if test="${!empty medical_staff}">
+	<c:if test="${!empty patient}">
 		<li class="list-group-item list-group-item-warning">
-			<h3>${medical_staff.surname} ${medical_staff.name}</h3>  
+			<h3>${patient.surname} ${patient.name}</h3>  
 			<ul class="list-group">
-  				<li class="list-group-item">${specialty} ${medical_staff.specialty.getSpecialtyValue()}</li>
-  				<li class="list-group-item">${email} ${medical_staff.email}</li>  
+  				<li class="list-group-item">${date_of_birth} ${patient.dateOfBirth}</li>
+  				<li class="list-group-item">${email} ${patient.email}</li>  
 			</ul>         	
 		</li>
 	</c:if>
 	
 	<!-- Form update staff personal data -->
 	
-	<h3>${update_staff}:</h3>
+	<h3>${update_heading}</h3>
 	
 		<div class="border border-secondary w-50 p-3" style="background-color: #eee;"> 
-			<form name="update_staff_data" action="font" method="POST">
-				<input type="hidden" name="command" value="update_personal_data" />
+			<form name="update_patient_data" action="font" method="POST">
+				<input type="hidden" name="command" value="update_patient_data" />
 	
 				<div class="form-group">
     				<label for="surname">${surname}:</label>
-    				<input id="box1" type="text"  name="surname" value="${requestScope.medical_staff.surname}">
+    				<input id="box1" type="text"  name="surname" value="${requestScope.patient.surname}">
   				</div>
   		
   				<div class="form-group">
     				<label for="name">${name}</label>
-    				<input id="box2" type="text" name="name" value="${requestScope.medical_staff.name}">
+    				<input id="box2" type="text" name="name" value="${requestScope.patient.name}">
   				</div>
+  				
+  				<div class="form-group">
+  					<label for="date">${date_of_birth}</label>
+  					<input id="box3" type="date" name="date_of_birth" value="${requestScope.patient.dateOfBirth}" >
+				</div>
 	
   				<div class="form-group">
   					<label for="email">${email}</label>
-  					<input type="hidden" name="old_email" value="${requestScope.medical_staff.email}" />
-    				<input id="box3" type="email" name="email" value="${requestScope.medical_staff.email}" >
+  					<input type="hidden" name="old_email" value="${requestScope.patient.email}" />
+    				<input id="box4" type="email" name="email" value="${requestScope.patient.email}" >
   				</div>
   		
   				<c:if test="${param.message == 'error_data'}">
@@ -123,4 +132,4 @@
 			</form>
 		</div>
 	</body>
-</html>	
+</html>

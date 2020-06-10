@@ -8,9 +8,9 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="style/style.css"/>
 
-	<title>Patients-data-page</title>
+	<title>Patient-data-page</title>
 
 	<fmt:setLocale value="${sessionScope.local}" />
 	<fmt:setBundle basename="localization.locale" var="loc" />
@@ -57,14 +57,14 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
   		
   		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${nav_main}</button>
         </form>
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
         	<input type="hidden" name="command" value="search_patient"/>
       		<input class="form-control mr-sm-2" type="search" name="query_search" 
       			placeholder="Surname" aria-label="Search the patient">
@@ -76,7 +76,7 @@
 	<!-- Alert -->
 	
 	<c:if test="${requestScope.message == 'patients_found'}">
-		<div class="alert alert-primary" role="alert">
+		<div class="alert alert-warning" role="alert">
 			<c:out value="${patients_found}"/>
 		</div>
 	</c:if>
@@ -129,11 +129,7 @@
 	
 	<!-- Displaying of the List of patients with the same surnames -->
 		
-	<ul class="list-group">
-		<c:if test="${!empty patients}">
-    		<c:out value="${choose}"/>
-		</c:if>
-	</ul>
+	
 	
 	<ul class="list-group">
 		<c:forEach var="patient" items="${patients}">
@@ -149,6 +145,8 @@
 			</li>
 		</c:forEach>
 	</ul>
+	
+	<img src="img/image_medicine.png" alt="medicine image">
 		
 </body>
 </html>	

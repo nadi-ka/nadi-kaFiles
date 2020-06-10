@@ -8,7 +8,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="style/style.css"/>
 
 	<title>Hospitalization-page</title>
 	
@@ -17,6 +17,7 @@
 	
 	<fmt:message bundle="${loc}" key="local.main.showtreat" var="show_treat" />
 	<fmt:message bundle="${loc}" key="local.hospital_plan.nav_main" var="navigate_main" />
+	<fmt:message bundle="${loc}" key="local.main.update_patient" var="update_patient_data" />
 	<fmt:message bundle="${loc}" key="local.hospital_plan.already_discharged" var="already_discharged" />
 	<fmt:message bundle="${loc}" key="local.hospital_plan.hospitalization_calc" var="hospitalization_calc" />
 	<fmt:message bundle="${loc}" key="local.hospital_plan.average_bed_days" var="average_bed_days" />
@@ -60,7 +61,12 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
+	
+		<form class="form-inline" name="update_patient_data" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_update_patient_data_page" />
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${update_patient_data}</button>
+        </form>
   		
   		<form class="form-inline" name="navigate_main" action="font" method="GET">
   			<input type="hidden" name="command" value="get_patient_main_page" />
@@ -77,12 +83,12 @@
 	<!-- Alerts -->
 	
 	<c:if test="${requestScope.message == 'already_discharged'}">
-  		<div class="alert alert-primary" role="alert">
+  		<div class="alert alert-warning" role="alert">
 			<c:out value="${already_discharged} ${requestScope.date_finishing}"/>
 		</div>
 	</c:if>
 	<c:if test="${requestScope.message == 'diagnosis_absent'}">
-  		<div class="alert alert-primary" role="alert">
+  		<div class="alert alert-warning" role="alert">
 			<c:out value="${diagnosis_absent}"/>
 		</div>
 	</c:if>
@@ -103,7 +109,7 @@
 		
 		<table class="table table-bordered">
 			<thead>
-				<tr class="table-info">
+				<tr class="table-active">
 					<th scope="col">${entry_date}</th>
 					<th scope="col">${discharge_date}</th>
 				</tr>

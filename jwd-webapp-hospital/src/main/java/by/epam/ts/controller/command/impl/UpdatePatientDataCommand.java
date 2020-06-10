@@ -19,42 +19,47 @@ import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
-public final class UpdatePersonalDataCommand implements Command {
 
-	private static final Logger log = LogManager.getLogger(UpdatePersonalDataCommand.class);
+public final class UpdatePatientDataCommand implements Command {
+	
+	private static final Logger log = LogManager.getLogger(UpdatePatientDataCommand.class);
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String surname = request.getParameter(RequestAtribute.SURNAME);
 		String name = request.getParameter(RequestAtribute.NAME);
 		String newEmail = request.getParameter(RequestAtribute.EMAIL);
+		String dateOfBirth = request.getParameter(RequestAtribute.DATE_OF_BIRTH);
 		String oldEmail = request.getParameter(RequestAtribute.OLD_EMAIL);
-		String staffId = getUserIdFromSession(request);
-		if ((staffId == null) || staffId.isEmpty()) {
+		String patientId = getUserIdFromSession(request);
+		log.info(surname + " " + name + " " + newEmail + " " + "old:" + oldEmail + "date:" + dateOfBirth);
+		if ((patientId == null) || patientId.isEmpty()) {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ACCESS_DENIED);
 			return;
-		}
+		}	
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		try {
-			userService.setStaffPersonalData(surname, name, newEmail, oldEmail, staffId);
+			userService.setPatientPersonalData(patientId, surname, name, dateOfBirth, newEmail, oldEmail);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE.toString().toLowerCase());
+					+ "=" + CommandEnum.GET_UPDATE_PATIENT_DATA_PAGE.toString().toLowerCase());
 		} catch (ValidationServiceException e) {
-			log.log(Level.WARN, "Error when calling execute() from UpdatePersonalDataCommand. Invalid parameters:", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA + "&"
-					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
-		} catch (ServiceException e) {
-			log.log(Level.ERROR,
-					"Error when calling execute() from UpdatePersonalDataCommand. The staff's personal data wasn't updated.",
+			log.log(Level.WARN,
+					"Error when calling execute() from UpdatePatientDataCommand. Invalid parameters:",
 					e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
+					+ CommandEnum.GET_UPDATE_PATIENT_DATA_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
+		}
+		catch (ServiceException e) {
+			log.log(Level.ERROR, "Error when calling execute() from UpdatePatientDataCommand. The patient's personal data wasn't updated.", e);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
+					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}
+
 	}
+
 }

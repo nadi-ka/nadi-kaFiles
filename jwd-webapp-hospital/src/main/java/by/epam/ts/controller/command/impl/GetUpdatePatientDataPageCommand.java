@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import by.epam.ts.bean.MedicalStaff;
+import by.epam.ts.bean.Patient;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
@@ -20,25 +20,25 @@ import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
-public final class GetUpdatePersonalDataPageCommand implements Command {
-
-	private static final Logger log = LogManager.getLogger(GetUpdatePersonalDataPageCommand.class);
+public final class GetUpdatePatientDataPageCommand implements Command {
+	
+	private static final Logger log = LogManager.getLogger(GetUpdatePatientDataPageCommand.class);
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String stafftId = getUserIdFromSession(request);
+		String patientId = getUserIdFromSession(request);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		try {
-			// if staff will not be found - service throws exception (access allowed only
+			// if patient will not be found - service throws exception (access allowed only
 			// for correctly logged persons);
-			MedicalStaff staff = userService.getStaffById(stafftId);
-			request.setAttribute(RequestAtribute.MEDICAL_STAFF, staff);
-			String page = NavigationManager.getProperty("path.page.staff.update_personal_data");
+			Patient patient = userService.getPatientById(patientId);
+			request.setAttribute(RequestAtribute.PATIENT, patient);
+			String page = NavigationManager.getProperty("path.page.update_patient_data");
 			goForward(request, response, page);
 		} catch (ServiceException e) {
-			log.log(Level.ERROR, "Error when calling execute() from GetUpdatePersonalDataPageCommand", e);
+			log.log(Level.ERROR, "Error when calling execute() from GetUpdatePatientDataPageCommand", e);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);

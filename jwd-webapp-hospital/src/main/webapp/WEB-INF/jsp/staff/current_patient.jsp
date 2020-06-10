@@ -8,7 +8,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="style/style.css"/>
 
 	<title>Current-patient-page</title>
 	
@@ -75,7 +75,7 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
   		
   		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />
@@ -147,7 +147,7 @@
 	
 		<!-- personal data -->
 		
-		<div class="p-3 mb-2 bg-success text-white">${patient.surname} ${patient.name}</div>
+		<div class="p-3 mb-2 bg-secondary text-white">${patient.surname} ${patient.name}</div>
 			<ul class="list-group">
   				<li class="list-group-item list-group-item-light">${date_of_birth} ${patient.dateOfBirth}</li>
   				<li class="list-group-item list-group-item-light">${e_mail} ${patient.email}</li>  

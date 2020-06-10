@@ -8,7 +8,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="style/style.css"/>
 
 	<title>Prescriptions-page</title>
 	
@@ -69,11 +69,9 @@
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
 	
-	<c:out value="${requestScope['javax.servlet.forward.query_string']}"/>
-	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
   		
   		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />

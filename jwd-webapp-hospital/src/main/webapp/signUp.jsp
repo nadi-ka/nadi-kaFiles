@@ -8,7 +8,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="style/style.css"/>
 	
 	<title>SignUp-page</title>
 
@@ -47,11 +47,10 @@
 	</form>
 
 	<h1>${register}</h1>
-	
-	<img class="rounded float-right" src="img/registration.png" 
-		 alt="pen and paper image" style="width:4em; height:5em;" />
 		 
 		 <div class="border border-secondary w-50 p-3" style="background-color: #eee;">	
+		 <img class="rounded float-right" src="img/registration.png" 
+		 alt="pen and paper image" style="width:4em; height:5em;" />
 			<form name="registerForm" method="POST" action="register">
 				<input type="hidden" name="command" value="sign_up" />
 			
@@ -82,10 +81,9 @@
 		</div>
 	
 	<!-- Go to index-page -->
+	
+	<p>${account}<p>
 
-	<h5>
-		<c:out value="${account}" /> 
-	</h5>
 	<form name="To_index_page" method="GET" action="font" >
 		<input type="hidden" name="command" value="get_index_page" /> 
 		<button type="submit" class="btn btn-link">${reflogin}</button>

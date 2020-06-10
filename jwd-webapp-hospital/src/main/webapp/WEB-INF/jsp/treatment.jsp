@@ -8,7 +8,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="style/style.css"/>
 
 	<title>Treatment</title>
 
@@ -30,6 +30,7 @@
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_button" />
 	<fmt:message bundle="${loc}" key="local.main.calc_hospitalization" var="calc_hospitalization" />
 	<fmt:message bundle="${loc}" key="local.hospital_plan.nav_main" var="navigate_main" />
+	<fmt:message bundle="${loc}" key="local.main.update_patient" var="update_patient_data" />
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
@@ -63,7 +64,12 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
+	
+		<form class="form-inline" name="update_patient_data" action="font" method="GET">
+  			<input type="hidden" name="command" value="get_update_patient_data_page" />
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${update_patient_data}</button>
+        </form>
 	
 		<form class="form-inline" name="navigate_main" action="font" method="GET">
   			<input type="hidden" name="command" value="get_patient_main_page" />
@@ -133,7 +139,7 @@
           						<label class="form-check-label">${disagree}</label>
           					</div>
           					
-          					<button type="submit" class="btn btn-primary">${submit_button}</button>	 
+          					<button type="submit" class="btn btn-secondary">${submit_button}</button>	 
           						
 						</form>
 						

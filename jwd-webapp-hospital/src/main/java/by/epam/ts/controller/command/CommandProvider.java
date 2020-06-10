@@ -32,8 +32,10 @@ import by.epam.ts.controller.command.impl.GetSignUpPageCommand;
 import by.epam.ts.controller.command.impl.GetStaffMainPageCommand;
 import by.epam.ts.controller.command.impl.GetTreatPerformancePageCommand;
 import by.epam.ts.controller.command.impl.GetTreatmentPageCommand;
+import by.epam.ts.controller.command.impl.GetUpdatePatientDataPageCommand;
 import by.epam.ts.controller.command.impl.GetUpdatePersonalDataPageCommand;
 import by.epam.ts.controller.command.impl.SignUpCommand;
+import by.epam.ts.controller.command.impl.UpdatePatientDataCommand;
 import by.epam.ts.controller.command.impl.UpdatePersonalDataCommand;
 import by.epam.ts.controller.command.impl.UpdateUserRoleCommand;
 import by.epam.ts.controller.command.impl.UpdateUserStatusCommand;
@@ -79,6 +81,8 @@ public final class CommandProvider {
 		repository.put(CommandEnum.UPDATE_USER_STATUS, new UpdateUserStatusCommand());
 		repository.put(CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE, new GetUpdatePersonalDataPageCommand());
 		repository.put(CommandEnum.UPDATE_PERSONAL_DATA, new UpdatePersonalDataCommand());
+		repository.put(CommandEnum.GET_UPDATE_PATIENT_DATA_PAGE, new GetUpdatePatientDataPageCommand());
+		repository.put(CommandEnum.UPDATE_PATIENT_DATA, new UpdatePatientDataCommand());
 		repository.put(CommandEnum.WRONG_REQUEST, new WrongRequestCommand());
 	}
 	

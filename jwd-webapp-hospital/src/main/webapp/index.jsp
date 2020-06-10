@@ -7,7 +7,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="style/style.css"/>
 	
 	<title>Login-page</title>
 
@@ -22,6 +22,7 @@
 <fmt:message bundle="${loc}" key="local.login.successfully.logout" var="successful_logout"/>
 <fmt:message bundle="${loc}" key="local.login.successfully.registr" var="successful_sign_up"/>
 <fmt:message bundle="${loc}" key="local.login.errordata" var="error_data"/>
+<fmt:message bundle="${loc}" key="local.login.access_dinied" var="access_denied"/>
 
 <fmt:message bundle="${loc}" key="local.login.button" var="login_button" />
 <fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
@@ -52,21 +53,25 @@
 	
 	<img src="img/hospital_facade.png" class="img-thumbnail" alt="hospital facade image">
 	
-	<div class="alert alert-primary" role="alert">
+	<!-- Alerts -->
 	
 		<c:if test="${param.message == 'successful_logout'}">
-			<h5>
+			<div class="alert alert-primary" role="alert">
 				<c:out value="${successful_logout}"/>
-			</h5>
-		</c:if>
-	
-		<c:if test="${param.message == 'successful_registration'}">
-			<h5>
-				<c:out value="${successful_sign_up}"/>
-			</h5>
+			</div>
 		</c:if>
 		
-	</div>
+		<c:if test="${param.message == 'successful_registration'}">
+			<div class="alert alert-primary" role="alert">
+				<c:out value="${successful_sign_up}"/>
+			</div>
+		</c:if>
+		
+		<c:if test="${param.message == 'access_denied'}">
+			<div class="alert alert-primary" role="alert">
+				<c:out value="${access_denied}"/>
+			</div>
+		</c:if>
 	
 	<!-- Login-form -->
 	

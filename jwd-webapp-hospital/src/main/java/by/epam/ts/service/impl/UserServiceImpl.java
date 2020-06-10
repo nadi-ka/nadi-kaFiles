@@ -223,7 +223,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public Patient getPatientById(String id) throws ServiceException {
-
 		if (id == null || id.isEmpty()) {
 			throw new ServiceException("Error when calling getPatientById(String id) from UserServiceImp. id=" + id);
 		}
@@ -284,28 +283,43 @@ public class UserServiceImpl implements UserService {
 		return id;
 	}
 
-	public void setPatientPersonalData(String id, String surname, String name, String dateBirth, String email)
-			throws ServiceException {
+	public void setPatientPersonalData(String id, String surname, String name, String dateBirth, String newEmail,
+			String oldEmail) throws ServiceException {
 		// Validation of personal data;
 		ValidationManager manager = new ValidationManager();
-		Set<String> invalidDataSet = manager.validatePatientPersonalData(surname, name, email, dateBirth);
+		Set<String> invalidDataSet = manager.validatePatientPersonalData(surname, name, newEmail, dateBirth);
 		if (!invalidDataSet.isEmpty()) {
 			String invalidData = String.join(",", invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
+		// check, if the new e-mail is unique in case if old and new e-mails are
+		// different;
+		if (!newEmail.equals(oldEmail)) {
+			Patient other;
+			try {
+				other = userDao.findPatientByEmail(newEmail);
+			} catch (DaoException ex) {
+				throw new ServiceException(
+						"Error when calling userDao.findPatientByEmail(email) from method setPatientPersonalData() from UserServiceImpl.");
+			}
+			// (other != null) means that the e-mail already exists in DB;
+			if (other != null) {
+				throw new ValidationServiceException(ValidationConstant.NOT_UNIQUE_EMAIL);
+			}
+		}
 		// update patient's personal data;
 		LocalDate birthday = LocalDate.parse(dateBirth);
-		Patient patient = new Patient(id, surname, name, birthday, email);
+		Patient patient = new Patient(id, surname, name, birthday, newEmail);
 		int effectedRows = 0;
 		try {
 			effectedRows = userDao.updatePatientPersonalData(patient);
 			if (effectedRows == 0) {
 				throw new ServiceException(
-						"The patient wasn't updated. EffectedRows, when calling userDao.updatePatientPersonalData() from UserServiceImpl, == 0");
+						"The patient wasn't updated. EffectedRows, when calling userDao.updatePatientPersonalData() from UserServiceImpl == 0");
 			}
 		} catch (DaoException ex) {
 			throw new ServiceException(
-					"Error when calling userDao.updatePatientPersonalData(patient) from method addNewPatient(Patient patient) from UserServiceImpl.");
+					"Error when calling userDao.updatePatientPersonalData(patient) from method setPatientPersonalData() from UserServiceImpl.");
 		}
 	}
 
@@ -453,7 +467,8 @@ public class UserServiceImpl implements UserService {
 		return id;
 	}
 
-	public void setStaffPersonalData(String surname, String name, String newEmail, String oldEmail, String id) throws ServiceException {
+	public void setStaffPersonalData(String surname, String name, String newEmail, String oldEmail, String id)
+			throws ServiceException {
 		// Data validation;
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateStaffPersonalData(surname, name, newEmail);
@@ -461,7 +476,8 @@ public class UserServiceImpl implements UserService {
 			String invalidData = String.join(",", invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
-		// check, if the new e-mail is unique in case if old and new e-mails are different;
+		// check, if the new e-mail is unique in case if old and new e-mails are
+		// different;
 		if (!newEmail.equals(oldEmail)) {
 			MedicalStaff other;
 			try {
@@ -473,7 +489,7 @@ public class UserServiceImpl implements UserService {
 			// (other != null) means that the e-mail already exists in DB;
 			if (other != null) {
 				throw new ValidationServiceException(ValidationConstant.NOT_UNIQUE_EMAIL);
-			}	
+			}
 		}
 		// Update staff's personal data;
 		int effectedRows = 0;
@@ -493,8 +509,7 @@ public class UserServiceImpl implements UserService {
 	public MedicalStaff getStaffById(String id) throws ServiceException {
 
 		if (id == null || id.isEmpty()) {
-			throw new ServiceException(
-					"Error when calling getStaffById(String id) from UserServiceImp. id=" + id);
+			throw new ServiceException("Error when calling getStaffById(String id) from UserServiceImp. id=" + id);
 		}
 		MedicalStaff staff = null;
 		try {
@@ -693,10 +708,11 @@ public class UserServiceImpl implements UserService {
 			}
 		} catch (DaoException e) {
 			throw new ServiceException(
-					"Error when calling userDao.updateStaffUserRole() from setStaffUserRole() from UserServiceImpl.", e);
+					"Error when calling userDao.updateStaffUserRole() from setStaffUserRole() from UserServiceImpl.",
+					e);
 		}
 	}
-	
+
 	public void setUserStatus(String userStatus, String id) throws ServiceException {
 		// Data validation;
 		ValidationManager manager = new ValidationManager();
