@@ -6,6 +6,12 @@ body{
 .bg-company-red {
     background-color: #cccccc;
   	background-image: linear-gradient(#C6FFDD, #FBD786, #f7797d);
-}  
+}
+
+.form-bcground {
+    background-color: #cccccc;
+  	background-image: linear-gradient(#C6FFDD, #FBD786, #f7797d);
+}
+  
   
 

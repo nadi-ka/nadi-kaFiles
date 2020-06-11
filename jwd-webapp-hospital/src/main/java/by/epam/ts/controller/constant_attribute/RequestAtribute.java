@@ -16,7 +16,6 @@ public final class RequestAtribute {
 	public final static String DATA_UNAVAILABLE = "data_unavailable";
 	public final static String ERROR_DATA = "error_data";
 	public final static String INVALID_PARAMETERS = "invalid_parameters";
-	public final static String SUCCESSFUL_REGISTRATION = "successful_registration";
 	public final static String SUCCESSFUL_PROCEDURE = "successful_procedure";
 	public final static String PRESCRIPTIONS = "prescriptions";
 	public final static String REDIRECT_COMMAND = "redirect_command";

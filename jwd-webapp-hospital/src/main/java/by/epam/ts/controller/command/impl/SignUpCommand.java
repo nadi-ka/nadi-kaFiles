@@ -36,27 +36,30 @@ public final class SignUpCommand implements Command {
 		int updatedRows = 0;
 		try {
 			updatedRows = userService.signUp(email, login, password);
-			
-			if (updatedRows != 0) {
-				request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.SUCCESSFUL_REGISTRATION);
-				response.sendRedirect(request.getContextPath() + "/register?command=get_index_page&message=successful_registration");
 
-			} else {
-				/* update rows == null means, that user with given e-mail was found neither in
-				 staff- nor in patient-table;
-				 */
-				request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
-				response.sendRedirect(request.getContextPath() + "/register?command=get_signup_page&message=error_data");
+			if (updatedRows == 0) {
+				// The person with given e-mail was found in base, but wasn't registered as
+				// user;
+				log.log(Level.ERROR,
+						"Error when calling method execute() from SignUpCommand. Updated rows==0. The user wasn't registered.");
+				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
+						+ RequestAtribute.COMMAND + "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&"
+						+ RequestAtribute.MESSAGE + "=" + RequestMessage.TECHNICAL_ERROR);
 			}
-			
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER
+					+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
+					+ RequestAtribute.MESSAGE + "=" + RequestMessage.SUCCESSFUL_REGISTRATION);
+
 		} catch (ValidationServiceException ex) {
-			log.log(Level.INFO, "Validation error during calling method signUp()", ex);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestAtribute.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + "/register?command=get_signup_page&message=error_data");
+			log.log(Level.WARN, "Validation error when calling method execute() from SignUpCommand", ex);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER
+					+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_SIGNUP_PAGE.toString().toLowerCase() + "&"
+					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA + "&"
+					+ RequestAtribute.INVALID_PARAMETERS + "=" + ex.getMessage());
 		} catch (ServiceException ex) {
-			log.log(Level.ERROR, "Error during calling method signUp() from SignUpCommand", ex);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+			log.log(Level.ERROR, "Error when calling method execute() from SignUpCommand", ex);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}
 

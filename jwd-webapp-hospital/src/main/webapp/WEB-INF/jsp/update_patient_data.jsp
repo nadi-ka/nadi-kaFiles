@@ -96,7 +96,7 @@
 	
 	<h3>${update_heading}</h3>
 	
-		<div class="border border-secondary w-50 p-3" style="background-color: #eee;"> 
+		<div class="border border-secondary w-50 p-3 form-bcground"> 
 			<form name="update_patient_data" action="font" method="POST">
 				<input type="hidden" name="command" value="update_patient_data" />
 	

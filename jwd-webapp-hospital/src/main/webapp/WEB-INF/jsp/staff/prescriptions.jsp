@@ -154,7 +154,7 @@
 			
 			<c:if test="${param.message == 'error_data'}">
 				<div class="alert alert-danger" role="alert">
-					<c:out value="${error_data}"/>
+					<c:out value="${error_data}: ${param.invalid_parameters}"/>
 				</div>
 			</c:if>
 

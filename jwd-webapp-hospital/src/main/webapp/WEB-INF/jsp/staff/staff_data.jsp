@@ -228,7 +228,7 @@
 	
 	<h3>${add_staff}:</h3>
 	
-	<div class="border border-secondary w-50 p-3" style="background-color: #eee;"> 
+	<div class="border border-secondary w-50 p-3 form-bcground"> 
 		<form name="staff_data" action="font" method="POST">
 			<input type="hidden" name="command" value="add_new_staff" />
 			<p><b>${form_heading}</b></p>
@@ -258,7 +258,7 @@
   		
   			<c:if test="${param.message == 'error_data'}">
 				<div class="alert alert-danger" role="alert">
-					<c:out value="${error_data}"/>
+					<c:out value="${error_data}: ${param.invalid_parameters}"/>
 				</div>
 			</c:if>
 

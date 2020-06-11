@@ -27,7 +27,7 @@ public final class PerformTreatmentCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		String treatmentTypeValue = request.getParameter(RequestAtribute.TREATMENT_TYPE);
 		if (treatmentTypeValue == null || treatmentTypeValue.isEmpty()) {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND

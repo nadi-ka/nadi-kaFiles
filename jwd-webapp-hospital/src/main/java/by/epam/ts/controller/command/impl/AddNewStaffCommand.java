@@ -57,7 +57,7 @@ public final class AddNewStaffCommand implements Command {
 					e);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ERROR_DATA);
+					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling userService.addNewStaff() from  AddNewStaffCommand. The staff wasn't added", e);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="

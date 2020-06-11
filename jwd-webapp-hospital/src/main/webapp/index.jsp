@@ -75,7 +75,7 @@
 	
 	<!-- Login-form -->
 	
-	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">	
+	<div class="border border-secondary w-50 p-3 form-bcground">	
 	
 		<form name="loginForm" method="POST" action="register">
 			<input type="hidden" name="command" value="login" />

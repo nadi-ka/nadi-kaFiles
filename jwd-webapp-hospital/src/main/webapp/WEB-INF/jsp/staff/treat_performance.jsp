@@ -139,7 +139,7 @@
 						
 						<h5>${form_name}</h5>
 						
-						<div class="border border-secondary w-50 p-3" style="background-color: #eee;">
+						<div class="border border-secondary w-50 p-3 form-bcground">
 							<form name="treatment_performance" method="POST" action="font">
 								<input type="hidden" name="command" value="perform_treatment" />
 								<input type="hidden" name="id_appointment" value="${treatment.idAppointment}" />

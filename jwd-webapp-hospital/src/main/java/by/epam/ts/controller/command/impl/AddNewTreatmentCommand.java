@@ -62,7 +62,8 @@ public final class AddNewTreatmentCommand implements Command {
 					e);
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 					+ CommandEnum.GET_PRESCRIPTIONS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
+					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling userService.addNewTreatment() from  AddNewTreatmentCommand.", e);
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="

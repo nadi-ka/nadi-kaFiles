@@ -48,9 +48,11 @@
 
 	<h1>${register}</h1>
 		 
-		 <div class="border border-secondary w-50 p-3" style="background-color: #eee;">	
-		 <img class="rounded float-right" src="img/registration.png" 
-		 alt="pen and paper image" style="width:4em; height:5em;" />
+		 <div class="border border-secondary w-50 p-3 form-bcground">
+		 	
+		 	<img class="rounded float-right" src="img/registration.png" 
+		 	alt="pen and paper image" style="width:4em; height:5em;" />
+		 	
 			<form name="registerForm" method="POST" action="register">
 				<input type="hidden" name="command" value="sign_up" />
 			
@@ -71,7 +73,7 @@
 			
 				<c:if test="${param.message == 'error_data'}">
 					<div class="alert alert-danger" role="alert">
-						<c:out value="${error_data}"/>
+						<c:out value="${error_data}: ${param.invalid_parameters}"/>
 					</div>
 				</c:if>
 

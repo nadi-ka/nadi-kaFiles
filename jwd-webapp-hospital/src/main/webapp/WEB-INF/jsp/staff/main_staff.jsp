@@ -99,7 +99,7 @@
 	
 	<!-- Form for adding new patient -->
 	
-	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">
+	<div class="border border-secondary w-50 p-3 form-bcground">
 	
 		<form name="patients_data" action="font" method="POST">
 			<input type="hidden" name="command" value="add_new_patient" />

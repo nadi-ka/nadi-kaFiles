@@ -3,6 +3,7 @@ package by.epam.ts.controller.constant_attribute;
 public final class RequestMessage {
 	
 	public final static String SUCCESSFUL_LOGOUT = "successful_logout";
+	public final static String SUCCESSFUL_REGISTRATION = "successful_registration";
 	public final static String PATIENT_EXISTS = "patient_exists";
 	public final static String ADDED_SUCCESSFULY = "added_successfully";
 	public final static String DIAGNOSIS_ADDED_SUCCESSFULY = "diagnosis_added_successfully";
@@ -20,5 +21,6 @@ public final class RequestMessage {
 	public final static String NO_CURRENT_TREATMENT = "no_current_treatment";
 	public final static String ALREADY_DISCHARGED = "already_discharged";
 	public final static String NO_CURRENT_HOSPITALIZATION = "no_current_hospitalization";
+	public final static String WRONG_REQUEST = "wrong_request";
 
 }

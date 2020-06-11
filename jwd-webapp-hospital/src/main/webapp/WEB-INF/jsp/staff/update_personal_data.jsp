@@ -92,7 +92,7 @@
 	
 	<h3>${update_staff}:</h3>
 	
-		<div class="border border-secondary w-50 p-3" style="background-color: #eee;"> 
+		<div class="border border-secondary w-50 p-3 form-bcground"> 
 			<form name="update_staff_data" action="font" method="POST">
 				<input type="hidden" name="command" value="update_personal_data" />
 	

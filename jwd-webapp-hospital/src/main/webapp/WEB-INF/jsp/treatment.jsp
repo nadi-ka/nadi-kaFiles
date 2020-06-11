@@ -124,7 +124,7 @@
 						
 						<!-- Change consent form -->
 						
-						<form name="consentForm" method="POST" action="register">
+						<form name="consentForm" method="POST" action="font">
 						
 						<input type="hidden" name="command" value="give_consent" />
 						<input type="hidden" name="id_appointment" value="${treatment.idAppointment}" />

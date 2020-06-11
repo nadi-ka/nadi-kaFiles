@@ -85,7 +85,6 @@ public class UserDaoSQL implements UserDao {
 			signUpPatient.setString(1, user.getId());
 			signUpPatient.setString(2, user.getLogin());
 			signUpPatient.setString(3, user.getPassword());
-
 			signUpPatient.setInt(4, user.getRole().getRoleValue());
 			signUpPatient.setBoolean(5, user.isUserStatus());
 			insertedRows = signUpPatient.executeUpdate();
@@ -141,7 +140,6 @@ public class UserDaoSQL implements UserDao {
 		Connection connection = null;
 		MedicalStaff medicalStaff = null;
 		PreparedStatement findStaffByEmail = null;
-
 		try {
 			connection = connectionPool.takeConnection();
 			findStaffByEmail = connection.prepareStatement(sqlFindStaffByEmail);
@@ -150,7 +148,6 @@ public class UserDaoSQL implements UserDao {
 			if (!staffResultSet.next()) {
 				return medicalStaff;
 			}
-
 			String id = staffResultSet.getString(1);
 			String specialtyString = staffResultSet.getString(2);
 			Specialty specialty = Specialty.getSpecialty(specialtyString);
@@ -178,7 +175,6 @@ public class UserDaoSQL implements UserDao {
 		Connection connection = null;
 		Patient patient = null;
 		PreparedStatement findPatientByEmail = null;
-
 		try {
 			connection = connectionPool.takeConnection();
 			findPatientByEmail = connection.prepareStatement(sqlFindPatientByEmail);
@@ -188,7 +184,6 @@ public class UserDaoSQL implements UserDao {
 			if (!patientResultSet.next()) {
 				return patient;
 			}
-
 			String id = patientResultSet.getString("id");
 			String surname = patientResultSet.getString("surname");
 			String name = patientResultSet.getString("name");
@@ -426,7 +421,6 @@ public class UserDaoSQL implements UserDao {
 			preparedStatement = connection.prepareStatement(sqlUpdateConsent);
 			preparedStatement.setBoolean(1, consent);
 			preparedStatement.setInt(2, idAppointment);
-
 			count = preparedStatement.executeUpdate();
 		} catch (ConnectionPoolException ex) {
 			throw new DaoException("Error during taking connection from pool", ex);

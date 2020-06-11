@@ -32,7 +32,6 @@ public final class GetTreatPerformancePageCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
-		log.info("id:" + patientId);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();

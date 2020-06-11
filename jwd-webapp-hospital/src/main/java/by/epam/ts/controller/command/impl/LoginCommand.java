@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.bean.User;
 import by.epam.ts.bean.role.UserRole;
 import by.epam.ts.controller.command.Command;
+import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.constant_attribute.SessionAtribute;
@@ -39,34 +40,34 @@ public final class LoginCommand implements Command {
 			user = userService.logIn(login, password);
 			if (user != null) {
 				HttpSession session = request.getSession(true);
-				// User stores parameters: id, login, role, userStatus;
+				UserRole role = user.getRole();
+				// User stores parameters: id and user's role;
 				session.setAttribute(SessionAtribute.USER_ID, user.getId());
-				session.setAttribute(SessionAtribute.USER_LOGIN, user.getLogin());
-				session.setAttribute(SessionAtribute.USER_ROLE, user.getRole());
-				session.setAttribute(SessionAtribute.USER_STATUS, user.isUserStatus());
+				session.setAttribute(SessionAtribute.USER_ROLE, role);
 				
-				if (user.getRole() == UserRole.DOCTOR || user.getRole() == UserRole.ADMINISTRATOR) {
-					response.sendRedirect(request.getContextPath() + "/register?command=get_staff_main_page");
+				if (role == UserRole.DOCTOR || role == UserRole.ADMINISTRATOR || role == UserRole.NURSE) {
+					response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER + RequestAtribute.COMMAND + "=" + CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase());
 				}
 				else {
-					response.sendRedirect(request.getContextPath() + "/register?command=get_patient_main_page");
+					response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER + RequestAtribute.COMMAND + "=" + CommandEnum.GET_PATIENT_MAIN_PAGE.toString().toLowerCase());
 				}
 				
 			} else {
 				request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-				response.sendRedirect(request.getContextPath() + "/register?command=get_index_page&message=error_data");
+				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER + RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA);
 			}
 			
 		} catch (ValidationServiceException ex) {
-			log.log(Level.INFO, "Validation error during calling method logIn()", ex);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + "/register?command=get_index_page&message=error_data");
+			log.log(Level.INFO, "Validation error during calling method execute from LoginCommand()", ex);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER
+					+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
+					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA);
 
 		} catch (ServiceException ex) {
-			log.log(Level.ERROR, "Error during calling method logIn() from LoginCommand.", ex);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
-			response.sendRedirect(
-					request.getContextPath() + "/register?command=show_error_page&message=technical_error");
+			log.log(Level.ERROR, "Error during calling method execute from LoginCommand.", ex);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+					+ RequestMessage.TECHNICAL_ERROR);
 		}
 
 	}

@@ -43,5 +43,7 @@
 		<button type="submit" class="btn btn-link">Navigate to the index-page</button>
 	</form>
 	
+	<img src="img\cat_error.png" alt="cat_error_image">
+	
 </body>
 </html>

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,12 +25,11 @@ import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.factory.DaoFactory;
 import by.epam.ts.dal.factory.impl.DaoFactoryImpl;
-import by.epam.ts.dal.pool.ConnectionPool;
-import by.epam.ts.dal.pool.ConnectionPoolException;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.constant.ValidationConstant;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.util.StaffUserRoleQualifier;
 import by.epam.ts.service.validator.ValidationManager;
 
 public class UserServiceImpl implements UserService {
@@ -41,7 +39,6 @@ public class UserServiceImpl implements UserService {
 	static final Logger log = LogManager.getLogger(UserServiceImpl.class);
 
 	public int signUp(String email, String login, String password) throws ServiceException {
-		int updatedRows = 0;
 		// Data validation;
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateSignUpData(login, password, email);
@@ -49,48 +46,37 @@ public class UserServiceImpl implements UserService {
 			String invalidData = String.join(",", invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
-		String idStaff;
-		String idPatient;
 		try {
-			// checking, if the login is unique;
+			// check, if the login is unique;
 			String checkedLogin = userDao.findLogin(login);
 			if (checkedLogin != null) {
 				throw new ValidationServiceException(ValidationConstant.INVALID_LOGIN);
 			}
-			// checking, if the person exists in the table staff or patient. In other case
-			// there's
-			// not allowed to sign up;
-			idStaff = getStaffIdByEmail(email);
-			idPatient = getPatientsIdByEmail(email);
-		} catch (DaoException ex) {
-			throw new ServiceException("Procedure of checking login, if it's unique, failed.", ex);
-		}
-		boolean userStatus = true;
-		User user;
-		// if id was found in the table staff;
-		if (idStaff != null) {
-			user = new User(idStaff, login, password, UserRole.DOCTOR, userStatus);
-			try {
-				updatedRows = userDao.createUserStaff(user);
-			} catch (DaoException ex) {
-				throw new ServiceException("Sign up procedure failed.", ex);
-			}
-		}
-		// if id was found in the table patient;
-		else if (idPatient != null) {
-			user = new User(idPatient, login, password, UserRole.PATIENT, userStatus);
-			try {
+			// search the person in the table patient;
+			Patient patient = userDao.findPatientByEmail(email);
+			User user = null;
+			boolean userStatus = true;
+			int updatedRows = 0;
+			if (patient != null) {
+				user = new User(patient.getId(), login, password, UserRole.PATIENT, userStatus);
 				updatedRows = userDao.createUserPatient(user);
-			} catch (DaoException ex) {
-				throw new ServiceException("Sign up procedure failed.", ex);
+				return updatedRows;
 			}
+			// search the person in the table medical-staff;
+			MedicalStaff staff = userDao.findStaffByEmail(email);
+			if (staff != null) {
+				StaffUserRoleQualifier qualifier = new StaffUserRoleQualifier();
+				UserRole staffRole = qualifier.qualifyStaffUserRole(staff);
+				user = new User(staff.getId(), login, password, staffRole, userStatus);
+				updatedRows = userDao.createUserStaff(user);
+				return updatedRows;
+			}
+			// the person wasn't found in any table;
+			throw new ValidationServiceException(ValidationConstant.NOT_UNIQUE_EMAIL);
+
+		} catch (DaoException ex) {
+			throw new ServiceException("Error when calling signUp() from UserServiceImpl", ex);
 		}
-		// id wasn't found in any table;
-		else {
-			log.log(Level.INFO, "Sign up procedure failed. Given e-mail isn't exist in DB.");
-			return updatedRows;
-		}
-		return updatedRows;
 	}
 
 	public User logIn(String login, String password) throws ServiceException {
@@ -108,34 +94,6 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
 		return user;
-	}
-
-	private String getStaffIdByEmail(String email) throws DaoException {
-		MedicalStaff medicalStaff = null;
-		String id = null;
-		try {
-			medicalStaff = userDao.findStaffByEmail(email);
-		} catch (DaoException ex) {
-			throw new DaoException("Error during reading from DB.", ex);
-		}
-		if (medicalStaff != null) {
-			id = medicalStaff.getId();
-		}
-		return id;
-	}
-
-	private String getPatientsIdByEmail(String email) throws DaoException {
-		Patient patient = null;
-		String id = null;
-		try {
-			patient = userDao.findPatientByEmail(email);
-		} catch (DaoException ex) {
-			throw new DaoException("Error during reading from DB.", ex);
-		}
-		if (patient != null) {
-			id = patient.getId();
-		}
-		return id;
 	}
 
 	public List<Treatment> getSortedPatientsTreatmentById(String id) throws ServiceException {
@@ -445,6 +403,7 @@ public class UserServiceImpl implements UserService {
 		}
 		// (other != null) means that the e-mail already exists in DB;
 		if (other != null) {
+			log.info(other.toString());
 			throw new ValidationServiceException(ValidationConstant.NOT_UNIQUE_EMAIL);
 		}
 		// Adding of the new staff;
@@ -734,26 +693,4 @@ public class UserServiceImpl implements UserService {
 					"Error when calling userDao.updateUserStatus() from setUserStatus() from UserServiceImpl.", e);
 		}
 	}
-
-//	public static void main(String[] args) {
-//		ConnectionPool connectionPool = null;
-//		try {
-//			connectionPool = new ConnectionPool();
-//			connectionPool.initializePoolData();
-//			DaoFactoryImpl.setConnectionPool(connectionPool);
-//			
-//			UserServiceImpl userService = new UserServiceImpl();
-//			userService.setUserStatus("true", "4dc191b9-3477-423c-8493-cfa531bc2b0b");
-//	
-//		} catch (ConnectionPoolException e) {
-//			e.printStackTrace();
-//
-//		} catch (ServiceException e) {
-//			e.printStackTrace();
-//		} finally {
-//			connectionPool.dispose();
-//		}
-//
-//	}
-
 }

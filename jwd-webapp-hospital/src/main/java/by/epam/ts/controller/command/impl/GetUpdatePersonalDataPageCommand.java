@@ -35,6 +35,7 @@ public final class GetUpdatePersonalDataPageCommand implements Command {
 			// for correctly logged persons);
 			MedicalStaff staff = userService.getStaffById(stafftId);
 			request.setAttribute(RequestAtribute.MEDICAL_STAFF, staff);
+			log.info(staff.getSpecialty().getSpecialtyValue());
 			String page = NavigationManager.getProperty("path.page.staff.update_personal_data");
 			goForward(request, response, page);
 		} catch (ServiceException e) {

@@ -37,32 +37,31 @@ public final class AddNewDiagnosisCommand implements Command {
 		String diagnosisName = request.getParameter(RequestAtribute.NAME_DIAGNOSIS);
 		String bedDays = request.getParameter(RequestAtribute.BED_DAYS);
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
-		
+
 		if (bedDays == null || bedDays.isEmpty()) {
 			bedDays = "0";
 		}
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
-		
+
 		try {
 			userService.addNewDiagnosis(diagnosisCode, diagnosisName, bedDays);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_DIAGNOSIS_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.DIAGNOSIS_ADDED_SUCCESSFULY + "&"
-					+ RequestAtribute.PATIENT_ID + "=" + patientId);
-		}catch (ValidationServiceException e) {
+					+ "=" + CommandEnum.GET_DIAGNOSIS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
+					+ "=" + RequestMessage.DIAGNOSIS_ADDED_SUCCESSFULY + "&" + RequestAtribute.PATIENT_ID + "="
+					+ patientId);
+		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewDiagnosis() from  AddNewDiagnosisCommand. Invalid parameters:",
 					e);
 			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 					+ CommandEnum.GET_DIAGNOSIS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
+					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
 		} catch (ServiceException e) {
-			log.log(Level.ERROR,
-					"Error when calling userService.addNewDiagnosis() from  AddNewDiagnosisCommand.",
-					e);
+			log.log(Level.ERROR, "Error when calling userService.addNewDiagnosis() from  AddNewDiagnosisCommand.", e);
 			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
