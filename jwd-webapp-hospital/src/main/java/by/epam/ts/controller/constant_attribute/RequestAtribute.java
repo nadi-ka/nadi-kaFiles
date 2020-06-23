@@ -49,5 +49,6 @@ public final class RequestAtribute {
 	public final static String ID_MEDICAL_HYSTORY = "id_history";
 	public final static String ID_APPOINTMENT = "id_appointment";
 	public final static String TREATMENT_STATUS = "status";
+	public final static String CURRENT_TREATMENT_STATUS = "current_status";
 	
 }

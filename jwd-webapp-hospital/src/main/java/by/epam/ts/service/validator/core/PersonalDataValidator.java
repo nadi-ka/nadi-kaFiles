@@ -1,7 +1,5 @@
 package by.epam.ts.service.validator.core;
 
-import by.epam.ts.bean.specialty.Specialty;
-
 public class PersonalDataValidator {
 	
 	 private static final String LOGIN_PATTERN = "^[a-zA-Z0-9_-]{3,20}$";
@@ -9,6 +7,7 @@ public class PersonalDataValidator {
 	 private static final String EMAIL_PATTERN = "^([a-z0-9_\\.-]+)@([a-z0-9_\\.-]+)\\.([a-z\\.]{2,6})$";
 	 private static final String NAME_PATTERN = "^([\\p{L}]|[-]){2,45}$";
 	 private static final String SURNAME_PATTERN = "^([\\p{L}]|[-]){2,45}$";
+	 private static final String SPECIALTY_PATTERN = "^([\\p{L}]){5,10}$";
 	 private static final String DATE_OF_BIRTH_PATTERN = "^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$";
 	 private static final String PATIENT_ID_PATTERN = "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
 	 private static final String POSITIVE_USER_STATUS = "true";
@@ -45,13 +44,8 @@ public class PersonalDataValidator {
 		return (id != null) && (id.matches(PATIENT_ID_PATTERN));
 	}
 	
-	public boolean validSpecialty(String specialty) {
-		for(Specialty item: Specialty.values()) {
-			if (item.getSpecialtyValue().equals(specialty)) {
-				return true;
-			}
-		}
-		return false;
+	public boolean validSpesialty(String specialty) {
+		return (specialty != null) && (specialty.matches(SPECIALTY_PATTERN));
 	}
 	
 	public boolean validUserStatus(String status) {

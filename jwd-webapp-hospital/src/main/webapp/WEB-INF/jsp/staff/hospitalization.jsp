@@ -55,7 +55,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>  
+		<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>  
 		<input type="hidden" name="redirect_command" value="get_hospitalization_page"/>     
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
@@ -64,7 +64,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>  
+		<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>  
 		<input type="hidden" name="redirect_command" value="get_hospitalization_page"/>    
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
@@ -80,19 +80,19 @@
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_diagnosis_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${make_diagnosis}</button>
         </form>
 
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_prescriptions_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${prescribe_treatment}</button>
         </form>
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_current_patient_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
         </form>       
         
@@ -107,35 +107,38 @@
 	
 	<!-- Alerts -->
 	
-	<c:if test="${param.message == 'discharged_successfully'}">
-  		<div class="alert alert-primary" role="alert">
-			<c:out value="${discharged_success}"/>
-		</div>
-	</c:if>
-	
 	<c:if test="${param.message == 'diagnosis_absent'}">
   		<div class="alert alert-primary" role="alert">
 			<c:out value="${diagnosis_absent}"/>
 		</div>
 	</c:if>
 	
-	<!-- If the patient was successfully discharged, displaying of the final diagnosis -->
+	<c:if test="${param.message == 'discharged_successfully'}">
+  		<div class="alert alert-primary" role="alert">
+			<c:out value="${discharged_success}"/>
+		</div>
+	</c:if>
+	
+	<h2>${patient.surname} ${patient.name}</h2> 	
+	<h5><i>${patient.dateOfBirth}</i></h5>
+	
+	<!-- If the patient was successfully discharged, display the final diagnosis -->
 	
 	<c:if test="${param.message == 'discharged_successfully'}">
-		<h3>${final_diagnosis}</h3>
+		<h5>${final_diagnosis}</h5>
 		
 		<table class="table table-bordered">
-			<tr class="table-info">
+			<tr class="table-secondary">
 				<th scope="col">${diagnosis_name}</th>
 				<th scope="row">${param.diagnosis_name}</th>
 			</tr>
 		</table>
 	</c:if>
 	
-	<!-- Displaying of the dates of the last hospitalization -->
+	<!-- Display the dates of the last hospitalization -->
 	
 	<c:if test="${!empty hospitalization}">
-		<h3>${last_hospitalization}</h3>
+		<h5>${last_hospitalization}</h5>
 		
 		<table class="table table-bordered">
 			<thead>
@@ -159,10 +162,10 @@
 	
 	<!-- Forms for start and finish hospitalization -->
 	
-	<div class="d-inline-block" style="background-color: #eee;">
+	<div class="d-inline-block form-bcground">
 		<form name="start_hospitalization" action="font" method="POST">
 			<input type="hidden" name="command" value="add_hospitalization" />
-			<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>
+			<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>
 			
 			<p><b>${start_hospitalization}</b></p>
 				
@@ -181,11 +184,11 @@
 		</form>
 	</div>
 	
-	<div class="d-inline-block" style="background-color: #eee;">
+	<div class="d-inline-block form-bcground">
 		<form name="end_hospitalization" action="font" method="POST">
 			<p><b>${end_hospitalization}</b></p>
 				<input type="hidden" name="command" value="discharge_patient"/>
-				<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>
+				<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>
 				<input type="hidden" name="id_history" value="${requestScope.hospitalization.idMedicalHistory}"/>
 				<input type="hidden" name="date_beginning" value="${requestScope.hospitalization.entryDate}"/>
 				

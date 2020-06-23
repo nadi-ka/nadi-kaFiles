@@ -19,7 +19,7 @@ public interface UserService {
 
 	User logIn(String login, String password) throws ServiceException;
 
-	List<Treatment> getSortedPatientsTreatmentById(String id) throws ServiceException;
+	List<Treatment> getPatientTreatmentById(String id) throws ServiceException;
 
 	List<PatientDiagnosis> getSortedPatientDiagnosisById(String id) throws ServiceException;
 
@@ -64,6 +64,8 @@ public interface UserService {
 
 	void performCurrentTreatment(String consent, String idAppointment, String datePerforming, String idPerformer,
 			String status) throws ServiceException;
+	
+	void cancelTreatment(String idAppointment, String idDoctor) throws ServiceException;
 
 	List<Treatment> getTreatmentDuringLastHospitalization(String idPatient, LocalDate entryDate)
 			throws ServiceException;

@@ -99,14 +99,14 @@
 	
 	<!-- Alerts -->
 	
-	<div class="alert alert-primary" role="alert">
+	<div class="alert alert-secondary" role="alert">
   		<c:if test="${param.message == 'added_successfully'}">
 			<c:out value="${added_successfully}"/>
 		</c:if>
 	</div>
 	
   	<c:if test="${param.message == 'not_found'}">
-  		<div class="alert alert-light" role="alert">
+  		<div class="alert alert-secondary" role="alert">
 			<c:out value="${not_found}"/>
 		</div>
 	</c:if>
@@ -115,7 +115,7 @@
 
 	<c:if test="${!empty medical_staff}">
 		<h5>${added}</h5>
-		<li class="list-group-item list-group-item-info">
+		<li class="list-group-item list-group-item-secondary">
 			<h3>${medical_staff.surname} ${medical_staff.name}</h3>  
 			<ul class="list-group">
   				<li class="list-group-item">${specialty} ${medical_staff.specialty.getSpecialtyValue()}</li>
@@ -236,8 +236,8 @@
 			<div class="form-group">
 			<label for="specialty">${specialty}</label>
 				<select name="specialty">
-					<option value="врач">${doctor}</option>
-					<option value="медсестра">${nurse}</option>
+					<option value="doctor">${doctor}</option>
+					<option value="nurse">${nurse}</option>
 				</select>
 			</div>
 	

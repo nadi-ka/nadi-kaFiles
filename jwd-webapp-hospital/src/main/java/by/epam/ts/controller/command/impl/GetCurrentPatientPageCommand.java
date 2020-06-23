@@ -1,6 +1,7 @@
 package by.epam.ts.controller.command.impl;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.epam.ts.bean.CurrentTreatment;
 import by.epam.ts.bean.Hospitalization;
 import by.epam.ts.bean.Patient;
 import by.epam.ts.bean.PatientDiagnosis;
@@ -40,7 +42,22 @@ public final class GetCurrentPatientPageCommand implements Command {
 		List<PatientDiagnosis> diagnosisList;
 		List<Hospitalization> hospitalizations;
 		try {
-			prescriptions = userService.getSortedPatientsTreatmentById(patientId);
+			prescriptions = userService.getPatientTreatmentById(patientId);
+			log.info("prescriptions:" + prescriptions.isEmpty());
+			if (!prescriptions.isEmpty()) {
+				List<CurrentTreatment> performingList;
+				for (Treatment treatment : prescriptions) {
+					int idAppointment = treatment.getIdAppointment();
+					// the list of performed procedures (could be empty, if the treatment hasn't
+					// been begun yet);
+					performingList = userService.getCurrentTreatmentByAppointmentId(idAppointment);
+					log.info("performingList:" + performingList.toString());
+					treatment.setPerformingList(performingList);
+					log.info(treatment.getTreatmentName() + " " + treatment.getTreatmentStatus());
+				}
+			}
+			Collections.sort(prescriptions, Treatment.treatmentStatusComparator);
+			
 			diagnosisList = userService.getSortedPatientDiagnosisById(patientId);
 			hospitalizations = userService.getAllHospitalizationsById(patientId);
 			patient = userService.getPatientById(patientId);
@@ -58,5 +75,4 @@ public final class GetCurrentPatientPageCommand implements Command {
 					+ RequestMessage.TECHNICAL_ERROR);
 		}
 	}
-
 }

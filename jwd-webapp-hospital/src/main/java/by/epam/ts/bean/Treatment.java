@@ -5,12 +5,15 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
+import by.epam.ts.bean.treat_status.TreatmentStatus;
+import by.epam.ts.bean.treat_type.TreatmentType;
+
 public class Treatment implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int idAppointment;
 	private String idPatient;
-	private String treatmentType;
+	private TreatmentType treatmentType;
 	private String treatmentName;
 	private String doctorId;
 	private String doctorSurname;
@@ -23,7 +26,7 @@ public class Treatment implements Serializable {
 	public Treatment() {
 	}
 
-	public Treatment(String idPatient, String treatmentType, String treatmentName, String doctorId,
+	public Treatment(String idPatient, TreatmentType treatmentType, String treatmentName, String doctorId,
 			LocalDate dateBeginning, LocalDate dateFinishing, boolean consent) {
 
 		this.idPatient = idPatient;
@@ -35,8 +38,8 @@ public class Treatment implements Serializable {
 		this.consent = consent;
 	}
 
-	public Treatment(int idAppointment, String idPatient, String treatmentType, String treatmentName, String doctorId,
-			String doctorSurname, String doctorName, LocalDate dateBeginning, LocalDate dateFinishing,
+	public Treatment(int idAppointment, String idPatient, TreatmentType treatmentType, String treatmentName,
+			String doctorId, String doctorSurname, String doctorName, LocalDate dateBeginning, LocalDate dateFinishing,
 			boolean consent) {
 
 		this(idPatient, treatmentType, treatmentName, doctorId, dateBeginning, dateFinishing, consent);
@@ -45,9 +48,9 @@ public class Treatment implements Serializable {
 		this.doctorName = doctorName;
 	}
 
-	public Treatment(int idAppointment, String idPatient, String treatmentType, String treatmentName, String doctorId,
-			String doctorSurname, String doctorName, LocalDate dateBeginning, LocalDate dateFinishing, boolean consent,
-			List<CurrentTreatment> performingList) {
+	public Treatment(int idAppointment, String idPatient, TreatmentType treatmentType, String treatmentName,
+			String doctorId, String doctorSurname, String doctorName, LocalDate dateBeginning, LocalDate dateFinishing,
+			boolean consent, List<CurrentTreatment> performingList) {
 
 		this(idAppointment, idPatient, treatmentType, treatmentName, doctorId, doctorSurname, doctorName, dateBeginning,
 				dateFinishing, consent);
@@ -70,11 +73,11 @@ public class Treatment implements Serializable {
 		this.idPatient = idPatient;
 	}
 
-	public String getTreatmentType() {
+	public TreatmentType getTreatmentType() {
 		return treatmentType;
 	}
 
-	public void setTreatmentType(String treatmentType) {
+	public void setTreatmentType(TreatmentType treatmentType) {
 		this.treatmentType = treatmentType;
 	}
 
@@ -142,12 +145,25 @@ public class Treatment implements Serializable {
 		this.performingList = performingList;
 	}
 
-	public static Comparator<Treatment> treatmentDateComparator = new Comparator<Treatment>() {
+	public TreatmentStatus getTreatmentStatus() {
+		if (performingList != null && !performingList.isEmpty()) {
+			for (CurrentTreatment item : performingList) {
+				TreatmentStatus status = item.getStatus();
+				if ((status == TreatmentStatus.COMPLETED) || (status == TreatmentStatus.CANCELED)) {
+					return status;
+				}
+			}
+			return TreatmentStatus.IN_PROGRESS;
+		}
+		return TreatmentStatus.PRESCRIBED;
+	}
+	
+	public static Comparator<Treatment> treatmentStatusComparator = new Comparator<Treatment>() {
 		@Override
 		public int compare(Treatment o1, Treatment o2) {
-			LocalDate date1 = o1.getDateBeginning();
-			LocalDate date2 = o2.getDateBeginning();
-			return date2.compareTo(date1);
+			int status1 = o1.getTreatmentStatus().ordinal();
+			int status2 = o2.getTreatmentStatus().ordinal();
+			return Integer.compare(status1, status2);
 		}
 	};
 
@@ -180,8 +196,7 @@ public class Treatment implements Serializable {
 		Treatment other = (Treatment) obj;
 		return idAppointment != other.idAppointment && consent != other.consent
 				&& (idPatient == other.idPatient || (idPatient != null && idPatient.equals(other.getIdPatient())))
-				&& (treatmentType == other.treatmentType
-						|| (treatmentType != null && treatmentType.equals(other.getTreatmentType())))
+				&& (treatmentType == other.treatmentType)
 				&& (treatmentName == other.treatmentName
 						|| (treatmentName != null && treatmentName.equals(other.getTreatmentName())))
 				&& (doctorId == other.doctorId || (doctorId != null && doctorId.equals(other.getDoctorId())))

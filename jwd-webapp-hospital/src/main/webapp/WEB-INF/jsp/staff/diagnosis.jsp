@@ -57,7 +57,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>  
+		<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>  
 		<input type="hidden" name="redirect_command" value="get_diagnosis_page"/>
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
@@ -66,7 +66,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>  
+		<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>  
 		<input type="hidden" name="redirect_command" value="get_diagnosis_page"/> 
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
@@ -82,19 +82,19 @@
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_hospitalization_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${set_hospitalization}</button>
         </form>
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_prescriptions_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${prescribe_treatment}</button>
         </form>
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_current_patient_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
         </form>        
         
@@ -122,13 +122,16 @@
 		</div>
 	</c:if>
 	
+	<h2>${patient.surname} ${patient.name}</h2> 	
+	<h5><i>${patient.dateOfBirth}</i></h5>
+	
 	<!-- Form with possible diagnosis to choose from -->
 	
-	<div class="border border-secondary w-50 p-3" style="background-color: #eee;"> 
+	<div class="border border-secondary w-50 p-3 form-bcground"> 
 		<form name="patients_diagnosis" action="font" method="POST">
 			<p><b>${choose_from}</b></p>
 			<input type="hidden" name="command" value="add_patient_diagnosis"/>
-			<input type="hidden" name="patient_id" value="${patient_id}"/>
+			<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>
 			
 			<div class="form-group">
 				<label for="primary_diagnosis">${choose_main_diagnosis}</label>
@@ -166,12 +169,12 @@
 	
 	<!-- Form for adding new diagnosis to the list of possible diagnosis -->
 	
-	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">
+	<div class="border border-secondary w-50 p-3 form-bcground">
 	 
 		<form name="diagnosis" action="font" method="POST">
 			<p><b>${enter_diagnosis}</b></p>
 			<input type="hidden" name="command" value="add_new_diagnosis"/>
-			<input type="hidden" name="patient_id" value="${patient_id}"/>
+			<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>
 			
 			<div class="form-group">
 				<label for="code">${code}</label>
@@ -188,7 +191,7 @@
 				<input type="text" class="form-control" style="width: 60%" name="bed_days" value="">
 			</div>
 			
-			<div class="alert alert-primary" role="alert">
+			<div class="alert alert-warning" role="alert">
 				<c:if test="${param.message == 'diagnosis_added_successfully'}">
 					<c:out value="${diagnosis_successfully}"/>
 				</c:if>

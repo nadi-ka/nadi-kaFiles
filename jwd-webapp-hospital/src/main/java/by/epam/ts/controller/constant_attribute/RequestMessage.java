@@ -4,6 +4,7 @@ public final class RequestMessage {
 	
 	public final static String SUCCESSFUL_LOGOUT = "successful_logout";
 	public final static String SUCCESSFUL_REGISTRATION = "successful_registration";
+	public final static String CANCELED_SUCCESS = "canceled_successfully";
 	public final static String PATIENT_EXISTS = "patient_exists";
 	public final static String ADDED_SUCCESSFULY = "added_successfully";
 	public final static String DIAGNOSIS_ADDED_SUCCESSFULY = "diagnosis_added_successfully";

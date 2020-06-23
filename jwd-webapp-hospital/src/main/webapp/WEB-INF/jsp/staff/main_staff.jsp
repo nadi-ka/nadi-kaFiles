@@ -97,42 +97,59 @@
 		</div>
 	</c:if>
 	
-	<!-- Form for adding new patient -->
+	<div class="container">
+    	<div class="row">
+    	
+    	<!-- Form for adding new patient -->
 	
-	<div class="border border-secondary w-50 p-3 form-bcground">
+		<c:if test="${sessionScope.role == 'ADMINISTRATOR' or sessionScope.role == 'DOCTOR'}">
 	
-		<form name="patients_data" action="font" method="POST">
-			<input type="hidden" name="command" value="add_new_patient" />
-			<p><b>${patients_data}</b></p>
+    		<div class="col-md-8 col-xl-6">
 	
-				<div class="form-group">
-    				<label for="surname">${surname}:</label>
-    				<input type="text" name="surname" value="">
-  				</div>
+				<div class="border border-secondary w-50 p-3 form-bcground">
+					<form name="patients_data" action="font" method="POST">
+						<input type="hidden" name="command" value="add_new_patient" />
+						<p><b>${patients_data}</b></p>
+	
+						<div class="form-group">
+    						<label for="surname">${surname}:</label>
+    						<input type="text" name="surname" value="">
+  						</div>
   		
-  				<div class="form-group">
-    				<label for="name">${name}</label>
-    				<input type="text" name="name" value="">
-  				</div>
+  						<div class="form-group">
+    						<label for="name">${name}</label>
+    						<input type="text" name="name" value="">
+  						</div>
   		
-  				<div class="form-group">
-  					<label for="date">${date_of_birth}</label>
-  					<input type="date" name="date_of_birth" value="" >
+  						<div class="form-group">
+  							<label for="date">${date_of_birth}</label>
+  							<input type="date" name="date_of_birth" value="" >
+						</div>
+	
+  						<div class="form-group">
+  							<label for="email">${email}</label>
+    						<input type="email" name="email" value="" >
+  						</div>
+  		
+  						<c:if test="${param.message == 'error_data'}">
+							<div class="alert alert-danger" role="alert">
+								<c:out value="${error_data}"/>
+							</div>
+						</c:if>
+
+						<button type="submit" class="btn btn-primary" name="btn_signup">${submit_btn}</button>
+					</form>
 				</div>
 	
-  				<div class="form-group">
-  					<label for="email">${email}</label>
-    				<input type="email" name="email" value="" >
-  				</div>
-  		
-  				<c:if test="${param.message == 'error_data'}">
-					<div class="alert alert-danger" role="alert">
-						<c:out value="${error_data}"/>
-					</div>
-				</c:if>
-
-			<button type="submit" class="btn btn-primary" name="btn_signup">${submit_btn}</button>
-		</form>
+			</div>
+	
+		</c:if>
+	
+	 	<div class="col-md-8 col-xl-6">
+			<img src="img/medical-staff.png" class="img-thumbnail" alt="medical_staff">
+		</div>
+	
+		</div>
 	</div>
   		
 </body>

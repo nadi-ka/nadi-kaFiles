@@ -25,6 +25,7 @@ import by.epam.ts.bean.User;
 import by.epam.ts.bean.role.UserRole;
 import by.epam.ts.bean.specialty.Specialty;
 import by.epam.ts.bean.treat_status.TreatmentStatus;
+import by.epam.ts.bean.treat_type.TreatmentType;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.pool.ConnectionPool;
@@ -39,7 +40,7 @@ public class UserDaoSQL implements UserDao {
 	private static final String sqlFindStaffByEmail = "SELECT * FROM `medical-staff` WHERE email=(?);";
 	private static final String sqlFindPatientByEmail = "SELECT * FROM patients WHERE email=(?);";
 	private static final String sqlFindUserByLoginPassword = "SELECT * FROM users WHERE login=(?) AND password=(?);";
-	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?);";
+	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?) ORDER BY `date_begin/holding` DESC;";
 	private static final String sqlFindDiagnosisByPatientId = "SELECT code_diagnosis, is_primary, setting_date, diagnosis.name FROM `id-m2m-code` JOIN diagnosis ON `id-m2m-code`.code_diagnosis=diagnosis.code WHERE id_patient=(?);";
 	private static final String sqlFindLogin = "SELECT login FROM users WHERE login=(?);";
 	private static final String sqlUpdateConsent = "UPDATE treatment SET consent=(?) WHERE id_appointment=(?);";
@@ -275,7 +276,7 @@ public class UserDaoSQL implements UserDao {
 				String doctorSurname = resultSet.getString("surname");
 				String doctorName = resultSet.getString("name");
 
-				treatment = new Treatment(idAppointment, id, treatmentType, treatmentName, doctorId, doctorSurname,
+				treatment = new Treatment(idAppointment, id, TreatmentType.getTreatmentType(treatmentType), treatmentName, doctorId, doctorSurname,
 						doctorName, dateBeggining.toLocalDate(), dateFinishing.toLocalDate(), consent);
 				prescriptions.add(treatment);
 			}
@@ -702,7 +703,7 @@ public class UserDaoSQL implements UserDao {
 			preparedStatement = connection.prepareStatement(sqlAddPatientTreatment);
 
 			preparedStatement.setString(1, treatment.getIdPatient());
-			preparedStatement.setString(2, treatment.getTreatmentType());
+			preparedStatement.setString(2, treatment.getTreatmentType().getTypeValue());
 			preparedStatement.setString(3, treatment.getTreatmentName());
 			preparedStatement.setString(4, treatment.getDoctorId());
 			preparedStatement.setDate(5, Date.valueOf(treatment.getDateBeginning()), Calendar.getInstance());
@@ -1067,7 +1068,7 @@ public class UserDaoSQL implements UserDao {
 				String doctorSurname = resultSet.getString("surname");
 				String doctorName = resultSet.getString("name");
 
-				treatment = new Treatment(idAppointment, idPatient, treatmentType, treatmentName, doctorId,
+				treatment = new Treatment(idAppointment, idPatient, TreatmentType.getTreatmentType(treatmentType), treatmentName, doctorId,
 						doctorSurname, doctorName, dateBeggining.toLocalDate(), dateFinishing.toLocalDate(), consent);
 				prescriptions.add(treatment);
 			}

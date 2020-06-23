@@ -55,7 +55,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>  
+		<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>  
 		<input type="hidden" name="redirect_command" value="get_prescriptions_page"/>     
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
@@ -64,7 +64,7 @@
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
-		<input type="hidden" name="patient_id" value="${requestScope.patient_id}"/>  
+		<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>  
 		<input type="hidden" name="redirect_command" value="get_prescriptions_page"/>    
 		<button type="submit" class="btn btn-secondary">${en_button}</button>
 	</form>
@@ -80,25 +80,25 @@
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_hospitalization_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${set_hospitalization}</button>
         </form>
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_diagnosis_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${make_diagnosis}</button>
         </form>
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_current_patient_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
         </form>
         
         <form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_treat_performance_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
+  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${perform_treatment}</button>
         </form>      
         
@@ -119,21 +119,24 @@
 		</div>
 	</c:if>
 	
-	<!-- Displaying of the form for new treatment adding -->
+	<h2>${patient.surname} ${patient.name}</h2> 	
+	<h5><i>${patient.dateOfBirth}</i></h5>
 	
-	<div class="border border-secondary w-50 p-3" style="background-color: #eee;">
+	<!-- Form for new treatment adding -->
+	
+	<div class="border border-secondary w-50 p-3 form-bcground">
 	 
 		<form name="prescriptions" action="font" method="POST">
 			<p><b>${make_treatment}</b></p>
 			<input type="hidden" name="command" value="add_new_treatment"/>
-			<input type="hidden" name="patient_id" value="${patient_id}"/>
+			<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>
 			
 			<div class="form-group">
 				<label for="treatment_type">${treatment_type}</label>
 				<select name="treatment_type">
-					<option value="хирургическое">${surgical}</option>
-					<option value="консервативное">${conservative}</option>
-					<option value="процедуры">${procedures}</option>
+					<option value="surgical">${surgical}</option>
+					<option value="conservative">${conservative}</option>
+					<option value="procedures">${procedures}</option>
 				</select>
 			</div>
 			

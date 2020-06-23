@@ -9,6 +9,7 @@ public class StaffUserRoleQualifier {
 	
 	public UserRole qualifyStaffUserRole(MedicalStaff staff) throws ServiceException {
 		Specialty specialty = staff.getSpecialty();
+		
 		UserRole userRole;
 		switch (specialty) {
 		case DOCTOR:

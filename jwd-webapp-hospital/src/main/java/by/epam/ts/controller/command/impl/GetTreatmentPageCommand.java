@@ -7,18 +7,17 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.epam.ts.bean.CurrentTreatment;
 import by.epam.ts.bean.Treatment;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
-import by.epam.ts.controller.constant_attribute.SessionAtribute;
 import by.epam.ts.controller.manager.NavigationManager;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
@@ -34,8 +33,7 @@ public final class GetTreatmentPageCommand implements Command {
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 
-		HttpSession session = request.getSession();
-		String userId = (String) session.getAttribute(SessionAtribute.USER_ID);
+		String userId = getUserIdFromSession(request);
 
 		if (userId == null) {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
@@ -45,7 +43,18 @@ public final class GetTreatmentPageCommand implements Command {
 		}
 		List<Treatment> prescriptions = new ArrayList<Treatment>();
 		try {
-			prescriptions = userService.getSortedPatientsTreatmentById(userId);
+			prescriptions = userService.getPatientTreatmentById(userId);
+			if (!prescriptions.isEmpty()) {
+				List<CurrentTreatment> performingList;
+				for (Treatment treatment : prescriptions) {
+					int idAppointment = treatment.getIdAppointment();
+					// the list of performed procedures (could be empty, if the treatment hasn't
+					// been begun yet);
+					performingList = userService.getCurrentTreatmentByAppointmentId(idAppointment);
+					treatment.setPerformingList(performingList);
+				}
+			}
+
 			request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
 			page = NavigationManager.getProperty("path.page.treatment");
 			goForward(request, response, page);

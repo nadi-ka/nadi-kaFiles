@@ -9,6 +9,17 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="style/style.css"/>
+	<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+	<script>
+	$(function() {
+		  $("#treat_performance_form").each(function() {
+			  var status = ${item.status.getStatusValue()};
+		      if (status === 'completed') {
+		      $(this).hide();
+		    }
+		  });
+		});
+	</script>
 
 	<title>Current-patient-page</title>
 	
@@ -31,14 +42,22 @@
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.form_name" var="form_name"/>
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.in_progress" var="in_progress"/>
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.completed" var="completed"/>
-	<fmt:message bundle="${loc}" key="local.staff.treat_perform.performed" var="performed"/>
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.prescribed" var="prescribed"/>
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.canceled" var="canceled"/>
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.date" var="date"/>
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.performer" var="performer"/>
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.status" var="status"/>
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.surgical_treatment" var="surgical_treatment"/>
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.doctor_cancel" var="doctor_cancel"/>
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.date_cancel" var="date_cancel"/>
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.access_denied" var="access_denied"/>
-	<fmt:message bundle="${loc}" key="local.error_data" var="error_data"/>
+	<fmt:message bundle="${loc}" key="local.treatment.request_denied" var="request_denied" />
+	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
 	<fmt:message bundle="${loc}" key="local.treatment.consent.true" var="agree" />
 	<fmt:message bundle="${loc}" key="local.treatment.consent.false" var="disagree" />
+	<fmt:message bundle="${loc}" key="local.staff.prescriptions.surgical" var="surgical" />
+	<fmt:message bundle="${loc}" key="local.staff.prescriptions.conservative" var="conservative" />
+	<fmt:message bundle="${loc}" key="local.staff.prescriptions.procedures" var="procedures" />
 	
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
@@ -91,7 +110,27 @@
       		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
     	</form>
 
-	</nav>	
+	</nav>
+	
+	<!-- Alert -->
+          						
+    <c:if test="${param.message == 'access_denied'}">
+        <div class="alert alert-danger" role="alert">
+			<c:out value = "${access_denied}" />
+		</div>
+	</c:if>
+								
+	<c:if test="${param.message == 'error_data'}">
+        <div class="alert alert-danger" role="alert">
+			<c:out value = "${error_data} ${param.invalid_parameters}" />
+		</div>
+	</c:if>
+	
+	<c:if test="${param.message == 'wrong_request'}">
+    	<div class="alert alert-danger" role="alert">
+			<c:out value = "${request_denied}" />
+		</div>
+	</c:if>  
 	
 	<!--  Table 'Treatment' -->
 
@@ -116,7 +155,23 @@
 			
 				<tr>
 					<th scope="row">${treatment.treatmentName}</th>
-					<td>${treatment.treatmentType}</td>
+					
+					<td>
+						<!-- Treatment type displaying -->
+						
+						<c:choose> 
+							<c:when test="${treatment.treatmentType == 'SURGICAL'}">
+								<c:out value="${surgical}"/>
+							</c:when>
+							<c:when test="${treatment.treatmentType == 'PROCEDURES'}">
+								<c:out value="${procedures}"/>
+							</c:when>
+							<c:otherwise>
+								<c:out value="${conservative}"/>
+							</c:otherwise>
+						</c:choose>
+					</td>
+					
 					<td>${treatment.doctorSurname}<br> 
 						${treatment.doctorName}</td>	
 					<td>${treatment.dateBeginning}</td>
@@ -127,72 +182,100 @@
 								<c:out value="${agree}"/>
 							</c:when>
 							<c:otherwise>
-								<c:out value="${disagree}"/>
+								<p class='text-danger'>${disagree}</p>
 							</c:otherwise>
 						</c:choose>
 					</td>
 					<td>
 					
-						<c:if test="${treatment.consent == 'true'}">	
+						<!-- Display data in column 'executions' only if consent was given -->
+					
+						<c:if test="${treatment.consent == 'true'}">
 						
-						<!-- 'Perform treatment' form -->
+							<c:choose> 
+								<c:when test="${treatment.getTreatmentStatus() == 'COMPLETED'}">
+									<strong><c:out value="${completed}"/></strong>
+								</c:when>
+								<c:when test="${treatment.getTreatmentStatus() == 'CANCELED'}">
+									<strong><c:out value="${canceled}"/></strong>
+								</c:when>
+								<c:when test="${sessionScope.role == 'NURSE' and treatment.treatmentType == 'SURGICAL'}">
+									<p class='text-danger'>${surgical_treatment}</p>
+								</c:when>
+								<c:otherwise>
+									<!-- 'Perform treatment' form except surgical treatment for nurses-->			
 						
-						<h5>${form_name}</h5>
+									<h5>${form_name}</h5>
 						
-						<div class="border border-secondary w-50 p-3 form-bcground">
-							<form name="treatment_performance" method="POST" action="font">
-								<input type="hidden" name="command" value="perform_treatment" />
-								<input type="hidden" name="id_appointment" value="${treatment.idAppointment}" />
-								<input type="hidden" name="consent" value="${treatment.consent}" />
-								<input type="hidden" name="treatment_type" value="${treatment.treatmentType}" />
-								<input type="hidden" name="patient_id" value="${param.patient_id}">
+									<div id="treat_performance_form" class="border border-secondary w-50 p-3 form-bcground">
+										<form name="treatment_performance" method="POST" action="font">
+											<input type="hidden" name="command" value="perform_treatment" />
+											<input type="hidden" name="id_appointment" value="${treatment.idAppointment}" />
+											<input type="hidden" name="consent" value="${treatment.consent}" />
+											<input type="hidden" name="treatment_type" value="${treatment.treatmentType.getTypeValue()}" />
+											<input type="hidden" name="patient_id" value="${param.patient_id}">
+											<input type="hidden" name="current_status" value="${treatment.getTreatmentStatus().getStatusValue()}" />
 								
-								<div class="form-group">
-  									<label for="setting_date">${date}</label>
-  									<input type="date" name="setting_date" value="" >
-								</div>
+											<div class="form-group">
+  												<label for="setting_date">${date}</label>
+  												<input type="date" name="setting_date" value="" >
+											</div>
 						
-								<div class="form-check">
-          							<input class="form-check-input" type="radio" name="status" value="in progress" checked>
-          							<label class="form-check-label">${in_progress}</label>
-        						</div>
+											<div class="form-check">
+          										<input class="form-check-input" type="radio" name="status" value="in progress" checked>
+          										<label class="form-check-label">${in_progress}</label>
+        									</div>
         					
-        						<div class="form-check">
-          							<input class="form-check-input" type="radio" name="status" value="completed" >
-          							<label class="form-check-label">${completed}</label>
-          						</div>
-          						
-          						<!-- Alerts -->
-          						
-          						<c:if test="${param.message == 'access_denied'}">
-          							<div class="alert alert-danger" role="alert">
-										<c:out value = "${access_denied}" />
-									</div>
-								</c:if>
-								
-								<c:if test="${param.message == 'error_data'}">
-          							<div class="alert alert-danger" role="alert">
-										<c:out value = "${error_data} ${param.invalid_parameters}" />
-									</div>
-								</c:if>       						
+        									<div class="form-check">
+          										<input class="form-check-input" type="radio" name="status" value="completed" >
+          										<label class="form-check-label">${completed}</label>
+          									</div>	     						
           					
-          						<button type="submit" class="btn btn-primary">${submit_btn}</button>	 		
-							</form>
-						</div>
+          									<button type="submit" class="btn btn-primary">${submit_btn}</button>	 		
+										</form>
+									</div>
+									
+								</c:otherwise>
+							</c:choose>	
 						
 						</c:if>
 						
+						<!-- Display performed procedures -->
+						
 						<c:if test="${!empty treatment.performingList}">
-						<h5>${performed}</h5>
 							<ul class="list-group">
 								<c:forEach items="${treatment.performingList}" var="item">
+									<c:choose> 
+										<c:when test="${item.status == 'CANCELED'}">
+											<li class="list-group-item">
+  												<ul class="list-group inner">
+                    								<li class="list-group-item">${date_cancel} ${item.datePerforming}</li>
+                    								<li class="list-group-item">${doctor_cancel} ${item.performerSurname} ${item.performerName}</li>
+                    								<li class="list-group-item">${status} 
+														<p class='text-danger'>${canceled}</p>
+													</li>
+												</ul>
+											</li>
+										</c:when>
+										<c:otherwise>
   									<li class="list-group-item">
   										<ul class="list-group inner">
                     						<li class="list-group-item">${date} ${item.datePerforming}</li>
                     						<li class="list-group-item">${performer} ${item.performerSurname} ${item.performerName}</li>
-                    						<li class="list-group-item">${status} ${item.status.getStatusValue()}</li>
+                    						<li class="list-group-item">${status} 
+                    							<c:choose> 
+													<c:when test="${item.status == 'COMPLETED'}">
+														<p class='text-success'>${completed}</p>
+													</c:when>
+													<c:otherwise>
+														<p class='text-warning'>${in_progress}</p>
+													</c:otherwise>
+												</c:choose>
+                    						</li>	
                 						</ul>
   									</li>
+  									</c:otherwise>
+  									</c:choose>
   								</c:forEach>
   							</ul>
   						</c:if>

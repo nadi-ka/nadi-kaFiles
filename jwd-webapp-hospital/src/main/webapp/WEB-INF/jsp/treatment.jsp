@@ -31,6 +31,15 @@
 	<fmt:message bundle="${loc}" key="local.main.calc_hospitalization" var="calc_hospitalization" />
 	<fmt:message bundle="${loc}" key="local.hospital_plan.nav_main" var="navigate_main" />
 	<fmt:message bundle="${loc}" key="local.main.update_patient" var="update_patient_data" />
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.status" var="status"/>
+	<fmt:message bundle="${loc}" key="local.treatment.request_denied" var="request_denied" />
+	<fmt:message bundle="${loc}" key="local.staff.prescriptions.surgical" var="surgical" />
+	<fmt:message bundle="${loc}" key="local.staff.prescriptions.conservative" var="conservative" />
+	<fmt:message bundle="${loc}" key="local.staff.prescriptions.procedures" var="procedures" />
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.in_progress" var="in_progress"/>
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.completed" var="completed"/>
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.prescribed" var="prescribed"/>
+	<fmt:message bundle="${loc}" key="local.staff.treat_perform.canceled" var="canceled"/>
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
@@ -83,6 +92,14 @@
 		
 	</nav>
 	
+	<!-- Alert -->
+	
+	<c:if test="${param.message == 'wrong_request'}">
+    	<div class="alert alert-danger" role="alert">
+			<c:out value = "${request_denied}" />
+		</div>
+	</c:if>
+	
 	<jsp:useBean id="prescriptions" type="java.util.List<by.epam.ts.bean.Treatment>" scope="request"/>
 	
 	<!--  Table 'Treatment' -->
@@ -97,6 +114,7 @@
 					<th scope="col">${doctor}</th>
 					<th scope="col">${date_begin}</th>
 					<th scope="col">${date_finish}</th>
+					<th scope="col">${status}</th>
 					<th scope="col">${consent}</th>
 				</tr>
 			</thead>
@@ -106,12 +124,40 @@
 			<c:forEach var="treatment" items="${prescriptions}">
 			
 				<tr>
-					<th scope="row">${treatment.treatmentType}</th>
+					<th scope="row">
+						<c:choose> 
+							<c:when test="${treatment.treatmentType == 'SURGICAL'}">
+								<c:out value="${surgical}"/>
+							</c:when>
+							<c:when test="${treatment.treatmentType == 'PROCEDURES'}">
+								<c:out value="${procedures}"/>
+							</c:when>
+							<c:otherwise>
+								<c:out value="${conservative}"/>
+							</c:otherwise>
+						</c:choose>
+					</th>
 					<td>${treatment.treatmentName}</td>
 					<td>${treatment.doctorSurname}<br> 
 						${treatment.doctorName}</td>	
 					<td>${treatment.dateBeginning}</td>
 					<td>${treatment.dateFinishing}</td>
+					<td>
+						<c:choose> 
+							<c:when test="${treatment.getTreatmentStatus() == 'CANCELED'}">
+								<c:out value="${canceled}"/>
+							</c:when>
+							<c:when test="${treatment.getTreatmentStatus() == 'IN_PROGRESS'}">
+								<c:out value="${in_progress}"/>
+							</c:when>
+							<c:when test="${treatment.getTreatmentStatus() == 'COMPLETED'}">
+								<c:out value="${completed}"/>
+							</c:when>
+							<c:otherwise>
+								<c:out value="${prescribed}"/>
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td>
 						<c:choose> 
 							<c:when test="${treatment.consent == true}">
@@ -124,24 +170,28 @@
 						
 						<!-- Change consent form -->
 						
-						<form name="consentForm" method="POST" action="font">
+						<c:if test="${treatment.getTreatmentStatus() != 'COMPLETED' and treatment.getTreatmentStatus() != 'CANCELED'}">	
 						
-						<input type="hidden" name="command" value="give_consent" />
-						<input type="hidden" name="id_appointment" value="${treatment.idAppointment}" />
+							<form name="consentForm" method="POST" action="font">
 						
-							<div class="form-check">
-          						<input class="form-check-input" type="radio" name="consent" value=true>
-          						<label class="form-check-label">${agree}</label>
-        					</div>
+								<input type="hidden" name="command" value="give_consent" />
+								<input type="hidden" name="id_appointment" value="${treatment.idAppointment}" />
+								<input type="hidden" name="status" value="${treatment.getTreatmentStatus().getStatusValue()}" />
+						
+								<div class="form-check">
+          							<input class="form-check-input" type="radio" name="consent" value=true>
+          							<label class="form-check-label">${agree}</label>
+        						</div>
         					
-        					<div class="form-check">
-          						<input class="form-check-input" type="radio" name="consent" value=false checked>
-          						<label class="form-check-label">${disagree}</label>
-          					</div>
+        						<div class="form-check">
+          							<input class="form-check-input" type="radio" name="consent" value=false checked>
+          							<label class="form-check-label">${disagree}</label>
+          						</div>
           					
-          					<button type="submit" class="btn btn-secondary">${submit_button}</button>	 
+          						<button type="submit" class="btn btn-secondary">${submit_button}</button>	 
           						
-						</form>
+							</form>
+						</c:if>
 						
 					</td>
 				</tr>

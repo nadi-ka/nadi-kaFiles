@@ -153,7 +153,7 @@ public class ValidationManager {
 		PersonalDataValidator validator = new PersonalDataValidator();
 		Map<String, Boolean> validResults = new HashMap<String, Boolean>();
 
-		validResults.put(KEY_SPECIALTY, validator.validSpecialty(specialty));
+		validResults.put(KEY_SPECIALTY, validator.validSpesialty(specialty));
 		validResults.put(KEY_SURNAME, validator.validSurname(surname));
 		validResults.put(KEY_NAME, validator.validName(name));
 		validResults.put(KEY_EMAIL, validator.validEmail(email));
@@ -207,6 +207,17 @@ public class ValidationManager {
 		validResults.put(KEY_DATE_PERFORMING, validator.validDate(datePerforming));
 		validResults.put(KEY_STAFF_ID, validator.validId(idPerformer));
 		validResults.put(KEY_TREATMENT_STATUS, validator.validTreatmentStatus(status));
+
+		Set<String> invalidData = checkInvalidData(validResults);
+		return invalidData;
+	}
+	
+	public Set<String> validateTreatCancellationData(String idAppointment, String idDoctor) {
+		TreatmentHospitalizationValidator validator = new TreatmentHospitalizationValidator();
+		Map<String, Boolean> validResults = new HashMap<String, Boolean>();
+
+		validResults.put(KEY_ID_APPOINTMENT, validator.validIdAppointment(idAppointment));
+		validResults.put(KEY_STAFF_ID, validator.validId(idDoctor));
 
 		Set<String> invalidData = checkInvalidData(validResults);
 		return invalidData;

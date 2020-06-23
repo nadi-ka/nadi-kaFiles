@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.epam.ts.bean.treat_status.TreatmentStatus;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
@@ -27,6 +28,14 @@ public final class GiveConsentCommand implements Command {
 
 		String idAppointment = request.getParameter(RequestAtribute.ID_APPOINTMENT);
 		String consent = request.getParameter(RequestAtribute.CONSENT);
+		
+		// if procedure was completed/canceled, it shouldn't be performed;
+		if (!checkTreatStatusForPerformProcedure(request)) {
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.GET_TREATMENT_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
+					+ "=" + RequestMessage.WRONG_REQUEST);
+			return;
+		}
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
@@ -41,6 +50,13 @@ public final class GiveConsentCommand implements Command {
 					+ RequestMessage.TECHNICAL_ERROR);
 		}
 
+	}
+
+	private boolean checkTreatStatusForPerformProcedure(HttpServletRequest request) {
+		String treatmentStatus = request.getParameter(RequestAtribute.TREATMENT_STATUS);
+		return (treatmentStatus != null && !treatmentStatus.isEmpty()
+				&& !treatmentStatus.equals(TreatmentStatus.CANCELED.getStatusValue())
+				&& !treatmentStatus.equals(TreatmentStatus.COMPLETED.getStatusValue()));
 	}
 
 }

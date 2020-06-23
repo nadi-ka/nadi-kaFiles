@@ -75,7 +75,7 @@
 		
 	</nav>
 	
-  		<h1>${welcome}!</h1>
+  		<h1>${welcome}</h1>
   		
   		<img src="img/background_theme.png" alt="stethoscope_image">		
 

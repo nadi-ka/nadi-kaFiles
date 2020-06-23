@@ -21,6 +21,7 @@ import by.epam.ts.bean.User;
 import by.epam.ts.bean.role.UserRole;
 import by.epam.ts.bean.specialty.Specialty;
 import by.epam.ts.bean.treat_status.TreatmentStatus;
+import by.epam.ts.bean.treat_type.TreatmentType;
 import by.epam.ts.dal.DaoException;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.factory.DaoFactory;
@@ -90,17 +91,19 @@ public class UserServiceImpl implements UserService {
 		User user = null;
 		try {
 			user = userDao.findUserByLoginPassword(login, password);
+			if ((user != null) && !user.isUserStatus()) {
+				throw new ValidationServiceException(ValidationConstant.INVALID_ACCOUNT);
+			}
 		} catch (DaoException ex) {
 			throw new ServiceException("Error during reading from DB.", ex);
 		}
 		return user;
 	}
 
-	public List<Treatment> getSortedPatientsTreatmentById(String id) throws ServiceException {
+	public List<Treatment> getPatientTreatmentById(String id) throws ServiceException {
 		List<Treatment> prescriptions;
 		try {
 			prescriptions = userDao.findPatientsTreatmentById(id);
-			Collections.sort(prescriptions, Treatment.treatmentDateComparator);
 		} catch (DaoException ex) {
 			throw new ServiceException("Error when calling userDao.findPatientsTreatmentById(id).", ex);
 		}
@@ -366,8 +369,9 @@ public class UserServiceImpl implements UserService {
 		LocalDate dateBeginning = LocalDate.parse(dateBegin);
 		LocalDate dateFinishing = LocalDate.parse(dateFinish);
 		boolean consent = false;
-		Treatment treatment = new Treatment(idPatient, treatmentType, treatmentName, idDoctor, dateBeginning,
-				dateFinishing, consent);
+		Treatment treatment = new Treatment(idPatient, TreatmentType.getTreatmentType(treatmentType), treatmentName,
+				idDoctor, dateBeginning, dateFinishing, consent);
+		log.info(treatment.toString());
 		int effectedRows = 0;
 		try {
 			effectedRows = userDao.createPatientTreatment(treatment);
@@ -602,6 +606,33 @@ public class UserServiceImpl implements UserService {
 		} catch (DaoException e) {
 			throw new ServiceException(
 					"Error when calling userDao.createCurrentTreatment(treatment) from performeCurrentTreatment() from UserServiceImpl",
+					e);
+		}
+	}
+
+	public void cancelTreatment(String idAppointment, String idDoctor) throws ServiceException {
+		// Data validation;
+		ValidationManager manager = new ValidationManager();
+		Set<String> invalidDataSet = manager.validateTreatCancellationData(idAppointment, idDoctor);
+		if (!invalidDataSet.isEmpty()) {
+			String invalidData = String.join(",", invalidDataSet);
+			throw new ValidationServiceException(invalidData);
+		}
+		int numAppointment = Integer.parseInt(idAppointment);
+		LocalDate now = LocalDate.now();
+		TreatmentStatus status = TreatmentStatus.CANCELED;
+
+		CurrentTreatment treatment = new CurrentTreatment(numAppointment, now, idDoctor, status);
+		int effectedRows = 0;
+		try {
+			effectedRows = userDao.createCurrentTreatment(treatment);
+			if (effectedRows == 0) {
+				throw new ServiceException(
+						"When calling createCurrentTreatment(treatment) from cancelTreatment() from UserServiceImpl, the treatment wasn't canceled. Effected rows == 0");
+			}
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"Error when callingcreateCurrentTreatment(treatment) from cancelTreatment() from UserServiceImpl",
 					e);
 		}
 	}

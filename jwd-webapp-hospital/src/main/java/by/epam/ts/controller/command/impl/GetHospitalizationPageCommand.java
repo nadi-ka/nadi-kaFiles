@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.bean.Hospitalization;
+import by.epam.ts.bean.Patient;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
@@ -28,22 +29,19 @@ public final class GetHospitalizationPageCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
-		String message = request.getParameter(RequestAtribute.MESSAGE);
 		
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
-		Hospitalization lastHospitalization;
 	try {
-		lastHospitalization = userService.getLastHospitalizationById(patientId);
+		Patient patient = userService.getPatientById(patientId);
+		Hospitalization lastHospitalization = userService.getLastHospitalizationById(patientId);
+		request.setAttribute(RequestAtribute.PATIENT, patient);
 		request.setAttribute(RequestAtribute.HOSPITALIZATION, lastHospitalization);
-		request.setAttribute(RequestAtribute.PATIENT_ID, patientId);
-		request.setAttribute(RequestAtribute.MESSAGE, message);
 		String page = NavigationManager.getProperty("path.page.staff.hospitalization");
 		goForward(request, response, page);
 	}catch (ServiceException e) {
 		log.log(Level.ERROR,
 				"Error when calling userService.getLastHospitalizationById() from GetHospitalizationPageCommand", e);
-		request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
 		response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 				+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 				+ RequestMessage.TECHNICAL_ERROR);

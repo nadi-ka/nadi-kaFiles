@@ -9,5 +9,6 @@ public final class ValidationConstant {
 	public static final String INVALID_PASSWORD = "password";
 	public static final String INVALID_DATE_OF_BIRTH = "date of birth";
 	public static final String INVALID_DISCHARGE_DATE = "discharge date";
+	public static final String INVALID_ACCOUNT = "sorry, this account is not active longer";
 
 }

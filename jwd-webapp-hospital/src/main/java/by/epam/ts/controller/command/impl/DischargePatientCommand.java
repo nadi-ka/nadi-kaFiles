@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.bean.PatientDiagnosis;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.access_manager.AccessManager;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
@@ -22,7 +23,7 @@ import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
-public final class DischargePatientCommand implements Command {
+public final class DischargePatientCommand implements Command, AccessManager {
 
 	private static final Logger log = LogManager.getLogger(DischargePatientCommand.class);
 
@@ -30,9 +31,9 @@ public final class DischargePatientCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// Checking of the user rights;
-		boolean staffRights = checkDoctorRights(request, response);
+		boolean staffRights = checkDoctorRights(request);
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ACCESS_DENIED);
 			return;
@@ -48,7 +49,7 @@ public final class DischargePatientCommand implements Command {
 		try {
 			List<PatientDiagnosis> diagnosisList = userService.getCurrentDiagnosisSorted(patientId, entryDate);
 			if (!diagnosisList.isEmpty()) {
-				// actual diagnosis was found, forming the string with result diagnosis;
+				// actual diagnosis was found, form the string with result diagnosis;
 				StringBuilder resultDiagnosis = new StringBuilder();
 				String delimeter = ", ";
 				for (PatientDiagnosis item : diagnosisList) {
@@ -57,7 +58,7 @@ public final class DischargePatientCommand implements Command {
 				}
 				String str = resultDiagnosis.toString().trim();
 				String resultStringUTF8 = URLEncoder.encode(str.substring(0, str.length() - 1), "UTF-8");
-				// setting of the discharge date;
+				// set the discharge date;
 				userService.setDischargeDate(dischargeDate, entryDate, idHistory);
 				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
 						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase()

@@ -2,9 +2,9 @@ package by.epam.ts.bean.specialty;
 
 public enum Specialty {
 	
-	DOCTOR("врач"),
-	NURSE("медсестра"),
-	UNKNOWN("не определена");
+	DOCTOR("doctor"),
+	NURSE("nurse"),
+	UNKNOWN("unknown");
 	
 	private final String specialtyValue;
 	

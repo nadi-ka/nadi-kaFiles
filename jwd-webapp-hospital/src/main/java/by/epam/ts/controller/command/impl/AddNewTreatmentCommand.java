@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.access_manager.AccessManager;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
@@ -20,14 +21,14 @@ import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
-public final class AddNewTreatmentCommand implements Command {
+public final class AddNewTreatmentCommand implements Command, AccessManager {
 
 	private static final Logger log = LogManager.getLogger(AddNewTreatmentCommand.class);
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Checking of the user rights;
-		boolean staffRights = checkDoctorRights(request, response);
+		boolean staffRights = checkDoctorRights(request);
 		if (!staffRights) {
 			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="

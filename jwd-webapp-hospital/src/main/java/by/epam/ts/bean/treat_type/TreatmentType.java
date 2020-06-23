@@ -2,10 +2,10 @@ package by.epam.ts.bean.treat_type;
 
 public enum TreatmentType {
 	
-	SURGICAL("хирургическое"),
-	PROCEDURES("процедуры"),
-	CONSERVATIVE("консервативное"),
-	UNKNOWN("не определено");
+	SURGICAL("surgical"),
+	PROCEDURES("procedures"),
+	CONSERVATIVE("conservative"),
+	UNKNOWN("unknown");
 	
 	private final String typeValue;
 	

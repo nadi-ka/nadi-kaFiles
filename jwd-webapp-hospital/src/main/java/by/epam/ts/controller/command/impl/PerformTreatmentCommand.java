@@ -14,6 +14,7 @@ import by.epam.ts.bean.treat_type.TreatmentType;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.util.treat_inspector.TreatmentRightsInspector;
+import by.epam.ts.controller.command.util.treat_inspector.TreatmentStatusInspector;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
@@ -27,26 +28,32 @@ public final class PerformTreatmentCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
+		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
+
+		// if procedure was completed/canceled, it shouldn't be performed;
+		TreatmentStatusInspector statusInspector = new TreatmentStatusInspector();
+		if (!statusInspector.checkTreatmentStatus(request)) {
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"
+					+ RequestAtribute.MESSAGE + "=" + RequestMessage.WRONG_REQUEST + "&" + RequestAtribute.PATIENT_ID
+					+ "=" + patientId);
+			return;
+		}
+
 		String treatmentTypeValue = request.getParameter(RequestAtribute.TREATMENT_TYPE);
-		if (treatmentTypeValue == null || treatmentTypeValue.isEmpty()) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
-			return;
-		}
 		TreatmentType type = TreatmentType.getTreatmentType(treatmentTypeValue);
-		if (type == TreatmentType.UNKNOWN) {
-			// The type of treatment is undefined, the procedure is prohibited;
+		// The type of treatment is undefined, the procedure is prohibited;
+		if (treatmentTypeValue == null || treatmentTypeValue.isEmpty() || type == TreatmentType.UNKNOWN) {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ACCESS_DENIED);
 			return;
 		}
+
 		// Checking of the staff rights for performing current procedure;
 		TreatmentRightsInspector inspector = new TreatmentRightsInspector();
 		boolean staffRights = inspector.inspectRightsForCurrentProcedure(request, type);
-		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 		if (!staffRights) {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"
@@ -65,25 +72,25 @@ public final class PerformTreatmentCommand implements Command {
 		UserService userService = factory.getUserService();
 		try {
 			userService.performCurrentTreatment(consent, idAppointment, datePerforming, staffId, status);
+			log.info(consent + " " + idAppointment + " " + datePerforming + " " + staffId + " " + status);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"
 					+ RequestAtribute.PATIENT_ID + "=" + patientId);
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
-					"Error when calling userService.performeCurrentTreatment from  PerformTreatmentCommand. Invalid parameters:",
+					"Error when calling performeCurrentTreatment() from  PerformTreatmentCommand. Invalid parameters:",
 					e);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"
 					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA + "&"
-					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage() + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage() + "&" + RequestAtribute.PATIENT_ID + "="
+					+ patientId);
 		} catch (ServiceException e) {
-			log.log(Level.ERROR,
-					"Error when calling userService.performCurrentTreatment() from PerformTreatmentCommand.", e);
+			log.log(Level.ERROR, "Error when calling performCurrentTreatment() from PerformTreatmentCommand.", e);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}
 
 	}
-
 }

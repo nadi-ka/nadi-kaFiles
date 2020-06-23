@@ -2,6 +2,7 @@ package by.epam.ts.controller.command.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -39,6 +40,7 @@ public final class GetTreatPerformancePageCommand implements Command {
 		try {
 			// getting of the last hospitalization;
 			hospitalization = userService.getLastHospitalizationById(patientId);
+
 			if (hospitalization != null) {
 				// the last entry date;
 				LocalDate entryDate = hospitalization.getEntryDate();
@@ -52,9 +54,12 @@ public final class GetTreatPerformancePageCommand implements Command {
 						// the list of performed procedures (could be empty, if the treatment hasn't
 						// been begun yet);
 						performingList = userService.getCurrentTreatmentByAppointmentId(idAppointment);
+						log.info(performingList.toString());
 						treatment.setPerformingList(performingList);
 					}
 				}
+				Collections.sort(prescriptions, Treatment.treatmentStatusComparator);
+				
 				request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
 				request.setAttribute(RequestAtribute.PATIENT_ID, patientId);
 				String page = NavigationManager.getProperty("path.page.staff.treat_performance");

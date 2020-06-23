@@ -5,6 +5,7 @@
 <head>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+	<%@ taglib uri="/WEB-INF/tld/taglib.tld" prefix="author"%>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="style/style.css"/>
@@ -115,6 +116,8 @@
 			<button type="submit" class="btn btn-link">${regist}</button>
 		</form>
 	</div>
+	
+	<author:signature></author:signature>
 
 </body>
 </html>

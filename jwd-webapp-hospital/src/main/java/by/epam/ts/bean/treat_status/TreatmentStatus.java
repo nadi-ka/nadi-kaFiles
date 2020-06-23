@@ -2,8 +2,10 @@ package by.epam.ts.bean.treat_status;
 
 public enum TreatmentStatus {
 	
+	PRESCRIBED("prescribed"),
+	IN_PROGRESS("in progress"),
 	COMPLETED("completed"),
-	IN_PROGRESS("in progress");
+	CANCELED("canceled");
 	
 	private final String statusValue;
 	
@@ -25,7 +27,7 @@ public enum TreatmentStatus {
 	}
 	
 	public static TreatmentStatus getDefault() {
-		return IN_PROGRESS;
+		return PRESCRIBED;
 	}
 
 }

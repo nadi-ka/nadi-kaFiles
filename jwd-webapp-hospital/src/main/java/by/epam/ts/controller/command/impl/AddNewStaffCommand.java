@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.access_manager.AccessManager;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
@@ -19,7 +20,7 @@ import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
-public final class AddNewStaffCommand implements Command {
+public final class AddNewStaffCommand implements Command, AccessManager {
 
 	private static final Logger log = LogManager.getLogger(AddNewStaffCommand.class);
 
@@ -27,7 +28,7 @@ public final class AddNewStaffCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// Checking of the user rights;
-		boolean adminRights = checkAdminRights(request, response);
+		boolean adminRights = checkAdminRights(request);
 		if (!adminRights) {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
