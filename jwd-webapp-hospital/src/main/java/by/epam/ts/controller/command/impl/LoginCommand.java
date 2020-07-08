@@ -24,7 +24,7 @@ import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class LoginCommand implements Command {
-	
+
 	private static final Logger log = LogManager.getLogger(LoginCommand.class);
 
 	@Override
@@ -38,28 +38,32 @@ public final class LoginCommand implements Command {
 
 		try {
 			user = userService.logIn(login, password);
-			if (user != null) {
+			if (user.getId() != null) {
 				HttpSession session = request.getSession(true);
 				UserRole role = user.getRole();
-				// User stores parameters: id and user's role;
+				// Session stores parameters: user's id and user's role;
 				session.setAttribute(SessionAtribute.USER_ID, user.getId());
 				session.setAttribute(SessionAtribute.USER_ROLE, role);
-				
+
 				if (role == UserRole.DOCTOR || role == UserRole.ADMINISTRATOR || role == UserRole.NURSE) {
-					response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER + RequestAtribute.COMMAND + "=" + CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase());
+					response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
+							+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase());
+				} else {
+					response.sendRedirect(
+							request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
+									+ CommandEnum.GET_PATIENT_MAIN_PAGE.toString().toLowerCase());
 				}
-				else {
-					response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER + RequestAtribute.COMMAND + "=" + CommandEnum.GET_PATIENT_MAIN_PAGE.toString().toLowerCase());
-				}
-				
+
 			} else {
 				request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER + RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA);
+				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
+						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
+						+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA);
 			}
-			
+
 		} catch (ValidationServiceException ex) {
 			log.log(Level.INFO, "Validation error during calling method execute from LoginCommand()", ex);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
 					+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
 					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA);
 

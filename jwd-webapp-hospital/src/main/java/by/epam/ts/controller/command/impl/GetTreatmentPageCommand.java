@@ -24,6 +24,8 @@ import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetTreatmentPageCommand implements Command {
+	
+	private static final String PATH = "path.page.treatment";
 	private static final Logger log = LogManager.getLogger(GetTreatmentPageCommand.class);
 
 	@Override
@@ -56,7 +58,7 @@ public final class GetTreatmentPageCommand implements Command {
 			}
 
 			request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
-			page = NavigationManager.getProperty("path.page.treatment");
+			page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method getPatientsTreatmentById() from ShowTreatmentCommand",

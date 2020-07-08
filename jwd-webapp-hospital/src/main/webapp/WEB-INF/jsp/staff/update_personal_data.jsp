@@ -23,7 +23,10 @@
 	<fmt:message bundle="${loc}" key="local.name" var="name" />
 	<fmt:message bundle="${loc}" key="local.email" var="email" />
 	<fmt:message bundle="${loc}" key="local.staff.data.specialty" var="specialty" />
+	<fmt:message bundle="${loc}" key="local.staff.data.doctor" var="doctor" />
+	<fmt:message bundle="${loc}" key="local.staff.data.nurse" var="nurse" />
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
+	<fmt:message bundle="${loc}" key="local.validation.required" var="field_required"/>
 
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_btn" />
@@ -35,14 +38,14 @@
 
 	<!-- Logout button -->
 		
-	<form name="Logout_form" method="POST" action="register" class="float-right">
+	<form name="Logout_form" method="POST" action="font" class="float-right">
 		<input type="hidden" name="command" value="logout" /> 
 		<button type="submit" class="btn btn-link">${logout_button}</button>
 	</form>
 
     <!-- Change language buttons -->
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -50,7 +53,7 @@
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -82,7 +85,16 @@
 		<li class="list-group-item list-group-item-warning">
 			<h3>${medical_staff.surname} ${medical_staff.name}</h3>  
 			<ul class="list-group">
-  				<li class="list-group-item">${specialty} ${medical_staff.specialty.getSpecialtyValue()}</li>
+  				<li class="list-group-item">
+  					<c:choose> 
+						<c:when test="${medical_staff.specialty == 'DOCTOR'}">
+							<p>${specialty} ${doctor}</p>
+						</c:when>
+						<c:otherwise>
+							<p>${specialty} ${nurse}</p>
+						</c:otherwise>
+					</c:choose>
+  				</li>
   				<li class="list-group-item">${email} ${medical_staff.email}</li>  
 			</ul>         	
 		</li>
@@ -90,26 +102,28 @@
 	
 	<!-- Form update staff personal data -->
 	
-	<h3>${update_staff}:</h3>
+		<div class="ml-4">
+			<h3>${update_staff}:</h3>
+		</div>
 	
-		<div class="border border-secondary w-50 p-3 form-bcground"> 
-			<form name="update_staff_data" action="font" method="POST">
+		<div class="border border-secondary w-50 p-3 form-bcground ml-4"> 
+			<form id="update" name="update_staff_data" action="font" method="POST">
 				<input type="hidden" name="command" value="update_personal_data" />
 	
 				<div class="form-group">
     				<label for="surname">${surname}:</label>
-    				<input id="box1" type="text"  name="surname" value="${requestScope.medical_staff.surname}">
+    				<input type="text"  name="surname" value="${requestScope.medical_staff.surname}" class="required" id="surname">
   				</div>
   		
   				<div class="form-group">
     				<label for="name">${name}</label>
-    				<input id="box2" type="text" name="name" value="${requestScope.medical_staff.name}">
+    				<input type="text" name="name" value="${requestScope.medical_staff.name}" class="required" id="name">
   				</div>
 	
   				<div class="form-group">
   					<label for="email">${email}</label>
   					<input type="hidden" name="old_email" value="${requestScope.medical_staff.email}" />
-    				<input id="box3" type="email" name="email" value="${requestScope.medical_staff.email}" >
+    				<input type="email" name="email" value="${requestScope.medical_staff.email}" id="email" required>
   				</div>
   		
   				<c:if test="${param.message == 'error_data'}">
@@ -122,5 +136,46 @@
 
 			</form>
 		</div>
+		
+		<hr/>
+		
+		<!-- Footer -->
+		
+		<div id="footer">
+    		<jsp:include page="/WEB-INF/jsp/part/footer.jsp"/>
+		</div>
+		
+		<!-- Form validation -->
+	
+		<script src="js/jquery.validate.min.js"></script>
+	
+		<script>
+		
+		var requiredField = '<p class="text-danger">${field_required}</p>';
+
+	 	$('#update').validate({
+	 		
+	   		rules: {	
+	   			surname: {
+	        		required: true        
+	     		},
+	     		name: {
+	        		required: true        
+	     		}
+	   		}, //end rules;
+	   
+	   		messages: {	
+	   			surname: {
+	         		required: requiredField
+	       		},
+	       		name: {
+	         		required: requiredField
+	       		}
+	   		} // end messages;
+
+	  	}); // end validate;
+
+	</script>
+		
 	</body>
 </html>	

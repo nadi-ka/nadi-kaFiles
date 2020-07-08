@@ -24,6 +24,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetDiagnosisPageCommand implements Command {
 
+	private static final String PATH = "path.page.staff.diagnosis";
 	private static final Logger log = LogManager.getLogger(GetDiagnosisPageCommand.class);
 
 	@Override
@@ -39,12 +40,12 @@ public final class GetDiagnosisPageCommand implements Command {
 
 			request.setAttribute(RequestAtribute.PATIENT, patient);
 			request.setAttribute(RequestAtribute.LIST_DIAGNOSIS, diagnosisList);
-			String page = NavigationManager.getProperty("path.page.staff.diagnosis");
+			String page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
 		} catch (ServiceException e) {
 			log.log(Level.ERROR,
 					"Error when calling userService.getAllDiagnosisSorted() from GetAllPossibleDiagnosisCommand", e);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}

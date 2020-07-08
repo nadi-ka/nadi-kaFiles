@@ -23,6 +23,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class AddNewTreatmentCommand implements Command, AccessManager {
 
+	private static final String ENCODING = "UTF-8";
 	private static final Logger log = LogManager.getLogger(AddNewTreatmentCommand.class);
 
 	@Override
@@ -30,7 +31,7 @@ public final class AddNewTreatmentCommand implements Command, AccessManager {
 		// Checking of the user rights;
 		boolean staffRights = checkDoctorRights(request);
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ACCESS_DENIED);
 			return;
@@ -52,7 +53,7 @@ public final class AddNewTreatmentCommand implements Command, AccessManager {
 
 		try {
 			userService.addNewTreatment(patientId, treatmentType, treatmentName, staffId, dateBegin, dateFinish);
-			String treatNameUTF8 = URLEncoder.encode(treatmentName, "UTF-8");
+			String treatNameUTF8 = URLEncoder.encode(treatmentName, ENCODING);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_PRESCRIPTIONS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
 					+ "=" + RequestMessage.TREATMENT_ADDED_SUCCESSFULY + "&" + RequestAtribute.TREATMENT_NAME + "="
@@ -61,13 +62,13 @@ public final class AddNewTreatmentCommand implements Command, AccessManager {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewTreatment() from  AddNewTreatmentCommand. Invalid parameters:",
 					e);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.GET_PRESCRIPTIONS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
 					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling userService.addNewTreatment() from  AddNewTreatmentCommand.", e);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}

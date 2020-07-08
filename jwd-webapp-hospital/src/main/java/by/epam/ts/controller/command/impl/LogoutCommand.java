@@ -16,7 +16,7 @@ public final class LogoutCommand implements Command{
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getSession().invalidate();
-        response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER + RequestAtribute.COMMAND
+        response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 				+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
 				+ RequestAtribute.MESSAGE + "=" + RequestMessage.SUCCESSFUL_LOGOUT);
 		

@@ -34,6 +34,7 @@
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.treatment_successfully" var="treatment_successfully"/>
 	<fmt:message bundle="${loc}" key="local.surname" var="surname" />
+	<fmt:message bundle="${loc}" key="local.validation.required" var="field_required"/>
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
@@ -44,14 +45,14 @@
 
 	<!-- Logout button -->
 		
-	<form name="Logout_form" method="POST" action="register" class="float-right">
+	<form name="Logout_form" method="POST" action="font" class="float-right">
 		<input type="hidden" name="command" value="logout" /> 
 		<button type="submit" class="btn btn-link">${logout_button}</button>
 	</form>
 
 	<!-- Change language buttons -->
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -60,7 +61,7 @@
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -102,7 +103,7 @@
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${perform_treatment}</button>
         </form>      
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
         	<input type="hidden" name="command" value="search_patient"/>
       		<input class="form-control mr-sm-2" type="search" name="query_search" 
       			placeholder="${surname}" aria-label="Search the patient">
@@ -119,14 +120,16 @@
 		</div>
 	</c:if>
 	
-	<h2>${patient.surname} ${patient.name}</h2> 	
-	<h5><i>${patient.dateOfBirth}</i></h5>
+	<div class="container text-center">
+		<h2>${patient.surname} ${patient.name}</h2> 	
+		<h5><i>${patient.dateOfBirth}</i></h5>
+	</div>
 	
 	<!-- Form for new treatment adding -->
 	
-	<div class="border border-secondary w-50 p-3 form-bcground">
+	<div class="border border-secondary w-50 p-3 form-bcground ml-4">
 	 
-		<form name="prescriptions" action="font" method="POST">
+		<form id="prescriptions" name="prescriptions" action="font" method="POST">
 			<p><b>${make_treatment}</b></p>
 			<input type="hidden" name="command" value="add_new_treatment"/>
 			<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>
@@ -142,17 +145,17 @@
 			
 			<div class="form-group">
     			<label for="treatment_name">${treatment_name}</label>
-    			<input type="text" name="treatment_name" value="">
+    			<input id="treatment_name" type="text" name="treatment_name" value="">
   			</div>
 			
 			<div class="form-group">
   				<label for="date_beginning">${date_beginning}</label>
-  				<input type="date" name="date_beginning" value="" >
+  				<input id="date_beginning" type="date" name="date_beginning" value="" required>
 			</div>
 			
 			<div class="form-group">
   				<label for="date_finishing">${date_finishing}</label>
-  				<input type="date" name="date_finishing" value="" >
+  				<input id="date_finishing" type="date" name="date_finishing" value="" >
 			</div>
 			
 			<c:if test="${param.message == 'error_data'}">
@@ -160,12 +163,54 @@
 					<c:out value="${error_data}: ${param.invalid_parameters}"/>
 				</div>
 			</c:if>
+			
+			<p class="text-info">${field_not_obvious}</p>
 
 			<button type="submit"  class="btn btn-primary">${submit_btn}</button>
 		</form>
 	</div>
 	
-	<p class="text-info">${field_not_obvious}</p>
+	<hr/>
+	
+	<!-- Footer -->
+		
+	<div id="footer">
+    	<jsp:include page="/WEB-INF/jsp/part/footer.jsp"/>
+	</div>
+	
+	<!-- Form validation -->
+	
+	<script src="js/jquery.validate.min.js"></script>
+	<script src="js/date_today.js"></script>
+	
+	<script>
+	
+		//Minimum value of date;
+	
+		document.getElementById("date_beginning").setAttribute("min", today);
+		document.getElementById("date_finishing").setAttribute("min", today);
+		
+		//Required field;
+		
+		var requiredField = '<p class="text-danger">${field_required}</p>';
+
+	 	$('#prescriptions').validate({
+	 		
+	   		rules: {	
+	   			treatment_name: {
+	        		required: true        
+	     		}
+	   		}, //end rules;
+	   
+	   		messages: {	
+	   			treatment_name: {
+	         		required: requiredField
+	       		}
+	   		} // end messages;
+
+	  	}); // end validate;
+
+	</script>
 
 </body>
 </html>

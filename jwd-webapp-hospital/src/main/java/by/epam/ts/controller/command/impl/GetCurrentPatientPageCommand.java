@@ -28,6 +28,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetCurrentPatientPageCommand implements Command {
 
+	private static final String PATH = "path.page.staff.current_patient";
 	private static final Logger log = LogManager.getLogger(GetCurrentPatientPageCommand.class);
 
 	@Override
@@ -66,7 +67,7 @@ public final class GetCurrentPatientPageCommand implements Command {
 			patient.setHospitalizations(hospitalizations);
 			request.setAttribute(RequestAtribute.PATIENT, patient);
 			request.setAttribute(RequestAtribute.MESSAGE, message);
-			String page = NavigationManager.getProperty("path.page.staff.current_patient");
+			String page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetCurrentPatientPageCommand", e);

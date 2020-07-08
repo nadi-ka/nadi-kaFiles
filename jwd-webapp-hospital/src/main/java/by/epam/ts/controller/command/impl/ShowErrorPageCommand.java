@@ -10,10 +10,12 @@ import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.manager.NavigationManager;
 
 public final class ShowErrorPageCommand implements Command{
+	
+	private static final String PATH = "path.page.error";
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String page = NavigationManager.getProperty("path.page.error");
+		String page = NavigationManager.getProperty(PATH);
 		goForward(request, response, page);
 		
 	}

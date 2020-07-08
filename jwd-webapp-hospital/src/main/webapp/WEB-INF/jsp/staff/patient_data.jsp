@@ -34,21 +34,21 @@
 
 	<!-- Logout button -->
 		
-	<form name="Logout_form" method="POST" action="register" class="float-right">
+	<form name="Logout_form" method="POST" action="font" class="float-right">
 		<input type="hidden" name="command" value="logout" /> 
 		<button type="submit" class="btn btn-link">${logout_button}</button>
 	</form>
 
 	<!-- Change language buttons -->
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
@@ -83,7 +83,7 @@
 				
 	<!-- Displaying of the new patient's personal data, if after 'add_patient' patients with the same surnames were found -->
 	
-	<c:if test="${requestScope.message == 'patient_exists'}">
+	<c:if test="${param.message == 'patient_exists'}">
 	
 	<ul class="list-group">
 		<li class="list-group-item list-group-item-primary">
@@ -119,34 +119,49 @@
 		</li>
 	</ul>
 	
-	</c:if>
-	
-	<c:if test="${requestScope.message == 'patient_exists'}">
-  		<div class="alert alert-primary" role="alert">
+  	<div class="alert alert-primary" role="alert">
 			<c:out value="${patient_exists}"/>
-		</div>
+	</div>
+	
 	</c:if>
 	
 	<!-- Displaying of the List of patients with the same surnames -->
-		
 	
+	<div class="container">
+    	<div class="row">
+    	
+    		<div class="col-md-8 col-xl-8">
 	
-	<ul class="list-group">
-		<c:forEach var="patient" items="${patients}">
+				<ul class="list-group">
+					<c:forEach var="patient" items="${patients}">
 		
-			<li class="list-group-item">
-		
-				<form action="font" method="GET">
-					<input type="hidden" name="command" value="get_current_patient_page"/>
-					<input type="hidden" name="patient_id" value="${patient.id}" />
-					<button type="submit" class="btn btn-link">${patient.surname} ${patient.name} 
-					${date_of_birth} ${patient.dateOfBirth}</button>
-				</form>
-			</li>
-		</c:forEach>
-	</ul>
+						<li class="list-group-item w-75">
+							<form action="font" method="GET">
+								<input type="hidden" name="command" value="get_current_patient_page"/>
+								<input type="hidden" name="patient_id" value="${patient.id}" />
+								<button type="submit" class="btn btn-link">${patient.surname} ${patient.name} 
+									${date_of_birth} ${patient.dateOfBirth}</button>
+							</form>
+						</li>
+					</c:forEach>
+				</ul>
 	
-	<img src="img/image_medicine.png" alt="medicine image">
+			</div>
+		
+			<div class="col-md-4 col-xl-4">
+				<img class="w-100 p-3" src="img/image_medicine.png" alt="medicine image" >
+			</div>
+	
+		</div>
+	</div>
+	
+	<hr/>
+	
+	<!-- Footer -->
+		
+	<div id="footer">
+    	<jsp:include page="/WEB-INF/jsp/part/footer.jsp"/>
+	</div>
 		
 </body>
 </html>	

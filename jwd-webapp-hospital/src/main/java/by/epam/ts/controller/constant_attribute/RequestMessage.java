@@ -12,12 +12,15 @@ public final class RequestMessage {
 	public final static String ACCESS_DENIED = "access_denied";
 	public final static String ERROR_DATA = "error_data";
 	public final static String ERROR_DATA_DISCHARGE = "error_data_discharge";
+	public final static String INVALID_DATE = "invalid_date";
 	public final static String TECHNICAL_ERROR = "technical_error";
 	public final static String NOT_FOUND = "not_found";
 	public final static String PATIENTS_FOUND = "patients_found";
 	public final static String NOTHING_CHOSEN = "nothing_chosen";
 	public final static String HOSPITALIZATION_ADDED_SUCCESSFULY = "hospit_added_successfully";
 	public final static String DISCHARGED_SUCCESSFULY = "discharged_successfully";
+	public final static String DISCHARGED_ELIER = "discharged_elier";
+	public final static String HOSPITALIZED_ELIER = "hospitalized_elier";
 	public final static String DIAGNOSIS_ABSENT = "diagnosis_absent";
 	public final static String NO_CURRENT_TREATMENT = "no_current_treatment";
 	public final static String ALREADY_DISCHARGED = "already_discharged";

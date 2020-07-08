@@ -21,7 +21,7 @@
 		});
 	</script>
 
-	<title>Current-patient-page</title>
+	<title>Treat-performance-page</title>
 	
 	<fmt:setLocale value="${sessionScope.local}" />
 	<fmt:setBundle basename="localization.locale" var="loc" />
@@ -58,6 +58,7 @@
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.surgical" var="surgical" />
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.conservative" var="conservative" />
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.procedures" var="procedures" />
+	<fmt:message bundle="${loc}" key="local.validation.required" var="field_required"/>
 	
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
@@ -67,21 +68,21 @@
 
 	<!-- Logout button -->
 		
-	<form name="Logout_form" method="POST" action="register" class="float-right">
+	<form name="Logout_form" method="POST" action="font" class="float-right">
 		<input type="hidden" name="command" value="logout" /> 
 		<button type="submit" class="btn btn-link">${logout_button}</button>
 	</form>
 
 	<!-- Change language buttons -->
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
@@ -203,12 +204,13 @@
 									<p class='text-danger'>${surgical_treatment}</p>
 								</c:when>
 								<c:otherwise>
-									<!-- 'Perform treatment' form except surgical treatment for nurses-->			
+								
+									<!-- 'Perform treatment' form, won't display in case of surgical treatment for nurses-->			
 						
 									<h5>${form_name}</h5>
 						
 									<div id="treat_performance_form" class="border border-secondary w-50 p-3 form-bcground">
-										<form name="treatment_performance" method="POST" action="font">
+										<form id="treat_performance" name="treatment_performance" method="POST" action="font">
 											<input type="hidden" name="command" value="perform_treatment" />
 											<input type="hidden" name="id_appointment" value="${treatment.idAppointment}" />
 											<input type="hidden" name="consent" value="${treatment.consent}" />
@@ -218,7 +220,7 @@
 								
 											<div class="form-group">
   												<label for="setting_date">${date}</label>
-  												<input type="date" name="setting_date" value="" >
+  												<input type="date" name="setting_date" value="" id="date" required>
 											</div>
 						
 											<div class="form-check">
@@ -287,7 +289,25 @@
 			</tbody>
 			
 		</table>
+		
+		<!-- Footer -->
+		
+		<div id="footer">
+    		<jsp:include page="/WEB-INF/jsp/part/footer.jsp"/>
+		</div>
+		
+		<!-- Form validation -->
 	
+	<script src="js/jquery.validate.min.js"></script>
+	<script src="js/date_today.js"></script>
+	
+	<script>
+	
+		//Minimum value of date;
+	
+		document.getElementById("date").setAttribute("min", today);
+
+	</script>
 	
 </body>
 </html>

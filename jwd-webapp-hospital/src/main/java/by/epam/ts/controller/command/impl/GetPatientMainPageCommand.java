@@ -10,11 +10,13 @@ import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.manager.NavigationManager;
 
 public final class GetPatientMainPageCommand implements Command{
+	
+	private static final String PATH = "path.page.main";
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String page = NavigationManager.getProperty("path.page.main");
+        String page = NavigationManager.getProperty(PATH);
         goForward(request, response, page);
 
 	}

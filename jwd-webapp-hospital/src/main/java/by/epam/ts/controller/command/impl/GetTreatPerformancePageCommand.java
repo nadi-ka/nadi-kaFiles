@@ -27,6 +27,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetTreatPerformancePageCommand implements Command {
 
+	private static final String PATH = "path.page.staff.treat_performance";
 	private static final Logger log = LogManager.getLogger(GetTreatPerformancePageCommand.class);
 
 	@Override
@@ -62,19 +63,19 @@ public final class GetTreatPerformancePageCommand implements Command {
 				
 				request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
 				request.setAttribute(RequestAtribute.PATIENT_ID, patientId);
-				String page = NavigationManager.getProperty("path.page.staff.treat_performance");
+				String page = NavigationManager.getProperty(PATH);
 				goForward(request, response, page);
 			} else {
 				// the patient hasn't been hospitalized yet, no treatment waiting for
 				// performance;
-				response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 						+ CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
 						+ "=" + RequestMessage.NO_CURRENT_TREATMENT + "&" + RequestAtribute.PATIENT_ID + "="
 						+ patientId);
 			}
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetTreatPerformancePageCommand", e);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}

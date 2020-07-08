@@ -46,13 +46,13 @@ public final class SignUpCommand implements Command {
 						+ RequestAtribute.COMMAND + "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&"
 						+ RequestAtribute.MESSAGE + "=" + RequestMessage.TECHNICAL_ERROR);
 			}
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
 					+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
 					+ RequestAtribute.MESSAGE + "=" + RequestMessage.SUCCESSFUL_REGISTRATION);
 
 		} catch (ValidationServiceException ex) {
 			log.log(Level.WARN, "Validation error when calling method execute() from SignUpCommand", ex);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_REGISTER
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
 					+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_SIGNUP_PAGE.toString().toLowerCase() + "&"
 					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA + "&"
 					+ RequestAtribute.INVALID_PARAMETERS + "=" + ex.getMessage());

@@ -22,30 +22,32 @@ import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetHospitalizationPageCommand implements Command {
-	
+
+	private static final String PATH = "path.page.staff.hospitalization";
 	private static final Logger log = LogManager.getLogger(GetHospitalizationPageCommand.class);
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
-		
+
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
-	try {
-		Patient patient = userService.getPatientById(patientId);
-		Hospitalization lastHospitalization = userService.getLastHospitalizationById(patientId);
-		request.setAttribute(RequestAtribute.PATIENT, patient);
-		request.setAttribute(RequestAtribute.HOSPITALIZATION, lastHospitalization);
-		String page = NavigationManager.getProperty("path.page.staff.hospitalization");
-		goForward(request, response, page);
-	}catch (ServiceException e) {
-		log.log(Level.ERROR,
-				"Error when calling userService.getLastHospitalizationById() from GetHospitalizationPageCommand", e);
-		response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
-				+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-				+ RequestMessage.TECHNICAL_ERROR);
-	}
+		try {
+			Patient patient = userService.getPatientById(patientId);
+			Hospitalization lastHospitalization = userService.getLastHospitalizationById(patientId);
+			request.setAttribute(RequestAtribute.PATIENT, patient);
+			request.setAttribute(RequestAtribute.HOSPITALIZATION, lastHospitalization);
+			String page = NavigationManager.getProperty(PATH);
+			goForward(request, response, page);
+		} catch (ServiceException e) {
+			log.log(Level.ERROR,
+					"Error when calling userService.getLastHospitalizationById() from GetHospitalizationPageCommand",
+					e);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+					+ RequestMessage.TECHNICAL_ERROR);
+		}
 
 	}
 

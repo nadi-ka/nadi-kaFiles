@@ -36,6 +36,8 @@ public final class RequestAtribute {
 	public final static String TREATMENT_NAME = "treatment_name";
 	public final static String DATE_BEGINNING = "date_beginning";
 	public final static String DATE_FINISHING = "date_finishing";
+	public final static String ALREADY_DISCHARGED = "already_discharged";
+	public final static String ALREADY_HOSPITALIZED = "already_hospitalized";
 	public final static String CONSENT = "consent";
 	public final static String STAFF_ID = "staff_id";
 	public final static String SPECIALTY = "specialty";

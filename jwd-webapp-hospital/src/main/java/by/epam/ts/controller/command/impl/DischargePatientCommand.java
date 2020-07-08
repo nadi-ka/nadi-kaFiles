@@ -1,6 +1,7 @@
 package by.epam.ts.controller.command.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -33,8 +34,8 @@ public final class DischargePatientCommand implements Command, AccessManager {
 		// Checking of the user rights;
 		boolean staffRights = checkDoctorRights(request);
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.ACCESS_DENIED);
 			return;
 		}
@@ -42,6 +43,16 @@ public final class DischargePatientCommand implements Command, AccessManager {
 		String dischargeDate = request.getParameter(RequestAtribute.DATE_FINISHING);
 		String idHistory = request.getParameter(RequestAtribute.ID_MEDICAL_HYSTORY);
 		String entryDate = request.getParameter(RequestAtribute.DATE_BEGINNING);
+		String alreadyDischarged = request.getParameter(RequestAtribute.ALREADY_DISCHARGED);
+		
+		//If patient has already been discharged, simply return to the previous page with message;
+		if (alreadyDischarged != null && !alreadyDischarged.isEmpty()) {
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase() + "&"
+					+ RequestAtribute.MESSAGE + "=" + RequestMessage.DISCHARGED_ELIER + "&"
+					+ RequestAtribute.PATIENT_ID + "=" + patientId);
+			return;
+		}
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
@@ -49,43 +60,53 @@ public final class DischargePatientCommand implements Command, AccessManager {
 		try {
 			List<PatientDiagnosis> diagnosisList = userService.getCurrentDiagnosisSorted(patientId, entryDate);
 			if (!diagnosisList.isEmpty()) {
-				// actual diagnosis was found, form the string with result diagnosis;
-				StringBuilder resultDiagnosis = new StringBuilder();
-				String delimeter = ", ";
-				for (PatientDiagnosis item : diagnosisList) {
-					resultDiagnosis.append(item.getDiagnosisName());
-					resultDiagnosis.append(delimeter);
-				}
-				String str = resultDiagnosis.toString().trim();
-				String resultStringUTF8 = URLEncoder.encode(str.substring(0, str.length() - 1), "UTF-8");
+				// actual diagnosis was found, form the string with final diagnosis;
+				String finalDiagnosisString = formFinalDiagnosis(diagnosisList);
+				
 				// set the discharge date;
 				userService.setDischargeDate(dischargeDate, entryDate, idHistory);
 				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
 						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase()
 						+ "&" + RequestAtribute.MESSAGE + "=" + RequestMessage.DISCHARGED_SUCCESSFULY + "&"
 						+ RequestAtribute.PATIENT_ID + "=" + patientId + "&" + RequestAtribute.NAME_DIAGNOSIS + "="
-						+ resultStringUTF8);
+						+ finalDiagnosisString);
 			} else {
-				//patient shouldn't be discharged without actual diagnosis;
-				response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
-						+ CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-						+ "=" + RequestMessage.DIAGNOSIS_ABSENT + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+				// patient shouldn't be discharged without actual diagnosis;
+				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
+						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase()
+						+ "&" + RequestAtribute.MESSAGE + "=" + RequestMessage.DIAGNOSIS_ABSENT + "&"
+						+ RequestAtribute.PATIENT_ID + "=" + patientId);
 			}
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
 					"Error when calling userService.setDischargeDate() from  DischargePatientCommand. Invalid parameters:",
 					e);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
-					+ CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.ERROR_DATA_DISCHARGE + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase() + "&"
+					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA_DISCHARGE + "&"
+					+ RequestAtribute.PATIENT_ID + "=" + patientId + "&"
+							+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling userService.setDischargeDate() from  DischargePatientCommand.", e);
 			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
+					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}
 
+	}
+
+	private String formFinalDiagnosis(List<PatientDiagnosis> diagnosisList) throws UnsupportedEncodingException{
+		StringBuilder resultDiagnosis = new StringBuilder();
+		String delimeter = ", ";
+		for (PatientDiagnosis item : diagnosisList) {
+			resultDiagnosis.append(item.getDiagnosisName());
+			resultDiagnosis.append(delimeter);
+		}
+		String str = resultDiagnosis.toString().trim();
+		String encoding = "UTF-8";
+		String resultStringUTF8 = URLEncoder.encode(str.substring(0, str.length() - 1), encoding);
+		return resultStringUTF8;
 	}
 
 }

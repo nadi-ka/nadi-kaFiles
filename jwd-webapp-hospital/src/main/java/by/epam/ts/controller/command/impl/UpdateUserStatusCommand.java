@@ -21,6 +21,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class UpdateUserStatusCommand implements Command {
 
+	private static final String ENCODING = "UTF-8";
 	private static final Logger log = LogManager.getLogger(UpdateUserStatusCommand.class);
 
 	@Override
@@ -28,7 +29,7 @@ public final class UpdateUserStatusCommand implements Command {
 		String status = request.getParameter(RequestAtribute.USER_STATUS);
 		String staffId = request.getParameter(RequestAtribute.STAFF_ID);
 		String querySurname = request.getParameter(RequestAtribute.QUERY_SEARCH);
-		String querySurnameUTF8 = URLEncoder.encode(querySurname, "UTF-8");
+		String querySurnameUTF8 = URLEncoder.encode(querySurname, ENCODING);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();

@@ -9,13 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.manager.NavigationManager;
 
-public final class GetStaffMainPageCommand implements Command{
+public final class GetStaffMainPageCommand implements Command {
+
+	private static final String PATH = "path.page.staff.main";
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String page = NavigationManager.getProperty("path.page.staff.main");
-        goForward(request, response, page);
-	
+
+		String page = NavigationManager.getProperty(PATH);
+		goForward(request, response, page);
+
 	}
 }

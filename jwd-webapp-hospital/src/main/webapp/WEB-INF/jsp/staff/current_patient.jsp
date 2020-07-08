@@ -6,14 +6,13 @@
 <head>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+	
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/jquery/jquery-ui.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="style/style.css"/>
-	
-	<script src="js/jquery-3.4.1.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
 
 	<title>Current-patient-page</title>
 	
@@ -63,48 +62,26 @@
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
 	
-	<script>
-		$(document).ready(function() {
-			$('#accordion').accordion({
-			  	active: false,
-			  	collapsible: true,
-			  	icons : {
-			    	header: 'ui-icon-circle-plus',
-			    	activeHeader: 'ui-icon-circle-minus'
-			  	},
-			  	animate: false
-			}); //end accordion
-			
-			$("#delete_btn").click(function(){
-				var deleteQuestion = '<c:out value="${delete_question}"/>';
-			    if (!confirm(deleteQuestion)){
-			        return false;
-			    }
-			}); //end click
-			
-		}); // end ready
-	</script>
-	
 </head>
 <body>
 
 	<!-- Logout button -->
 		
-	<form name="Logout_form" method="POST" action="register" class="float-right">
+	<form name="Logout_form" method="POST" action="font" class="float-right">
 		<input type="hidden" name="command" value="logout" /> 
 		<button type="submit" class="btn btn-link">${logout_button}</button>
 	</form>
 
 	<!-- Change language buttons -->
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>  
@@ -206,12 +183,16 @@
 	
 		<!-- personal data -->
 		
-		<h1>${patient.surname} ${patient.name}</h1>
-		
+		<div class="container text-center">
+			<h1>${patient.surname} ${patient.name}</h1>
+		</div>
+			
+		<div class="container text-center w-75 p-3">
 			<ul class="list-group">
   				<li class="list-group-item list-group-item-light">${date_of_birth} ${patient.dateOfBirth}</li>
   				<li class="list-group-item list-group-item-light">${e_mail} ${patient.email}</li>  
 			</ul>
+		</div>
 			
 			
 		<!-- Accordion -->
@@ -364,6 +345,36 @@
 				</div>
 			</div>
 		</div>
-				
+		
+		<!-- Footer -->
+	
+		<div id="footer">
+    		<jsp:include page="/WEB-INF/jsp/part/footer.jsp"/>
+		</div>
+		
+		<script src="js/jquery-ui.min.js"></script>
+		
+		<script>
+		
+			$('#accordion').accordion({
+			  	active: false,
+			  	collapsible: true,
+			  	icons : {
+			    	header: 'ui-icon-circle-plus',
+			    	activeHeader: 'ui-icon-circle-minus'
+			  	},
+			  	animate: false
+			}); //end accordion
+			
+			$("#delete_btn").click(function(){
+				var deleteQuestion = '<c:out value="${delete_question}"/>';
+			    if (!confirm(deleteQuestion)){
+			        return false;
+			    }
+			}); //end click
+			
+	
+	</script>
+		
 </body>
 </html>

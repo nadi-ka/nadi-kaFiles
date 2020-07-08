@@ -15,9 +15,8 @@
 	<fmt:setLocale value="${sessionScope.local}" />
 	<fmt:setBundle basename="localization.locale" var="loc" />
 	
-	<fmt:message bundle="${loc}" key="local.staff.data.add_search_patient" var="add_search_patient" />
+	<fmt:message bundle="${loc}" key="local.nav.main_page" var="nav_main" />
 	<fmt:message bundle="${loc}" key="local.staff.data.add_staff" var="add_staff" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.new_staff" var="add_staff" />
 	<fmt:message bundle="${loc}" key="local.staff.data.search_staff" var="search_staff" />
 	<fmt:message bundle="${loc}" key="local.staff.data.staff_surname" var="staff_surname" />
 	<fmt:message bundle="${loc}" key="local.staff.data.added_successfully" var="added_successfully"/>
@@ -45,6 +44,7 @@
 	<fmt:message bundle="${loc}" key="local.staff.data.change_status" var="change_status" />
 	<fmt:message bundle="${loc}" key="local.staff.data.current_role" var="current_role" />
 	<fmt:message bundle="${loc}" key="local.staff.data.current_status" var="current_status" />
+	<fmt:message bundle="${loc}" key="local.validation.required" var="field_required"/>
 
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_btn" />
@@ -56,14 +56,14 @@
 
 	<!-- Logout button -->
 		
-	<form name="Logout_form" method="POST" action="register" class="float-right">
+	<form name="Logout_form" method="POST" action="font" class="float-right">
 		<input type="hidden" name="command" value="logout" /> 
 		<button type="submit" class="btn btn-link">${logout_button}</button>
 	</form>
 
     <!-- Change language buttons -->
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" /> 
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -71,7 +71,7 @@
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -85,7 +85,7 @@
   		
   		<form class="form-inline" action="font" method="GET">
   			<input type="hidden" name="command" value="get_staff_main_page" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${add_search_patient}</button>
+  			<button type="submit" class="btn btn-sm btn-outline-secondary">${nav_main}</button>
         </form>
         
         <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
@@ -99,14 +99,14 @@
 	
 	<!-- Alerts -->
 	
-	<div class="alert alert-secondary" role="alert">
+	<div class="alert alert-warning" role="alert">
   		<c:if test="${param.message == 'added_successfully'}">
 			<c:out value="${added_successfully}"/>
 		</c:if>
 	</div>
 	
   	<c:if test="${param.message == 'not_found'}">
-  		<div class="alert alert-secondary" role="alert">
+  		<div class="alert alert-warning" role="alert">
 			<c:out value="${not_found}"/>
 		</div>
 	</c:if>
@@ -147,7 +147,16 @@
 			
 				<tr>
 					<th scope="row">${staff.surname} ${staff.name}</th>
-					<td>${staff.specialty.getSpecialtyValue()}</td>
+					<td>
+						<c:choose> 
+							<c:when test="${staff.specialty == 'DOCTOR'}">
+								<p>${doctor}</p>
+							</c:when>
+							<c:otherwise>
+								<p>${nurse}</p>
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td>${staff.email}</td>	
 					<td>
 					
@@ -226,10 +235,12 @@
 					
 	<!-- Form for adding new staff -->
 	
-	<h3>${add_staff}:</h3>
+	<div class="ml-4">
+		<h3>${add_staff}</h3>
+	</div>
 	
-	<div class="border border-secondary w-50 p-3 form-bcground"> 
-		<form name="staff_data" action="font" method="POST">
+	<div class="border border-secondary w-50 p-3 form-bcground ml-4"> 
+		<form id="add_staff" name="staff_data" action="font" method="POST">
 			<input type="hidden" name="command" value="add_new_staff" />
 			<p><b>${form_heading}</b></p>
 	
@@ -243,17 +254,17 @@
 	
 			<div class="form-group">
     		<label for="surname">${surname}:</label>
-    			<input type="text" name="surname" value="">
+    			<input type="text" name="surname" value="" class="required" id="surname">
   			</div>
   		
   			<div class="form-group">
     			<label for="name">${name}</label>
-    			<input type="text" name="name" value="">
+    			<input type="text" name="name" value="" class="required" id="name">
   			</div>
 	
   			<div class="form-group">
   				<label for="email">${email}</label>
-    			<input type="email" name="email" value="" >
+    			<input type="email" name="email" value="" required>
   			</div>
   		
   			<c:if test="${param.message == 'error_data'}">
@@ -266,6 +277,46 @@
 
 		</form>
 	</div>
+	
+	<hr/>
+	
+	<!-- Footer -->
+		
+	<div id="footer">
+    	<jsp:include page="/WEB-INF/jsp/part/footer.jsp"/>
+	</div>
+	
+	<!-- Form validation -->
+	
+		<script src="js/jquery.validate.min.js"></script>
+	
+		<script>
+	
+		var requiredField = '<p class="text-danger">${field_required}</p>';
+
+	 	$('#add_staff').validate({
+	 		
+	   		rules: {	
+	   			surname: {
+	        		required: true        
+	     		},
+	     		name: {
+	        		required: true        
+	     		}
+	   		}, //end rules;
+	   
+	   		messages: {	
+	   			surname: {
+	         		required: requiredField
+	       		},
+	       		name: {
+	         		required: requiredField
+	       		}
+	   		} // end messages;
+
+	  	}); // end validate;
+
+	</script>
   		
 </body>
 </html>

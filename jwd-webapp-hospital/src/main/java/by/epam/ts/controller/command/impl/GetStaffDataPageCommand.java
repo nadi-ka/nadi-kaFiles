@@ -22,6 +22,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetStaffDataPageCommand implements Command {
 	
+	private static final String PATH = "path.page.staff.staff_data";
 	private static final Logger log = LogManager.getLogger(GetStaffDataPageCommand.class);
 
 	@Override
@@ -39,17 +40,17 @@ public final class GetStaffDataPageCommand implements Command {
 				medicalStaff = userService.getStaffById(newAddedStaffId);
 				request.setAttribute(RequestAtribute.MEDICAL_STAFF, medicalStaff);
 				request.setAttribute(RequestAtribute.MESSAGE, message);
-				String page = NavigationManager.getProperty("path.page.staff.staff_data");
+				String page = NavigationManager.getProperty(PATH);
 		        goForward(request, response, page);
 		        log.info("Staff obj:" + medicalStaff.toString());
 			}catch (ServiceException e) {
 				log.log(Level.ERROR, "Error when calling execute() from GetStaffDataPageCommand", e);
-				response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 						+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 						+ RequestMessage.TECHNICAL_ERROR);
 			}
 		}else {
-			String page = NavigationManager.getProperty("path.page.staff.staff_data");
+			String page = NavigationManager.getProperty(PATH);
 	        goForward(request, response, page);
 		}
 

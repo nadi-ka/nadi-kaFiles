@@ -39,7 +39,7 @@ public class UserDaoSQL implements UserDao {
 	private static final String sqlAddUserPatient = "INSERT INTO users (id_patient, login, password, role, user_status) VALUES (?,?,?,?,?);";
 	private static final String sqlFindStaffByEmail = "SELECT * FROM `medical-staff` WHERE email=(?);";
 	private static final String sqlFindPatientByEmail = "SELECT * FROM patients WHERE email=(?);";
-	private static final String sqlFindUserByLoginPassword = "SELECT * FROM users WHERE login=(?) AND password=(?);";
+	private static final String sqlFindUserByLogin = "SELECT * FROM users WHERE login=(?);";
 	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?) ORDER BY `date_begin/holding` DESC;";
 	private static final String sqlFindDiagnosisByPatientId = "SELECT code_diagnosis, is_primary, setting_date, diagnosis.name FROM `id-m2m-code` JOIN diagnosis ON `id-m2m-code`.code_diagnosis=diagnosis.code WHERE id_patient=(?);";
 	private static final String sqlFindLogin = "SELECT login FROM users WHERE login=(?);";
@@ -207,34 +207,34 @@ public class UserDaoSQL implements UserDao {
 		return patient;
 	}
 
-	public User findUserByLoginPassword(String login, String password) throws DaoException {
+	public User findUserByLogin(String login) throws DaoException {
 		Connection connection = null;
 		User user = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet userResultSet = null;
 		try {
 			connection = connectionPool.takeConnection();
-			preparedStatement = connection.prepareStatement(sqlFindUserByLoginPassword);
+			preparedStatement = connection.prepareStatement(sqlFindUserByLogin);
 			preparedStatement.setString(1, login);
-			preparedStatement.setString(2, password);
 			userResultSet = preparedStatement.executeQuery();
 
 			if (!userResultSet.next()) {
 				return user;
 			}
-			String idStaff = userResultSet.getString(2);
-			String idPatient = userResultSet.getString(3);
 			String idUser = null;
-			if (idStaff != null) {
-				idUser = idStaff;
-			} else {
-				idUser = idPatient;
-			}
-			int role = userResultSet.getInt(6);
+			int role = userResultSet.getInt("role");
 			UserRole userRole = UserRole.getUserRole(role);
-			boolean userStatus = userResultSet.getBoolean(7);
+			switch (userRole) {
+			case PATIENT:
+				idUser = userResultSet.getString("id_patient");
+				break;
+			default:
+				idUser = userResultSet.getString("id_medical_staff");
+			}
+			String hashedPassword = userResultSet.getString("password");
+			boolean userStatus = userResultSet.getBoolean("user_status");
 
-			user = new User(idUser, login, userRole, userStatus);
+			user = new User(idUser, login, hashedPassword, userRole, userStatus);
 
 		} catch (ConnectionPoolException ex) {
 			throw new DaoException("Error during taking connection from pool", ex);

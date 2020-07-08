@@ -18,17 +18,12 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public User(String id, String login, UserRole role, boolean userStatus) {
-		super();
+	public User(String id, String login, String password, UserRole role, boolean userStatus) {
 		this.id = id;
 		this.login = login;
+		this.password = password;
 		this.role = role;
 		this.userStatus = userStatus;
-	}
-
-	public User(String id, String login, String password, UserRole role, boolean userStatus) {
-		this(id, login, role, userStatus);
-		this.password = password;
 	}
 
 	public String getId() {

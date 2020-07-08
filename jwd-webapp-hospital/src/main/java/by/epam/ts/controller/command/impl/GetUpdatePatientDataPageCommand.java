@@ -22,6 +22,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetUpdatePatientDataPageCommand implements Command {
 	
+	private static final String PATH = "path.page.update_patient_data";
 	private static final Logger log = LogManager.getLogger(GetUpdatePatientDataPageCommand.class);
 
 	@Override
@@ -35,7 +36,7 @@ public final class GetUpdatePatientDataPageCommand implements Command {
 			// for correctly logged persons);
 			Patient patient = userService.getPatientById(patientId);
 			request.setAttribute(RequestAtribute.PATIENT, patient);
-			String page = NavigationManager.getProperty("path.page.update_patient_data");
+			String page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetUpdatePatientDataPageCommand", e);

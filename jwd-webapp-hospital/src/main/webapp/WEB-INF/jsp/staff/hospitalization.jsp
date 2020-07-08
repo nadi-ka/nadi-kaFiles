@@ -31,9 +31,12 @@
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.med_history" var="medical_history_num" />
 	<fmt:message bundle="${loc}" key="local.staff.hospital.last_hospitalization" var="last_hospitalization" />
 	<fmt:message bundle="${loc}" key="local.staff.hospital.discharged_success" var="discharged_success" />
+	<fmt:message bundle="${loc}" key="local.staff.hospital.discharged_elier" var="discharged_elier" />
+	<fmt:message bundle="${loc}" key="local.staff.hospital.hospitalized_elier" var="hospitalized_elier" />
 	<fmt:message bundle="${loc}" key="local.staff.hospital.diagnosis_absent" var="diagnosis_absent" />
 	<fmt:message bundle="${loc}" key="local.staff.hospital.final_diagnosis" var="final_diagnosis" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.name" var="diagnosis_name" />
+	<fmt:message bundle="${loc}" key="local.validation.required" var="field_required"/>
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
@@ -44,14 +47,14 @@
 
 	<!-- Logout button -->
 		
-	<form name="Logout_form" method="POST" action="register" class="float-right">
+	<form name="Logout_form" method="POST" action="font" class="float-right">
 		<input type="hidden" name="command" value="logout" /> 
 		<button type="submit" class="btn btn-link">${logout_button}</button>
 	</form>
 
 	<!-- Change language buttons -->
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -60,7 +63,7 @@
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -96,7 +99,7 @@
   			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
         </form>       
         
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0 float-right">
+        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
         	<input type="hidden" name="command" value="search_patient"/>
       		<input class="form-control mr-sm-2" type="search" name="query_search" 
       			placeholder="${surname}" aria-label="Search the patient">
@@ -113,14 +116,28 @@
 		</div>
 	</c:if>
 	
+	<c:if test="${param.message == 'hospitalized_elier'}">
+  		<div class="alert alert-primary" role="alert">
+			<c:out value="${hospitalized_elier} ${requestScope.hospitalization.entryDate}"/>
+		</div>
+	</c:if>
+	
+	<c:if test="${param.message == 'discharged_elier'}">
+  		<div class="alert alert-primary" role="alert">
+			<c:out value="${discharged_elier} ${requestScope.hospitalization.dischargeDate}"/>
+		</div>
+	</c:if>
+	
 	<c:if test="${param.message == 'discharged_successfully'}">
   		<div class="alert alert-primary" role="alert">
 			<c:out value="${discharged_success}"/>
 		</div>
 	</c:if>
 	
-	<h2>${patient.surname} ${patient.name}</h2> 	
-	<h5><i>${patient.dateOfBirth}</i></h5>
+	<div class="container text-center">
+		<h2>${patient.surname} ${patient.name}</h2> 	
+		<h5><i>${patient.dateOfBirth}</i></h5>
+	</div>
 	
 	<!-- If the patient was successfully discharged, display the final diagnosis -->
 	
@@ -138,9 +155,12 @@
 	<!-- Display the dates of the last hospitalization -->
 	
 	<c:if test="${!empty hospitalization}">
-		<h5>${last_hospitalization}</h5>
+	
+		<div class="mx-auto" style="width: 75%;">
+			<h5>${last_hospitalization}</h5>
+		</div>
 		
-		<table class="table table-bordered">
+		<table class="table table-bordered mx-auto" style="width: 75%;">
 			<thead>
 				<tr class="table-secondary">
 					<th scope="col">${medical_history_num}</th>
@@ -162,16 +182,22 @@
 	
 	<!-- Forms for start and finish hospitalization -->
 	
+	<c:if test="${param.message != 'discharged_successfully'}">
+	
+	<div class="mx-auto" style="width: 75%;">
+	
 	<div class="d-inline-block form-bcground">
 		<form name="start_hospitalization" action="font" method="POST">
 			<input type="hidden" name="command" value="add_hospitalization" />
 			<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>
+			<input type="hidden" name="already_hospitalized" value="${requestScope.hospitalization.entryDate}"/>
+			<input type="hidden" name="already_discharged" value="${requestScope.hospitalization.dischargeDate}"/>
 			
 			<p><b>${start_hospitalization}</b></p>
 				
 				<div class="form-group">
   					<label for="date_beginning">${entry_date}</label>
-  					<input type="date" name="date_beginning" value="" >
+  					<input type="date" name="date_beginning" value="" id="start_hospital" required>
 				</div>
 				
 				<c:if test="${param.message == 'error_data'}">
@@ -191,21 +217,45 @@
 				<input type="hidden" name="patient_id" value="${requestScope.patient.id}"/>
 				<input type="hidden" name="id_history" value="${requestScope.hospitalization.idMedicalHistory}"/>
 				<input type="hidden" name="date_beginning" value="${requestScope.hospitalization.entryDate}"/>
+				<input type="hidden" name="already_discharged" value="${requestScope.hospitalization.dischargeDate}"/>
 				
 				<div class="form-group">
   					<label for="date_finishing">${discharge_date}</label>
-  					<input type="date" name="date_finishing" value="" >
+  					<input type="date" name="date_finishing" value="" id="end_hospital" required>
 				</div>
 				
 				<c:if test="${param.message == 'error_data_discharge'}">
 					<div class="alert alert-danger" role="alert">
-						<c:out value="${error_data_discharge}"/>
+						<c:out value="${error_data_discharge}: ${param.invalid_parameters}"/>
 					</div>
 				</c:if>
 			
 			<button type="submit"  class="btn btn-primary">${submit_btn}</button>
 		</form>
 	</div>
+	
+	</div>
+	
+	</c:if>
+	
+	<hr/>
+	
+	<!-- Footer -->
+		
+	<div id="footer">
+    	<jsp:include page="/WEB-INF/jsp/part/footer.jsp"/>
+	</div>
+	
+	<!-- Form validation -->
+	
+	<script src="js/date_today.js"></script>
+	
+	<script>
+	
+		document.getElementById("start_hospital").setAttribute("min", today);
+		document.getElementById("end_hospital").setAttribute("min", today);
+
+	</script>
 
 </body>
 </html>

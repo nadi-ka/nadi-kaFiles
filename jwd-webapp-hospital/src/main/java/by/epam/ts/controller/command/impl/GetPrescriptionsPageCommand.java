@@ -22,6 +22,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetPrescriptionsPageCommand implements Command {
 
+	private static final String PATH = "path.page.staff.prescriptions";
 	private static final Logger log = LogManager.getLogger(GetPrescriptionsPageCommand.class);
 
 	@Override
@@ -35,7 +36,7 @@ public final class GetPrescriptionsPageCommand implements Command {
 			Patient patient = userService.getPatientById(patientId);
 
 			request.setAttribute(RequestAtribute.PATIENT, patient);
-			String page = NavigationManager.getProperty("path.page.staff.prescriptions");
+			String page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling getPatientById() from GetPrescriptionsPageCommand", e);

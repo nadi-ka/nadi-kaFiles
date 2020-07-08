@@ -23,6 +23,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetHospitalizationPlanCommand implements Command {
 
+	private static final String PATH = "path.page.hospitalization_plan";
 	private static final Logger log = LogManager.getLogger(GetHospitalizationPlanCommand.class);
 
 	@Override
@@ -49,7 +50,7 @@ public final class GetHospitalizationPlanCommand implements Command {
 				// get the last entry date and attempt to get the last discharge date;
 				LocalDate entryDate = lastHospitalization.getEntryDate();
 				LocalDate dischargeDate = lastHospitalization.getDischargeDate();
-				String page = NavigationManager.getProperty("path.page.hospitalization_plan");
+				String page = NavigationManager.getProperty(PATH);
 				if (dischargeDate != null) {
 					// the patient has been already discharged, hospitalization was closed;
 					request.setAttribute(RequestAtribute.HOSPITALIZATION, lastHospitalization);
@@ -75,14 +76,14 @@ public final class GetHospitalizationPlanCommand implements Command {
 				}
 			} else {
 				// the patient hasn't been hospitalized yet;
-				response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 						+ CommandEnum.GET_PATIENT_MAIN_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
 						+ "=" + RequestMessage.NO_CURRENT_HOSPITALIZATION);
 			}
 
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetHospitalizationPlanCommand", e);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);
 		}

@@ -26,6 +26,7 @@
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
 	<fmt:message bundle="${loc}" key="local.staff.main.not_found" var="not_found" />
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
+	<fmt:message bundle="${loc}" key="local.validation.required" var="field_required"/>
 	
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_btn" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
@@ -37,14 +38,14 @@
 
 	<!-- Logout button -->
 		
-	<form name="Logout_form" method="POST" action="register" class="float-right">
+	<form name="Logout_form" method="POST" action="font" class="float-right">
 		<input type="hidden" name="command" value="logout" /> 
 		<button type="submit" class="btn btn-link">${logout_button}</button>
 	</form>
 
     <!-- Change language buttons -->
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="ru" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -52,7 +53,7 @@
 		<button type="submit" class="btn btn-secondary">${ru_button}</button>
 	</form>
 
-	<form action="font" method="POST">
+	<form class="ml-2" action="font" method="POST">
 		<input type="hidden" name="command" value="change_language"/>
 		<input type="hidden" name="local" value="en" />
 		<input type="hidden" name="query_string" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -87,7 +88,9 @@
 
 	</nav>
 	
-	<h1>${welcome}</h1>
+	<div class="container text-center">
+		<h1>${welcome}</h1>
+	</div>
 	
 	<!-- Alert -->
 	
@@ -104,31 +107,31 @@
 	
 		<c:if test="${sessionScope.role == 'ADMINISTRATOR' or sessionScope.role == 'DOCTOR'}">
 	
-    		<div class="col-md-8 col-xl-6">
+    		<div class="col-md-8 col-xl-8">
 	
 				<div class="border border-secondary w-50 p-3 form-bcground">
-					<form name="patients_data" action="font" method="POST">
+					<form id="add_patient" name="patients_data" action="font" method="POST">
 						<input type="hidden" name="command" value="add_new_patient" />
 						<p><b>${patients_data}</b></p>
 	
 						<div class="form-group">
     						<label for="surname">${surname}:</label>
-    						<input type="text" name="surname" value="">
+    						<input type="text" name="surname" value="" class="required" id="surname">
   						</div>
   		
   						<div class="form-group">
     						<label for="name">${name}</label>
-    						<input type="text" name="name" value="">
+    						<input type="text" name="name" value="" class="required" id="name">
   						</div>
   		
   						<div class="form-group">
   							<label for="date">${date_of_birth}</label>
-  							<input type="date" name="date_of_birth" value="" >
+  							<input type="date" name="date_of_birth" value="" id="birthdate" required>
 						</div>
 	
   						<div class="form-group">
   							<label for="email">${email}</label>
-    						<input type="email" name="email" value="" >
+    						<input type="email" name="email" value="" class="required" id="email">
   						</div>
   		
   						<c:if test="${param.message == 'error_data'}">
@@ -145,12 +148,70 @@
 	
 		</c:if>
 	
-	 	<div class="col-md-8 col-xl-6">
-			<img src="img/medical-staff.png" class="img-thumbnail" alt="medical_staff">
+	 	<div class="col-md-4 col-xl-4">
+			<img src="img/staff.png" class="img-thumbnail" alt="medical_staff">
 		</div>
 	
 		</div>
 	</div>
+	
+	<hr/>
+	
+	<!-- Footer -->
+		
+	<div id="footer">
+    	<jsp:include page="/WEB-INF/jsp/part/footer.jsp"/>
+	</div>
+	
+	<!-- Form validation -->
+	
+	<script src="js/jquery.validate.min.js"></script>
+	<script src="js/date_today.js"></script>
+	
+	<script>
+	
+	//Maximum value of birthdate;
+	
+	document.getElementById("birthdate").setAttribute("max", today);
+	
+	//Required fields;
+	
+	var requiredField = '<p class="text-danger">${field_required}</p>';
+
+ 	$('#add_patient').validate({
+ 		
+   		rules: {
+     		surname: {
+        		required: true
+     		},
+     		
+     		name: {
+        		required: true
+     		},
+     		
+     		email: {
+     			required: true
+     		}
+   		}, //end rules;
+   
+   		messages: {
+   			
+      		surname: {
+         		required: requiredField
+       		},
+       		
+      		name: {
+      			required: requiredField
+      		},
+      		
+      		email: {
+      			required: requiredField
+      		}
+   		} // end messages;
+
+  	}); // end validate; 
+
+</script>
   		
 </body>
 </html>

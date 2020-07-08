@@ -34,8 +34,19 @@ public final class AddHospitalizationCommand implements Command, AccessManager {
 					+ RequestMessage.ACCESS_DENIED);
 			return;
 		}
+		
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 		String entryDate = request.getParameter(RequestAtribute.DATE_BEGINNING);
+		String alreadyHospitalized = request.getParameter(RequestAtribute.ALREADY_HOSPITALIZED);
+		String alreadyDischarged = request.getParameter(RequestAtribute.ALREADY_DISCHARGED);
+		
+		//If current hospitalization is open, the patient can't be hospitalized again;
+		if ((alreadyHospitalized != null && !alreadyHospitalized.isEmpty()) && (alreadyDischarged == null || alreadyDischarged.isEmpty())) {
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
+					+ CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
+					+ "=" + RequestMessage.HOSPITALIZED_ELIER + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+			return;
+		}
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
@@ -50,14 +61,13 @@ public final class AddHospitalizationCommand implements Command, AccessManager {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewHospitalisation() from  AddHospitalizationCommand. Invalid parameters:",
 					e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + "/font?" + RequestAtribute.COMMAND + "="
+			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+					+ "=" + RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
+							+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
 		} catch (ServiceException e) {
 			log.log(Level.ERROR,
 					"Error when calling userService.addNewHospitalisation() from  AddHospitalizationCommand.", e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
 					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
 					+ RequestMessage.TECHNICAL_ERROR);

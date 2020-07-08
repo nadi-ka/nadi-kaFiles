@@ -31,6 +31,7 @@ import by.epam.ts.service.constant.ValidationConstant;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.util.StaffUserRoleQualifier;
+import by.epam.ts.service.util.hash_manager.HashManager;
 import by.epam.ts.service.validator.ValidationManager;
 
 public class UserServiceImpl implements UserService {
@@ -53,13 +54,16 @@ public class UserServiceImpl implements UserService {
 			if (checkedLogin != null) {
 				throw new ValidationServiceException(ValidationConstant.INVALID_LOGIN);
 			}
+			// hashing the password, using BCryptPasswordEncoder;
+			String hashedPassword = HashManager.hashPassword(password);
+
 			// search the person in the table patient;
 			Patient patient = userDao.findPatientByEmail(email);
 			User user = null;
 			boolean userStatus = true;
 			int updatedRows = 0;
 			if (patient != null) {
-				user = new User(patient.getId(), login, password, UserRole.PATIENT, userStatus);
+				user = new User(patient.getId(), login, hashedPassword, UserRole.PATIENT, userStatus);
 				updatedRows = userDao.createUserPatient(user);
 				return updatedRows;
 			}
@@ -68,7 +72,7 @@ public class UserServiceImpl implements UserService {
 			if (staff != null) {
 				StaffUserRoleQualifier qualifier = new StaffUserRoleQualifier();
 				UserRole staffRole = qualifier.qualifyStaffUserRole(staff);
-				user = new User(staff.getId(), login, password, staffRole, userStatus);
+				user = new User(staff.getId(), login, hashedPassword, staffRole, userStatus);
 				updatedRows = userDao.createUserStaff(user);
 				return updatedRows;
 			}
@@ -90,9 +94,17 @@ public class UserServiceImpl implements UserService {
 		}
 		User user = null;
 		try {
-			user = userDao.findUserByLoginPassword(login, password);
-			if ((user != null) && !user.isUserStatus()) {
-				throw new ValidationServiceException(ValidationConstant.INVALID_ACCOUNT);
+			user = userDao.findUserByLogin(login);
+			boolean checkResult = false;
+			boolean userStatus = false;
+			if (user != null) {
+				// check password;
+				checkResult = HashManager.checkPassword(password, user.getPassword());
+				// check user's status
+				userStatus = user.isUserStatus();
+			}
+			if (user == null || !checkResult || !userStatus) {
+				return new User();
 			}
 		} catch (DaoException ex) {
 			throw new ServiceException("Error during reading from DB.", ex);
@@ -328,7 +340,7 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	// this method adds diagnosis by IDC-10 to the list of all possible diagnosis;
+	// next method adds diagnosis by IDC-10 to the list of all possible diagnosis;
 	public void addNewDiagnosis(String codeDiagnosis, String diagnosisName, String numberBedDays)
 			throws ServiceException {
 		// Date validation;

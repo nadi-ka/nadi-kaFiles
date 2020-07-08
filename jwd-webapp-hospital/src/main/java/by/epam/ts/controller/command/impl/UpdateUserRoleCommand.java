@@ -21,6 +21,7 @@ import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class UpdateUserRoleCommand implements Command {
 
+	private static final String ENCODING = "UTF-8";
 	private static final Logger log = LogManager.getLogger(UpdateUserRoleCommand.class);
 
 	@Override
@@ -28,8 +29,7 @@ public final class UpdateUserRoleCommand implements Command {
 		String role = request.getParameter(RequestAtribute.USER_ROLE);
 		String staffId = request.getParameter(RequestAtribute.STAFF_ID);
 		String querySurname = request.getParameter(RequestAtribute.QUERY_SEARCH);
-		String querySurnameUTF8 = URLEncoder.encode(querySurname, "UTF-8");
-		log.info("surname_query:" + querySurname);
+		String querySurnameUTF8 = URLEncoder.encode(querySurname, ENCODING);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
@@ -38,7 +38,7 @@ public final class UpdateUserRoleCommand implements Command {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.SEARCH_STAFF.toString().toLowerCase() + "&" + RequestAtribute.QUERY_SEARCH + "="
 					+ querySurnameUTF8);
-			log.info("search:" + querySurname);
+			
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method execute from UpdateUserRoleCommand", ex);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
