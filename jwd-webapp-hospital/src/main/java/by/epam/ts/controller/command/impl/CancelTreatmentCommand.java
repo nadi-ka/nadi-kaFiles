@@ -16,7 +16,7 @@ import by.epam.ts.controller.command.access_manager.AccessManager;
 import by.epam.ts.controller.command.util.treat_inspector.TreatmentStatusInspector;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
-import by.epam.ts.service.UserService;
+import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
@@ -54,9 +54,9 @@ public final class CancelTreatmentCommand implements Command, AccessManager {
 		String idAppointment = request.getParameter(RequestAtribute.ID_APPOINTMENT);
 		
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
-		UserService userService = factory.getUserService();
+		TreatmentService service = factory.getTreatmentService();
 		try {
-			userService.cancelTreatment(idAppointment, staffId);
+			service.cancelTreatment(idAppointment, staffId);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase() + "&"
 					+ RequestAtribute.PATIENT_ID + "=" + patientId + "&" + RequestAtribute.MESSAGE + "=" + RequestMessage.CANCELED_SUCCESS);

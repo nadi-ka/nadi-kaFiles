@@ -20,7 +20,7 @@ import by.epam.ts.controller.command.access_manager.AccessManager;
 import by.epam.ts.controller.command.util.parse.DateParser;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
-import by.epam.ts.service.UserService;
+import by.epam.ts.service.DiagnosisService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
@@ -69,10 +69,10 @@ public final class AddPatientDiagnosisCommand implements Command, AccessManager 
 		}
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
-		UserService userService = factory.getUserService();
+		DiagnosisService service= factory.getDiagnosisService();
 
 		try {
-			userService.addPatientDiagnosis(diagnosisList);
+			service.addPatientDiagnosis(diagnosisList);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase() + "&"
 					+ RequestAtribute.MESSAGE + "=" + RequestMessage.DIAGNOSIS_ADDED_SUCCESSFULY + "&"

@@ -18,6 +18,7 @@ import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
+import by.epam.ts.service.DiagnosisService;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
@@ -33,9 +34,10 @@ public final class GetDiagnosisPageCommand implements Command {
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
+		DiagnosisService diagnosisService = factory.getDiagnosisService();
 
 		try {
-			List<Diagnosis> diagnosisList = userService.getAllDiagnosisSorted();
+			List<Diagnosis> diagnosisList = diagnosisService.getAllDiagnosisSorted();
 			Patient patient = userService.getPatientById(patientId);
 
 			request.setAttribute(RequestAtribute.PATIENT, patient);

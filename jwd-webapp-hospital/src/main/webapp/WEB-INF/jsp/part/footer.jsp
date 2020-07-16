@@ -80,7 +80,4 @@
 	         count = 1-count;
 	    }); // end click;			
 	
-	</script>
-  
- </body>
- </html>
+   </script>

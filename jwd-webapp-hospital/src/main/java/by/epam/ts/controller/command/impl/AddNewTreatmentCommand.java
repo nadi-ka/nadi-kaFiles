@@ -16,7 +16,7 @@ import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.access_manager.AccessManager;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
-import by.epam.ts.service.UserService;
+import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
@@ -49,10 +49,10 @@ public final class AddNewTreatmentCommand implements Command, AccessManager {
 			dateFinish = dateBegin;
 		}
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
-		UserService userService = factory.getUserService();
+		TreatmentService service = factory.getTreatmentService();
 
 		try {
-			userService.addNewTreatment(patientId, treatmentType, treatmentName, staffId, dateBegin, dateFinish);
+			service.addNewTreatment(patientId, treatmentType, treatmentName, staffId, dateBegin, dateFinish);
 			String treatNameUTF8 = URLEncoder.encode(treatmentName, ENCODING);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_PRESCRIPTIONS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE

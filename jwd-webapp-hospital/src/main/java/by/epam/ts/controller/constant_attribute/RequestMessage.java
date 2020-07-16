@@ -11,6 +11,7 @@ public final class RequestMessage {
 	public final static String TREATMENT_ADDED_SUCCESSFULY = "treatment_added_successfully";
 	public final static String ACCESS_DENIED = "access_denied";
 	public final static String ERROR_DATA = "error_data";
+	public final static String MAILER_ERROR = "mailer_error";
 	public final static String ERROR_DATA_DISCHARGE = "error_data_discharge";
 	public final static String INVALID_DATE = "invalid_date";
 	public final static String TECHNICAL_ERROR = "technical_error";

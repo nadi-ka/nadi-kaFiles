@@ -24,12 +24,6 @@
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.hospit_successfully" var="hospit_successfully"/>
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.canceled_successfully" var="canceled_successfully"/>
 	<fmt:message bundle="${loc}" key="local.date_of_birth" var="date_of_birth"/>
-	<fmt:message bundle="${loc}" key="local.staff.main.button.new_patient" var="add_patient" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.make_diagnosis" var="make_diagnosis" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.prescribe_treatment" var="prescribe_treatment" />
-	<fmt:message bundle="${loc}" key="local.staff.current_patient.perform_treatment" var="perform_treatment" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
-	<fmt:message bundle="${loc}" key="local.staff.treat_perform.nav_main" var="nav_main"/>
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.treatment" var="treatment" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.date_begin" var="date_begin" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.date_end" var="date_end" />
@@ -45,7 +39,6 @@
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.med_history" var="medical_history_num" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.entry_date" var="entry_date" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.discharge_date" var="discharge_date" />
-	<fmt:message bundle="${loc}" key="local.staff.current_patient.nav_hospitalization" var="set_hospitalization" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.no_current_treat" var="no_current_treatment" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.yes" var="yes" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.no" var="no" />
@@ -55,6 +48,7 @@
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.completed" var="completed"/>
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.canceled" var="canceled"/>
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.error_data" var="error_data" />
+	<fmt:message bundle="${loc}" key="local.staff.current_patient.mailer_error" var="mailer_error" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.delete_question" var="delete_question" />
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	<fmt:message bundle="${loc}" key="local.staff.current_patient.delete_btn" var="delete_btn" />
@@ -90,56 +84,11 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
+	<div id="staff_nav">
+    	<jsp:include page="/WEB-INF/jsp/part/staff_nav.jsp"/>
+	</div>
 	
-		<c:if test="${sessionScope.role == 'ADMINISTRATOR' or sessionScope.role == 'DOCTOR'}">
-  		
-  			<form class="form-inline" action="font" method="GET">
-  				<input type="hidden" name="command" value="get_staff_main_page" />
-  				<button type="submit" class="btn btn-sm btn-outline-secondary">${add_patient}</button>
-        	</form>
-        
-        	<form class="form-inline" action="font" method="GET">
-  				<input type="hidden" name="command" value="get_hospitalization_page" />
-  				<input type="hidden" name="patient_id" value="${param.patient_id}">
-  				<button type="submit" class="btn btn-sm btn-outline-secondary">${set_hospitalization}</button>
-        	</form>
-        
-        	<form class="form-inline" action="font" method="GET">
-  				<input type="hidden" name="command" value="get_diagnosis_page" />
-  				<input type="hidden" name="patient_id" value="${param.patient_id}">
-  				<button type="submit" class="btn btn-sm btn-outline-secondary">${make_diagnosis}</button>
-        	</form>
-
-        	<form class="form-inline" action="font" method="GET">
-  				<input type="hidden" name="command" value="get_prescriptions_page" />
-  				<input type="hidden" name="patient_id" value="${param.patient_id}">
-  				<button type="submit" class="btn btn-sm btn-outline-secondary">${prescribe_treatment}</button>
-        	</form>
-        
-        </c:if>
-        
-        <c:if test="${sessionScope.role == 'NURSE'}">
-        	<form class="form-inline" action="font" method="GET">
-  				<input type="hidden" name="command" value="get_staff_main_page" />
-  				<button type="submit" class="btn btn-sm btn-outline-secondary">${nav_main}</button>
-        	</form>
-        </c:if>
-        
-        <form class="form-inline" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_treat_performance_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${perform_treatment}</button>
-        </form>
-        
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
-        	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_search" 
-      			placeholder="Surname" aria-label="Search the patient">
-      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
-    	</form>
-
-	</nav>
+	<!-- Navigation menu -->
 	
 	<!-- Alerts -->
 	
@@ -176,6 +125,12 @@
 	<c:if test="${param.message == 'error_data'}">
 		<div class="alert alert-warning" role="alert">
 			<c:out value="${error_data}"/>
+		</div>
+	</c:if>
+	
+	<c:if test="${param.message == 'mailer_error'}">
+  		<div class="alert alert-light" role="alert">
+			<c:out value="${mailer_error}"/>
 		</div>
 	</c:if>		
 	

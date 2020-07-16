@@ -21,7 +21,8 @@ import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
-import by.epam.ts.service.UserService;
+import by.epam.ts.service.HospitalizationService;
+import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
@@ -36,25 +37,26 @@ public final class GetTreatPerformancePageCommand implements Command {
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
-		UserService userService = factory.getUserService();
+		TreatmentService treatmentService = factory.getTreatmentService();
+		HospitalizationService hospitalizationService = factory.getHospitalizationService();
 		Hospitalization hospitalization;
 		try {
 			// getting of the last hospitalization;
-			hospitalization = userService.getLastHospitalizationById(patientId);
+			hospitalization = hospitalizationService.getLastHospitalizationById(patientId);
 
 			if (hospitalization != null) {
 				// the last entry date;
 				LocalDate entryDate = hospitalization.getEntryDate();
 				// the list of prescriptions during the last hospitalization, which could be
 				// empty;
-				List<Treatment> prescriptions = userService.getTreatmentDuringLastHospitalization(patientId, entryDate);
+				List<Treatment> prescriptions = treatmentService.getTreatmentDuringLastHospitalization(patientId, entryDate);
 				if (!prescriptions.isEmpty()) {
 					List<CurrentTreatment> performingList;
 					for (Treatment treatment : prescriptions) {
 						int idAppointment = treatment.getIdAppointment();
 						// the list of performed procedures (could be empty, if the treatment hasn't
 						// been begun yet);
-						performingList = userService.getCurrentTreatmentByAppointmentId(idAppointment);
+						performingList = treatmentService.getCurrentTreatmentByAppointmentId(idAppointment);
 						log.info(performingList.toString());
 						treatment.setPerformingList(performingList);
 					}

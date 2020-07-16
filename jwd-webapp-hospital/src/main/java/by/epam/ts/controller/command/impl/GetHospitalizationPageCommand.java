@@ -17,6 +17,7 @@ import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
+import by.epam.ts.service.HospitalizationService;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
@@ -33,9 +34,11 @@ public final class GetHospitalizationPageCommand implements Command {
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
+		HospitalizationService hospitalizationService = factory.getHospitalizationService();
+		
 		try {
 			Patient patient = userService.getPatientById(patientId);
-			Hospitalization lastHospitalization = userService.getLastHospitalizationById(patientId);
+			Hospitalization lastHospitalization = hospitalizationService.getLastHospitalizationById(patientId);
 			request.setAttribute(RequestAtribute.PATIENT, patient);
 			request.setAttribute(RequestAtribute.HOSPITALIZATION, lastHospitalization);
 			String page = NavigationManager.getProperty(PATH);

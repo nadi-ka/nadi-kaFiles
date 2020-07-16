@@ -24,11 +24,6 @@
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.invalid_date" var="invalid_date"/>
 	<fmt:message bundle="${loc}" key="local.staff.main.error_data" var="error_data" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.nothing_selected" var="nothing_selected" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.new_patient" var="add_patient" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.prescribe_treatment" var="prescribe_treatment" />
-	<fmt:message bundle="${loc}" key="local.staff.current_patient.nav_hospitalization" var="set_hospitalization" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.get_current" var="get_current_patient" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.missing_diagnosis" var="missing_diagnosis" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.add_here" var="add_here" />
 	<fmt:message bundle="${loc}" key="local.staff.diagnosis.enter_diagnosis" var="enter_diagnosis" />
@@ -75,39 +70,11 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
-  		
-  		<form class="form-inline" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_staff_main_page" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${add_patient}</button>
-        </form>
-        
-        <form class="form-inline" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_hospitalization_page" />
-  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${set_hospitalization}</button>
-        </form>
-        
-        <form class="form-inline" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_prescriptions_page" />
-  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${prescribe_treatment}</button>
-        </form>
-        
-        <form class="form-inline" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_current_patient_page" />
-  			<input type="hidden" name="patient_id" value="${requestScope.patient.id}">
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
-        </form>        
-        
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
-        	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_search" 
-      			placeholder="Surname" aria-label="Search the patient">
-      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
-    	</form>
-
-	</nav>
+	<div id="staff_nav">
+    	<jsp:include page="/WEB-INF/jsp/part/staff_nav.jsp"/>
+	</div>
+	
+	<!-- Navigation menu -->
 	
 	<!-- Alerts -->
 	

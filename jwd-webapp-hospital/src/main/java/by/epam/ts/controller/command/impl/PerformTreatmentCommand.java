@@ -17,7 +17,7 @@ import by.epam.ts.controller.command.util.treat_inspector.TreatmentRightsInspect
 import by.epam.ts.controller.command.util.treat_inspector.TreatmentStatusInspector;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
-import by.epam.ts.service.UserService;
+import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
@@ -69,9 +69,9 @@ public final class PerformTreatmentCommand implements Command {
 		String status = request.getParameter(RequestAtribute.TREATMENT_STATUS);
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
-		UserService userService = factory.getUserService();
+		TreatmentService service = factory.getTreatmentService();
 		try {
-			userService.performCurrentTreatment(consent, idAppointment, datePerforming, staffId, status);
+			service.performCurrentTreatment(consent, idAppointment, datePerforming, staffId, status);
 			log.info(consent + " " + idAppointment + " " + datePerforming + " " + staffId + " " + status);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"

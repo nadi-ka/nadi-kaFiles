@@ -17,7 +17,8 @@ import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
-import by.epam.ts.service.UserService;
+import by.epam.ts.service.DiagnosisService;
+import by.epam.ts.service.HospitalizationService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
@@ -38,13 +39,14 @@ public final class GetHospitalizationPlanCommand implements Command {
 		}
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
-		UserService userService = factory.getUserService();
+		HospitalizationService hospitalizationService = factory.getHospitalizationService();
+		DiagnosisService diagnosisService = factory.getDiagnosisService();
 		Hospitalization lastHospitalization;
 		int hospitalizationLength;
 
 		try {
 			// attempt to get the last hospitalization;
-			lastHospitalization = userService.getLastHospitalizationById(patientId);
+			lastHospitalization = hospitalizationService.getLastHospitalizationById(patientId);
 			if (lastHospitalization != null) {
 				// the patient has already been hospitalized;
 				// get the last entry date and attempt to get the last discharge date;
@@ -60,7 +62,7 @@ public final class GetHospitalizationPlanCommand implements Command {
 
 				} else {
 					// attempt to get average amount of bed days by primary diagnosis;
-					hospitalizationLength = userService.getAverageHospitalizationLength(patientId, entryDate);
+					hospitalizationLength = diagnosisService.getAverageHospitalizationLength(patientId, entryDate);
 					if (hospitalizationLength == 0) {
 						//the primary diagnosis is absent in current moment;
 						request.setAttribute(RequestAtribute.HOSPITALIZATION, lastHospitalization);

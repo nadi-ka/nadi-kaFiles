@@ -1,10 +1,13 @@
 package by.epam.ts.dal.factory.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import by.epam.ts.dal.DiagnosisDao;
+import by.epam.ts.dal.HospitalizationDao;
+import by.epam.ts.dal.TreatmentDao;
 import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.factory.DaoFactory;
+import by.epam.ts.dal.impl.DiagnosisDaoSql;
+import by.epam.ts.dal.impl.HospitalizationDaoSql;
+import by.epam.ts.dal.impl.TreatmentDaoSql;
 import by.epam.ts.dal.impl.UserDaoSQL;
 import by.epam.ts.dal.pool.ConnectionPool;
 
@@ -13,15 +16,15 @@ public final class DaoFactoryImpl implements DaoFactory {
 	private final static DaoFactoryImpl instance = new DaoFactoryImpl();
 	private static ConnectionPool connectionPool;
 	private final UserDao userDao = null;
-	
-	static final Logger log = LogManager.getLogger( DaoFactoryImpl.class);
+	private final TreatmentDao treatmentDao = null;
+	private final DiagnosisDao diagnosisDao = null;
+	private final HospitalizationDao hospitalizationDao = null;
 
 	private DaoFactoryImpl() {
 	}
 	
 	public static void setConnectionPool(ConnectionPool pool) {
 		connectionPool = pool;
-		log.info("setConnectionPool(pool) from DaoFactoryImpl.");
 	}
 
 	public static DaoFactoryImpl getInstance() {
@@ -30,5 +33,17 @@ public final class DaoFactoryImpl implements DaoFactory {
 
 	public UserDao getUserDao() {
 		return new UserDaoSQL(connectionPool);
+	}
+	
+	public TreatmentDao getTreatmentDao()  {
+		return new TreatmentDaoSql(connectionPool);
+	}
+	
+	public DiagnosisDao getDiagnosisDao() {
+		return new DiagnosisDaoSql(connectionPool);
+	}
+	
+	public HospitalizationDao getHospitalizationDao() {
+		return new HospitalizationDaoSql(connectionPool);
 	}
 }

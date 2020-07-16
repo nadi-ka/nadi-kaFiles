@@ -15,7 +15,7 @@ import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
-import by.epam.ts.service.UserService;
+import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
@@ -38,9 +38,9 @@ public final class GiveConsentCommand implements Command {
 		}
 
 		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
-		UserService userService = factory.getUserService();
+		TreatmentService service = factory.getTreatmentService();
 		try {
-			userService.getPatientsConsent(idAppointment, consent);
+			service.getPatientsConsent(idAppointment, consent);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_TREATMENT_PAGE.toString().toLowerCase());
 		} catch (ServiceException ex) {

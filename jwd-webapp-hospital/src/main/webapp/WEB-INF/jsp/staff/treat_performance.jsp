@@ -27,9 +27,6 @@
 	<fmt:setBundle basename="localization.locale" var="loc" />
 	
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
-	<fmt:message bundle="${loc}" key="local.staff.treat_perform.nav_main" var="nav_main"/>
-	<fmt:message bundle="${loc}" key="local.staff.main.button.get_current" var="get_current_patient" />
-	<fmt:message bundle="${loc}" key="local.staff.main.button.search_patient" var="search_patient" />
 	<fmt:message bundle="${loc}" key="local.treatment" var="treat" />
 	<fmt:message bundle="${loc}" key="local.treatment.type" var="type" />
 	<fmt:message bundle="${loc}" key="local.treatment.name" var="name" />
@@ -91,27 +88,11 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
-  		
-  		<form class="form-inline" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_staff_main_page" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${nav_main}</button>
-        </form>
-        
-        <form class="form-inline" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_current_patient_page" />
-  			<input type="hidden" name="patient_id" value="${param.patient_id}">
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${get_current_patient}</button>
-        </form>
-        
-        <form action="font" method="GET" class="form-inline my-2 my-lg-0 ml-auto">
-        	<input type="hidden" name="command" value="search_patient"/>
-      		<input class="form-control mr-sm-2" type="search" name="query_search" 
-      			placeholder="Surname" aria-label="Search the patient">
-      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">${search_patient}</button>
-    	</form>
-
-	</nav>
+	<div id="staff_nav">
+    	<jsp:include page="/WEB-INF/jsp/part/staff_nav.jsp"/>
+	</div>
+	
+	<!-- Navigation menu -->
 	
 	<!-- Alert -->
           						
