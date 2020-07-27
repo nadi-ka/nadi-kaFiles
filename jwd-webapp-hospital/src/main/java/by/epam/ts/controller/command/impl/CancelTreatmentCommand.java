@@ -19,6 +19,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class CancelTreatmentCommand implements Command, AccessManager {
@@ -53,7 +54,7 @@ public final class CancelTreatmentCommand implements Command, AccessManager {
 		String staffId = getUserIdFromSession(request);
 		String idAppointment = request.getParameter(RequestAtribute.ID_APPOINTMENT);
 		
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		TreatmentService service = factory.getTreatmentService();
 		try {
 			service.cancelTreatment(idAppointment, staffId);

@@ -24,6 +24,7 @@ import by.epam.ts.controller.manager.NavigationManager;
 import by.epam.ts.service.HospitalizationService;
 import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetTreatPerformancePageCommand implements Command {
@@ -36,7 +37,7 @@ public final class GetTreatPerformancePageCommand implements Command {
 
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		TreatmentService treatmentService = factory.getTreatmentService();
 		HospitalizationService hospitalizationService = factory.getHospitalizationService();
 		Hospitalization hospitalization;

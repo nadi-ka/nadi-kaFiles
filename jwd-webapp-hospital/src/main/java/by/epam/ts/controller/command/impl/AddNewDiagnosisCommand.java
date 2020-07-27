@@ -18,6 +18,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.DiagnosisService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class AddNewDiagnosisCommand implements Command, AccessManager {
@@ -43,7 +44,7 @@ public final class AddNewDiagnosisCommand implements Command, AccessManager {
 			bedDays = "0";
 		}
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		DiagnosisService service = factory.getDiagnosisService();
 
 		try {

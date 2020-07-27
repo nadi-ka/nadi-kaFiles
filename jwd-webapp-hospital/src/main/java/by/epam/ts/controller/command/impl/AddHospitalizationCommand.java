@@ -18,6 +18,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.HospitalizationService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class AddHospitalizationCommand implements Command, AccessManager {
@@ -48,7 +49,7 @@ public final class AddHospitalizationCommand implements Command, AccessManager {
 			return;
 		}
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		HospitalizationService service = factory.getHospitalizationService();
 
 		try {

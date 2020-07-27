@@ -17,6 +17,7 @@ import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GiveConsentCommand implements Command {
@@ -37,7 +38,7 @@ public final class GiveConsentCommand implements Command {
 			return;
 		}
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		TreatmentService service = factory.getTreatmentService();
 		try {
 			service.getPatientsConsent(idAppointment, consent);

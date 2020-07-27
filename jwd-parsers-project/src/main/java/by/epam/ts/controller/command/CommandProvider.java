@@ -5,9 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import by.epam.ts.controller.command.impl.GetErrorPage;
 import by.epam.ts.controller.command.impl.GetIndexPage;
 import by.epam.ts.controller.command.impl.ParseCommand;
@@ -18,8 +15,6 @@ import by.epam.ts.controller.constant_attribute.RequestAttribute;
 public final class CommandProvider {
 	private final static CommandProvider instance = new CommandProvider();
 	private final Map<CommandEnum, ActionCommand> repository = new HashMap<>();
-	
-	private static final Logger log = LogManager.getLogger(CommandProvider.class);
 
 	private CommandProvider() {
 		repository.put(CommandEnum.PARSE_DOCUMENT, new ParseCommand());

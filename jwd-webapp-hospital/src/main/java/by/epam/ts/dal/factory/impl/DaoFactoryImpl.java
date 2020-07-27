@@ -9,41 +9,66 @@ import by.epam.ts.dal.impl.DiagnosisDaoSql;
 import by.epam.ts.dal.impl.HospitalizationDaoSql;
 import by.epam.ts.dal.impl.TreatmentDaoSql;
 import by.epam.ts.dal.impl.UserDaoSQL;
-import by.epam.ts.dal.pool.ConnectionPool;
 
 public final class DaoFactoryImpl implements DaoFactory {
 	
-	private final static DaoFactoryImpl instance = new DaoFactoryImpl();
-	private static ConnectionPool connectionPool;
-	private final UserDao userDao = null;
-	private final TreatmentDao treatmentDao = null;
-	private final DiagnosisDao diagnosisDao = null;
-	private final HospitalizationDao hospitalizationDao = null;
-
-	private DaoFactoryImpl() {
-	}
+	private final static DaoFactory instance = new DaoFactoryImpl();
+//	private static ConnectionPool connectionPool;
+//	private final UserDao userDao = null;
+//	private final TreatmentDao treatmentDao = null;
+//	private final DiagnosisDao diagnosisDao = null;
+//	private final HospitalizationDao hospitalizationDao = null;
+//
+//	private DaoFactoryImpl() {
+//	}
+//	
+//	public static void setConnectionPool(ConnectionPool pool) {
+//		connectionPool = pool;
+//	}
+//
+//	public static DaoFactoryImpl getInstance() {
+//		return instance;
+//	}
+//
+//	public UserDao getUserDao() {
+//		return new UserDaoSQL(connectionPool);
+//	}
+//	
+//	public TreatmentDao getTreatmentDao()  {
+//		return new TreatmentDaoSql(connectionPool);
+//	}
+//	
+//	public DiagnosisDao getDiagnosisDao() {
+//		return new DiagnosisDaoSql(connectionPool);
+//	}
+//	
+//	public HospitalizationDao getHospitalizationDao() {
+//		return new HospitalizationDaoSql(connectionPool);
+//	}
 	
-	public static void setConnectionPool(ConnectionPool pool) {
-		connectionPool = pool;
-	}
-
-	public static DaoFactoryImpl getInstance() {
+	private final UserDao userDao = new UserDaoSQL();
+	private final TreatmentDao treatmentDao = new TreatmentDaoSql();
+	private final DiagnosisDao diagnosisDao = new DiagnosisDaoSql();
+	private final HospitalizationDao hospitalizationDao = new HospitalizationDaoSql();
+	
+	public static DaoFactory getInstance() {
 		return instance;
 	}
-
+	
 	public UserDao getUserDao() {
-		return new UserDaoSQL(connectionPool);
+		return userDao;
 	}
 	
-	public TreatmentDao getTreatmentDao()  {
-		return new TreatmentDaoSql(connectionPool);
+	public TreatmentDao getTreatmentDao() {
+		return treatmentDao;
 	}
 	
 	public DiagnosisDao getDiagnosisDao() {
-		return new DiagnosisDaoSql(connectionPool);
+		return diagnosisDao;
 	}
 	
 	public HospitalizationDao getHospitalizationDao() {
-		return new HospitalizationDaoSql(connectionPool);
+		return hospitalizationDao;
 	}
+	
 }

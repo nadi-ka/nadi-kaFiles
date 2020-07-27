@@ -23,6 +23,7 @@ import by.epam.ts.service.DiagnosisService;
 import by.epam.ts.service.HospitalizationService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class DischargePatientCommand implements Command, AccessManager {
@@ -55,7 +56,7 @@ public final class DischargePatientCommand implements Command, AccessManager {
 			return;
 		}
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		DiagnosisService service = factory.getDiagnosisService();
 		HospitalizationService hospitalizationService = factory.getHospitalizationService();
 

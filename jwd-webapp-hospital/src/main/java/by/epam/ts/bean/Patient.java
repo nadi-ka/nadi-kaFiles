@@ -1,10 +1,15 @@
 package by.epam.ts.bean;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Patient extends User implements Serializable {
+/**
+ * 
+ * Class are ready for serialization and implements Serializable interface as
+ * inheritor of User
+ *
+ */
+public class Patient extends User {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
@@ -127,7 +132,7 @@ public class Patient extends User implements Serializable {
 		}
 		Patient other = (Patient) obj;
 
-		return (id == other.id || (id != null && id.equals(other.getId())))
+		return super.equals(other) && (id == other.id || (id != null && id.equals(other.getId())))
 				&& (surname == other.surname || (surname != null && surname.equals(other.getSurname())))
 				&& (name == other.name || (name != null && name.equals(other.getName())))
 				&& (dateOfBirth == other.dateOfBirth

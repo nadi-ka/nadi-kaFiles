@@ -20,10 +20,13 @@ import by.epam.ts.dal.HospitalizationDao;
 import by.epam.ts.dal.constant.ColumnNameHolder;
 import by.epam.ts.dal.pool.ConnectionPool;
 import by.epam.ts.dal.pool.ConnectionPoolException;
+import by.epam.ts.dal.pool.factory.ConnectionPoolFactory;
 
 public class HospitalizationDaoSql implements HospitalizationDao {
 	
-	private ConnectionPool connectionPool;
+	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
+	private ConnectionPool connectionPool = factory.getConnectionPool();
+//	private ConnectionPool connectionPool;
 	
 	private static final String sqlAddHospitalization = "INSERT INTO hospitalization (id_patient, entry_date) VALUES (?,?);";
 	private static final String sqlFinishHospitalization = "UPDATE hospitalization SET discharge_date = (?) WHERE id_history = (?);";
@@ -32,9 +35,9 @@ public class HospitalizationDaoSql implements HospitalizationDao {
 
 	private static final Logger log = LogManager.getLogger(HospitalizationDaoSql.class);
 
-	public HospitalizationDaoSql(ConnectionPool connectionPool) {
-		this.connectionPool = connectionPool;
-	}
+//	public HospitalizationDaoSql(ConnectionPool connectionPool) {
+//		this.connectionPool = connectionPool;
+//	}
 	
 	public int createNewHospitalization(Hospitalization hospitalization) throws DaoException {
 		int insertedRows;

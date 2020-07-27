@@ -18,6 +18,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetPrescriptionsPageCommand implements Command {
@@ -30,7 +31,7 @@ public final class GetPrescriptionsPageCommand implements Command {
 
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		try {
 			Patient patient = userService.getPatientById(patientId);

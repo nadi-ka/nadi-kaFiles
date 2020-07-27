@@ -23,10 +23,13 @@ import by.epam.ts.dal.UserDao;
 import by.epam.ts.dal.constant.ColumnNameHolder;
 import by.epam.ts.dal.pool.ConnectionPool;
 import by.epam.ts.dal.pool.ConnectionPoolException;
+import by.epam.ts.dal.pool.factory.ConnectionPoolFactory;
 
 public class UserDaoSQL implements UserDao {
-
-	private ConnectionPool connectionPool;
+	
+	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
+	private ConnectionPool connectionPool = factory.getConnectionPool();
+//	private ConnectionPool connectionPool;
 
 	private static final String sqlAddUserStaff = "INSERT INTO users (id_medical_staff, login, password, role, user_status) VALUES (?,?,?,?,?);";
 	private static final String sqlAddUserPatient = "INSERT INTO users (id_patient, login, password, role, user_status) VALUES (?,?,?,?,?);";
@@ -47,9 +50,9 @@ public class UserDaoSQL implements UserDao {
 
 	private static final Logger log = LogManager.getLogger(UserDaoSQL.class);
 
-	public UserDaoSQL(ConnectionPool connectionPool) {
-		this.connectionPool = connectionPool;
-	}
+//	public UserDaoSQL(ConnectionPool connectionPool) {
+//		this.connectionPool = connectionPool;
+//	}
 
 	public int createUserPatient(User user) throws DaoException {
 		int insertedRows = 0;

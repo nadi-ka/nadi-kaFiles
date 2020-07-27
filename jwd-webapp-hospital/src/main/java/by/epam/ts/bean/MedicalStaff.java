@@ -1,10 +1,15 @@
 package by.epam.ts.bean;
 
-import java.io.Serializable;
-
 import by.epam.ts.bean.specialty.Specialty;
 
-public class MedicalStaff extends User implements Serializable {
+/**
+ * 
+ * Class are ready for serialization and implements Serializable interface as
+ * inheritor of User
+ *
+ */
+
+public class MedicalStaff extends User {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
@@ -87,7 +92,8 @@ public class MedicalStaff extends User implements Serializable {
 			return false;
 		}
 		MedicalStaff other = (MedicalStaff) obj;
-		return specialty == other.specialty && (id == other.id || (id != null && id.equals(other.getId())))
+		return super.equals(other) && specialty == other.specialty
+				&& (id == other.id || (id != null && id.equals(other.getId())))
 				&& (surname == other.surname || (surname != null && surname.equals(other.getSurname())))
 				&& (name == other.name || (name != null && name.equals(other.getName())))
 				&& (email == other.email || (email != null && email.equals(other.getEmail())));
@@ -95,8 +101,8 @@ public class MedicalStaff extends User implements Serializable {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "@[id = " + id + ", specialty = " + specialty.getSpecialtyValue() + ", surname = " + surname
-				+ ", name = " + name + ", email = " + email + "]";
+		return getClass().getName() + "@[id = " + id + ", specialty = " + specialty.getSpecialtyValue() + ", surname = "
+				+ surname + ", name = " + name + ", email = " + email + "]";
 	}
 
 }

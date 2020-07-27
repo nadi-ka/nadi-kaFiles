@@ -21,6 +21,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class SignUpCommand implements Command {
@@ -34,7 +35,7 @@ public final class SignUpCommand implements Command {
 		String password = request.getParameter(RequestAtribute.USER_PASSWORD);
 		String email = request.getParameter(RequestAtribute.EMAIL);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 
 		User user;

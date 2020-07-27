@@ -24,6 +24,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public class AddNewPatientCommand implements Command, AccessManager {
@@ -55,7 +56,7 @@ public class AddNewPatientCommand implements Command, AccessManager {
 		// add new patient" was chosen;
 		String addObviously = request.getParameter(RequestAtribute.ADD_OBVIOUSLY);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		String patientId = null;
 		try {

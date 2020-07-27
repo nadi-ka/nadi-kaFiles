@@ -18,6 +18,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetUpdatePatientDataPageCommand implements Command {
@@ -29,7 +30,7 @@ public final class GetUpdatePatientDataPageCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String patientId = getUserIdFromSession(request);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		try {
 			// if patient will not be found - service throws exception (access allowed only

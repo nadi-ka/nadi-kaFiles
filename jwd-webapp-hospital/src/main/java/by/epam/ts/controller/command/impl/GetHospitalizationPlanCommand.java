@@ -20,6 +20,7 @@ import by.epam.ts.controller.manager.NavigationManager;
 import by.epam.ts.service.DiagnosisService;
 import by.epam.ts.service.HospitalizationService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetHospitalizationPlanCommand implements Command {
@@ -38,7 +39,7 @@ public final class GetHospitalizationPlanCommand implements Command {
 			return;
 		}
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		HospitalizationService hospitalizationService = factory.getHospitalizationService();
 		DiagnosisService diagnosisService = factory.getDiagnosisService();
 		Hospitalization lastHospitalization;

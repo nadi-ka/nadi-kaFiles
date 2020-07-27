@@ -20,6 +20,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class SearchStaffCommand implements Command, AccessManager {
@@ -44,9 +45,8 @@ public final class SearchStaffCommand implements Command, AccessManager {
 					+ "=" + RequestMessage.NOT_FOUND);
 			return;
 		}
-		log.info("Query:" + querySurname);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		try {
 			List<MedicalStaff> staffList = userService.getUserStaffBySurname(querySurname);

@@ -21,6 +21,7 @@ import by.epam.ts.controller.manager.NavigationManager;
 import by.epam.ts.service.DiagnosisService;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetDiagnosisPageCommand implements Command {
@@ -32,7 +33,7 @@ public final class GetDiagnosisPageCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		DiagnosisService diagnosisService = factory.getDiagnosisService();
 

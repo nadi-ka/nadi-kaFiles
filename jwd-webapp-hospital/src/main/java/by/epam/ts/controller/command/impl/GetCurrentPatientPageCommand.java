@@ -27,6 +27,7 @@ import by.epam.ts.service.HospitalizationService;
 import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetCurrentPatientPageCommand implements Command {
@@ -39,7 +40,7 @@ public final class GetCurrentPatientPageCommand implements Command {
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 		String message = request.getParameter(RequestAtribute.MESSAGE);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		TreatmentService treatmentService = factory.getTreatmentService();
 		DiagnosisService diagnosisService = factory.getDiagnosisService();

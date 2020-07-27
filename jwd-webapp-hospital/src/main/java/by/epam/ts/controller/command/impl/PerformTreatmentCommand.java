@@ -20,6 +20,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class PerformTreatmentCommand implements Command {
@@ -68,7 +69,7 @@ public final class PerformTreatmentCommand implements Command {
 		String datePerforming = request.getParameter(RequestAtribute.SETTING_DATE);
 		String status = request.getParameter(RequestAtribute.TREATMENT_STATUS);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		TreatmentService service = factory.getTreatmentService();
 		try {
 			service.performCurrentTreatment(consent, idAppointment, datePerforming, staffId, status);

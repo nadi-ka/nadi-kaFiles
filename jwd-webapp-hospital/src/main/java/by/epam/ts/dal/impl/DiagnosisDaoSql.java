@@ -21,24 +21,27 @@ import by.epam.ts.dal.DiagnosisDao;
 import by.epam.ts.dal.constant.ColumnNameHolder;
 import by.epam.ts.dal.pool.ConnectionPool;
 import by.epam.ts.dal.pool.ConnectionPoolException;
+import by.epam.ts.dal.pool.factory.ConnectionPoolFactory;
 
 public class DiagnosisDaoSql implements DiagnosisDao {
-	
-	private ConnectionPool connectionPool;
-	
+
+	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
+	private ConnectionPool connectionPool = factory.getConnectionPool();
+
 	private static final String sqlFindDiagnosisByPatientId = "SELECT code_diagnosis, is_primary, setting_date, diagnosis.name FROM `id-m2m-code` JOIN diagnosis ON `id-m2m-code`.code_diagnosis=diagnosis.code WHERE id_patient=(?);";
 	private static final String sqlGetAllFromDiagnosis = "SELECT * FROM diagnosis;";
 	private static final String sqlAddDiagnosis = "INSERT INTO diagnosis VALUES (?,?,?);";
 	private static final String sqlAddPatientsDiagnosis = "INSERT INTO `id-m2m-code` VALUES (?,?,?,?);";
 	private static final String sqlFindCurrentDiagnosisById = "SELECT code_diagnosis, is_primary, setting_date, diagnosis.name FROM `id-m2m-code` JOIN diagnosis ON `id-m2m-code`.code_diagnosis=diagnosis.code WHERE id_patient=(?) AND setting_date >= (?);";
 	private static final String sqlFindDiagnosisByIdAndDate = "SELECT code_diagnosis, diagnosis.name, diagnosis.bed_days FROM `id-m2m-code` JOIN diagnosis ON `id-m2m-code`.code_diagnosis=diagnosis.code WHERE id_patient=(?) AND is_primary=true AND setting_date >= (?);";
-	
+
 	private static final Logger log = LogManager.getLogger(DiagnosisDaoSql.class);
 
-	public DiagnosisDaoSql(ConnectionPool connectionPool) {
-		this.connectionPool = connectionPool;
-	}
-	
+	/*
+	 * Find the list of primary and secondary diagnosis of the concrete person for
+	 * the period of all hospitalizations; If diagnosis is absent or id wasn't found
+	 * the function returns empty list;
+	 */
 	public List<PatientDiagnosis> findPatientsDiagnosisById(String id) throws DaoException {
 		Connection connection = null;
 		PatientDiagnosis patientDiagnosis = null;
@@ -152,7 +155,7 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 		}
 		return insertedRows;
 	}
-	
+
 	public List<Diagnosis> readAllDiagnosis() throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -225,7 +228,7 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 		}
 		return insertedRows;
 	}
-	
+
 	public List<Diagnosis> findDiagnosisByIdAndDate(String id, LocalDate hospitalizationDate) throws DaoException {
 		Connection connection = null;
 		Diagnosis diagnosis = null;

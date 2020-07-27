@@ -21,6 +21,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
 import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.exception.ServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetTreatmentPageCommand implements Command {
@@ -32,7 +33,7 @@ public final class GetTreatmentPageCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String page = null;
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		TreatmentService service = factory.getTreatmentService();
 
 		String userId = getUserIdFromSession(request);

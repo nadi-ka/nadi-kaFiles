@@ -23,10 +23,13 @@ import by.epam.ts.dal.TreatmentDao;
 import by.epam.ts.dal.constant.ColumnNameHolder;
 import by.epam.ts.dal.pool.ConnectionPool;
 import by.epam.ts.dal.pool.ConnectionPoolException;
+import by.epam.ts.dal.pool.factory.ConnectionPoolFactory;
 
 public class TreatmentDaoSql implements TreatmentDao {
 
-	private ConnectionPool connectionPool;
+	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
+	private ConnectionPool connectionPool = factory.getConnectionPool();
+//	private ConnectionPool connectionPool;
 
 	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?) ORDER BY `date_begin/holding` DESC;";
 	private static final String sqlUpdateConsent = "UPDATE treatment SET consent=(?) WHERE id_appointment=(?);";
@@ -37,9 +40,9 @@ public class TreatmentDaoSql implements TreatmentDao {
 
 	private static final Logger log = LogManager.getLogger(TreatmentDaoSql.class);
 
-	public TreatmentDaoSql(ConnectionPool connectionPool) {
-		this.connectionPool = connectionPool;
-	}
+//	public TreatmentDaoSql(ConnectionPool connectionPool) {
+//		this.connectionPool = connectionPool;
+//	}
 
 	public List<Treatment> findPatientsTreatmentById(String id) throws DaoException {
 		Connection connection = null;

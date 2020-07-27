@@ -21,6 +21,7 @@ import by.epam.ts.controller.constant_attribute.SessionAtribute;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class LoginCommand implements Command {
@@ -32,7 +33,7 @@ public final class LoginCommand implements Command {
 		String login = request.getParameter(RequestAtribute.USER_LOGIN);
 		String password = request.getParameter(RequestAtribute.USER_PASSWORD);
 
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		User user = null;
 

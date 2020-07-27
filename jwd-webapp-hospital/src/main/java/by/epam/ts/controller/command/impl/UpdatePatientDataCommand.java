@@ -17,6 +17,7 @@ import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
 import by.epam.ts.service.exception.ServiceException;
 import by.epam.ts.service.exception.ValidationServiceException;
+import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class UpdatePatientDataCommand implements Command {
@@ -38,7 +39,7 @@ public final class UpdatePatientDataCommand implements Command {
 					+ RequestMessage.ACCESS_DENIED);
 			return;
 		}
-		ServiceFactoryImpl factory = ServiceFactoryImpl.getInstance();
+		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
 		try {
 			userService.setPatientPersonalData(patientId, surname, name, dateOfBirth, newEmail, oldEmail);
