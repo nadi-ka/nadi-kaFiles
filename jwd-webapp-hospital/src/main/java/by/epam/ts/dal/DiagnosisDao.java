@@ -18,6 +18,6 @@ public interface DiagnosisDao {
 
 	int[] createPatientDiagnosis(List<PatientDiagnosis> diagnosisList) throws DaoException;
 	
-	List<Diagnosis> findDiagnosisByIdAndDate(String id, LocalDate hospitalizationDate) throws DaoException;
+	List<Diagnosis> findShortDiagnosisByIdAndDate(String id, LocalDate hospitalizationDate) throws DaoException;
 
 }

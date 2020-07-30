@@ -101,7 +101,10 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 		}
 	}
 
-	// Add the diagnosis by IDC-10 to the list of all possible diagnosis;
+	/*
+	 * Add new diagnosis by IDC-10 to the list of all possible ophthalmological
+	 * diagnosis;
+	 */
 	public void addNewDiagnosis(String codeDiagnosis, String diagnosisName, String numberBedDays)
 			throws ServiceException {
 		// Date validation;
@@ -132,7 +135,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 		List<Diagnosis> diagnosisList;
 		int numberBedDays = 0;
 		try {
-			diagnosisList = diagnosisDao.findDiagnosisByIdAndDate(id, hospitalizationDate);
+			diagnosisList = diagnosisDao.findShortDiagnosisByIdAndDate(id, hospitalizationDate);
 			if (diagnosisList.isEmpty()) {
 				return numberBedDays;
 			} else {

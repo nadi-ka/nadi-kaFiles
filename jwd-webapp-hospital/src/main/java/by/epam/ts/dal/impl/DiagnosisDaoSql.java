@@ -121,6 +121,10 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 		return diagnosisList;
 	}
 
+	/*
+	 * Add new diagnosis to the 'choose from' list which contains all possible
+	 * ophthalmological diagnosis;
+	 */
 	public int createNewDiagnosis(Diagnosis diagnosis) throws DaoException {
 		int insertedRows = 0;
 		Connection connection = null;
@@ -156,6 +160,9 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 		return insertedRows;
 	}
 
+	/*
+	 * Get the list of all possible diagnosis;
+	 */
 	public List<Diagnosis> readAllDiagnosis() throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -191,6 +198,9 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 		return diagnosisList;
 	}
 
+	/*
+	 * Add the list of the concrete patient's diagnosis;
+	 */
 	public int[] createPatientDiagnosis(List<PatientDiagnosis> diagnosisList) throws DaoException {
 		int[] insertedRows;
 		Connection connection = null;
@@ -229,7 +239,13 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 		return insertedRows;
 	}
 
-	public List<Diagnosis> findDiagnosisByIdAndDate(String id, LocalDate hospitalizationDate) throws DaoException {
+	/*
+	 * This method is used to calculate the expected period of current patient's
+	 * hospitalization; 
+	 * It returns the list of short patient's diagnosis including
+	 * average number of bed days by the primary disease;
+	 */
+	public List<Diagnosis> findShortDiagnosisByIdAndDate(String id, LocalDate hospitalizationDate) throws DaoException {
 		Connection connection = null;
 		Diagnosis diagnosis = null;
 		List<Diagnosis> diagnosisList = new ArrayList<Diagnosis>();
@@ -243,7 +259,7 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				String codeDiagnosis = resultSet.getString(ColumnNameHolder.DIAGNOSIS_CODE);
+				String codeDiagnosis = resultSet.getString(ColumnNameHolder.M2M_CODE_DIAGNOSIS);
 				String nameDiagnosis = resultSet.getString(ColumnNameHolder.DIAGNOSIS_NAME);
 				int bedDays = resultSet.getInt(ColumnNameHolder.DIAGNOSIS_BED_DAYS);
 
@@ -265,6 +281,28 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 			connectionPool.releaseConnection(connection);
 		}
 		return diagnosisList;
+	}
+	
+	public static void main(String[] args) {
+		
+		ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
+		ConnectionPool connectionPool = factory.getConnectionPool();
+
+		try {
+			connectionPool.initializePoolData();
+			DiagnosisDao diagnosisDao = new DiagnosisDaoSql();
+			
+			List<Diagnosis> list = diagnosisDao.findShortDiagnosisByIdAndDate("e4a4baa0-25a5-4b60-9856-b55ec84d8c88", LocalDate.parse("2019-07-23"));
+			System.out.println(list);
+			
+		} catch (ConnectionPoolException e) {
+			e.printStackTrace();
+
+		} catch (DaoException e) {
+			e.printStackTrace();
+		} finally {
+			connectionPool.dispose();
+		}
 	}
 
 }

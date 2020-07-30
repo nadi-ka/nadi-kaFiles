@@ -1,8 +1,5 @@
 package by.epam.ts.dal.pool;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -30,15 +27,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TestConnectionPool {
-
-	private static final String TEST_PROPERTIES_FILE = "dbTest.properties";
-
-	public static final String DB_DRIVER = "dbHospital.driver";
-	public static final String DB_URL = "dbHospital.url";
-	public static final String DB_USER = "dbHospital.user";
-	public static final String DB_PASSWORD = "dbHospital.password";
-	public static final String DB_POOL_SIZE = "dbHospital.poolsize";
+public class TestConnectionPool implements ConnectionPool {
 
 	private BlockingQueue<Connection> connectionQueue;
 	private BlockingQueue<Connection> givenAwayConnectionQueue;
@@ -52,28 +41,17 @@ public class TestConnectionPool {
 	private int poolSize;
 
 	public TestConnectionPool() {
+		ResourceManagerTest resourceManager = ResourceManagerTest.getInstance();
+		this.driver = resourceManager.getValue(DBParameterTest.DB_DRIVER);
+		this.url = resourceManager.getValue(DBParameterTest.DB_URL);
+		this.user = resourceManager.getValue(DBParameterTest.DB_USER);
+		this.password = resourceManager.getValue(DBParameterTest.DB_PASSWORD);
 		try {
-			Properties prop = new Properties();
-			InputStream inputStream = getClass().getClassLoader().getResourceAsStream(TEST_PROPERTIES_FILE);
-			if (inputStream != null) {
-				prop.load(inputStream);
-			} else {
-				log.log(Level.ERROR, "Test property file " + TEST_PROPERTIES_FILE + " wasn't found in the classpath.");
-				throw new FileNotFoundException(
-						"Test property file " + TEST_PROPERTIES_FILE + " wasn't found in the classpath.");
-			}
-			this.driver = prop.getProperty(DB_DRIVER);
-			this.url = prop.getProperty(DB_URL);
-			this.user = prop.getProperty(DB_USER);
-			this.password = prop.getProperty(DB_PASSWORD);
-
-			String poolSize = prop.getProperty(DB_POOL_SIZE);
+			String poolSize = resourceManager.getValue(DBParameterTest.DB_POOL_SIZE);
 			int sizeInt = Integer.parseInt(poolSize);
 			this.poolSize = sizeInt;
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException ex) {
 			this.poolSize = 5;
-		} catch (IOException e) {
-			log.log(Level.ERROR, "Test property file " + TEST_PROPERTIES_FILE + " wasn't load.", e);
 		}
 	}
 
@@ -82,13 +60,12 @@ public class TestConnectionPool {
 			Class.forName(driver);
 			connectionQueue = new ArrayBlockingQueue<Connection>(poolSize);
 			givenAwayConnectionQueue = new ArrayBlockingQueue<Connection>(poolSize);
-			
+
 			for (int i = 0; i < poolSize; i++) {
 				Connection connection = DriverManager.getConnection(url, user, password);
 				InnerConnection innerConnection = new InnerConnection(connection);
 				connectionQueue.add(innerConnection);
 			}
-			log.info("after pool init!");
 		} catch (SQLException ex) {
 			log.log(Level.ERROR, "Connection wasn't created", ex);
 			throw new ConnectionPoolException("Connection wasn't created", ex);
