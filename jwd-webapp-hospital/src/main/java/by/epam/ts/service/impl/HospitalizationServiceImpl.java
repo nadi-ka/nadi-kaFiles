@@ -19,7 +19,7 @@ import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.validator.ValidationManager;
 
 public class HospitalizationServiceImpl implements HospitalizationService {
-
+	
 	private DaoFactory daoFactory = DaoFactoryImpl.getInstance();
 	private HospitalizationDao hospitalizationDao = daoFactory.getHospitalizationDao();
 

@@ -29,7 +29,6 @@ public class TreatmentDaoSql implements TreatmentDao {
 
 	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
 	private ConnectionPool connectionPool = factory.getConnectionPool();
-//	private ConnectionPool connectionPool;
 
 	private static final String sqlFindTreatmentByPatientId = "SELECT id_appointment, treatment_type, treatment_name, id_assigned_by, `date_begin/holding`, date_finish, consent, surname, name FROM treatment JOIN `medical-staff` ON treatment.id_assigned_by=`medical-staff`.id WHERE id_patient=(?) ORDER BY `date_begin/holding` DESC;";
 	private static final String sqlUpdateConsent = "UPDATE treatment SET consent=(?) WHERE id_appointment=(?);";
@@ -39,10 +38,6 @@ public class TreatmentDaoSql implements TreatmentDao {
 	private static final String sqlFindCurrentTreatmentByAppointmentId = "SELECT id_procedure, date, id_performer, status, surname, name FROM `current-treatment` JOIN `medical-staff` ON `current-treatment`.id_performer=`medical-staff`.id WHERE id_appointment=(?) ORDER BY date DESC;";
 
 	private static final Logger log = LogManager.getLogger(TreatmentDaoSql.class);
-
-//	public TreatmentDaoSql(ConnectionPool connectionPool) {
-//		this.connectionPool = connectionPool;
-//	}
 
 	public List<Treatment> findPatientsTreatmentById(String id) throws DaoException {
 		Connection connection = null;
@@ -134,7 +129,6 @@ public class TreatmentDaoSql implements TreatmentDao {
 			preparedStatement.setDate(5, Date.valueOf(treatment.getDateBeginning()), Calendar.getInstance());
 			preparedStatement.setDate(6, Date.valueOf(treatment.getDateFinishing()), Calendar.getInstance());
 			preparedStatement.setBoolean(7, treatment.isConsent());
-			preparedStatement.addBatch();
 
 			insertedRows = preparedStatement.executeUpdate();
 
@@ -244,14 +238,14 @@ public class TreatmentDaoSql implements TreatmentDao {
 			connection = connectionPool.takeConnection();
 			preparedStatement = connection.prepareStatement(sqlFindCurrentTreatmentByAppointmentId);
 			preparedStatement.setInt(1, idAppointment);
-			;
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
 				int idProcedure = resultSet.getInt(ColumnNameHolder.CURRENT_ID_PROCEDURE);
 				LocalDate datePerforming = resultSet.getDate(ColumnNameHolder.CURRENT_DATE).toLocalDate();
 				String idPerformer = resultSet.getString(ColumnNameHolder.CURRENT_ID_PERFORMER);
-				TreatmentStatus status = TreatmentStatus.getTreatmentStatus(resultSet.getString(ColumnNameHolder.CURRENT_STATUS));
+				TreatmentStatus status = TreatmentStatus
+						.getTreatmentStatus(resultSet.getString(ColumnNameHolder.CURRENT_STATUS));
 				String staffSurname = resultSet.getString(ColumnNameHolder.STAFF_SURNAME);
 				String staffName = resultSet.getString(ColumnNameHolder.STAFF_NAME);
 
@@ -275,5 +269,28 @@ public class TreatmentDaoSql implements TreatmentDao {
 		}
 		return treatmentList;
 	}
+
+//	public static void main(String[] args) {
+//		
+//		ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
+//		ConnectionPool connectionPool = factory.getConnectionPool();
+//
+//		TreatmentDao treatmentDao = DaoFactoryImpl.getInstance().getTreatmentDao();
+//		
+//		try {
+//			connectionPool.initializePoolData();
+//			
+//			List<Treatment> treatments = treatmentDao.findPatientsTreatmentById("e4a4baa0-25a5-4b60-9856-b55ec84d8c88");
+//			System.out.println(treatments);
+//			
+//		} catch (ConnectionPoolException e) {
+//			e.printStackTrace();
+//
+//		} catch (DaoException e) {
+//			e.printStackTrace();
+//		} finally {
+//			connectionPool.dispose();
+//		}
+//	}
 
 }

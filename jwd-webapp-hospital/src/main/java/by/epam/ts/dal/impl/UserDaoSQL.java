@@ -29,7 +29,6 @@ public class UserDaoSQL implements UserDao {
 	
 	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
 	private ConnectionPool connectionPool = factory.getConnectionPool();
-//	private ConnectionPool connectionPool;
 
 	private static final String sqlAddUserStaff = "INSERT INTO users (id_medical_staff, login, password, role, user_status) VALUES (?,?,?,?,?);";
 	private static final String sqlAddUserPatient = "INSERT INTO users (id_patient, login, password, role, user_status) VALUES (?,?,?,?,?);";
@@ -49,10 +48,6 @@ public class UserDaoSQL implements UserDao {
 	private static final String sqlUpdatePatientPersonalData = "UPDATE patients SET surname = (?), name = (?), birth_date = (?), email = (?) WHERE id = (?);";
 
 	private static final Logger log = LogManager.getLogger(UserDaoSQL.class);
-
-//	public UserDaoSQL(ConnectionPool connectionPool) {
-//		this.connectionPool = connectionPool;
-//	}
 
 	public int createUserPatient(User user) throws DaoException {
 		int insertedRows = 0;

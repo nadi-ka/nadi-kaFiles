@@ -26,7 +26,6 @@ public class HospitalizationDaoSql implements HospitalizationDao {
 	
 	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
 	private ConnectionPool connectionPool = factory.getConnectionPool();
-//	private ConnectionPool connectionPool;
 	
 	private static final String sqlAddHospitalization = "INSERT INTO hospitalization (id_patient, entry_date) VALUES (?,?);";
 	private static final String sqlFinishHospitalization = "UPDATE hospitalization SET discharge_date = (?) WHERE id_history = (?);";
@@ -34,10 +33,6 @@ public class HospitalizationDaoSql implements HospitalizationDao {
 	private static final String sqlFindLastHospitalizationById = "SELECT * FROM hospitalization WHERE id_patient = (?) ORDER BY entry_date DESC LIMIT 1;";
 
 	private static final Logger log = LogManager.getLogger(HospitalizationDaoSql.class);
-
-//	public HospitalizationDaoSql(ConnectionPool connectionPool) {
-//		this.connectionPool = connectionPool;
-//	}
 	
 	public int createNewHospitalization(Hospitalization hospitalization) throws DaoException {
 		int insertedRows;
