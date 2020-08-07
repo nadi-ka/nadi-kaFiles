@@ -66,7 +66,7 @@ public class AddNewPatientCommand implements Command, AccessManager {
 			if ((addObviously != null && addObviously.equals(mustBeAdded)) || patients.isEmpty()) {
 				patientId = userService.addNewPatient(surname, name, dateOfBirth, email);
 				
-				//Send letter to the given patient's e-mail;
+				//Send the letter to the given patient's e-mail;
 				Mailer mailer = new Mailer();
 				mailer.send(MailAttributes.LETTER_SUBJECT, MailAttributes.LETTER_BODY_NEW_PATIENT, MailAttributes.TEMPORARY_EMAIL_FOR_CHECK);
 	

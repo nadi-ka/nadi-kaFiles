@@ -239,7 +239,7 @@ public class TreatmentDaoSqlTest {
 
 		List<Treatment> prescriptionsActual = treatmentDao.findCurrentHospitalizationTreatment(presentId,
 				LocalDate.parse(hospitalizationDateCorrect));
-		
+
 		int prescriptionsSizeExpected = 2;
 		int prescriptionsSizeActual = prescriptionsActual.size();
 		String treatmentName1 = "Витрэктомия с введением ПФОС";
@@ -251,30 +251,34 @@ public class TreatmentDaoSqlTest {
 		assertTrue(prescriptionsSizeExpected == prescriptionsSizeActual);
 		assertEquals(treatmentNameExpected, treatmentNameActual);
 	}
-	
+
 	@Test
 	public void testFindCurrentHospitalizationTreatment_negativeResult_dateLater() throws DaoException {
-		
+
 		List<Treatment> prescriptionsExpected = new ArrayList<Treatment>();
-		List<Treatment> prescriptionsActual = treatmentDao.findCurrentHospitalizationTreatment(presentId, LocalDate.parse(hospitalizationDateLater));
-		
+		List<Treatment> prescriptionsActual = treatmentDao.findCurrentHospitalizationTreatment(presentId,
+				LocalDate.parse(hospitalizationDateLater));
+
 		assertEquals(prescriptionsExpected, prescriptionsActual);
 	}
-	
+
 	@Test(expected = NullPointerException.class)
 	public void testFindCurrentHospitalizationTreatment_nullDateValue() throws DaoException {
-		
+
 		treatmentDao.findCurrentHospitalizationTreatment(presentId, null);
 	}
-	
+
 	@Test
 	public void testFindCurrentHospitalizationTreatment_idAbsent() throws DaoException {
-		
+
 		List<Treatment> prescriptionsExpected = new ArrayList<Treatment>();
-		List<Treatment> prescriptionsActual_absentId = treatmentDao.findCurrentHospitalizationTreatment(absentId, LocalDate.parse(hospitalizationDateCorrect));
-		List<Treatment> prescriptionsActual_nullId = treatmentDao.findCurrentHospitalizationTreatment(null, LocalDate.parse(hospitalizationDateCorrect));
-		List<Treatment> prescriptionsActual_emptyId = treatmentDao.findCurrentHospitalizationTreatment(emptyString, LocalDate.parse(hospitalizationDateCorrect));
-		
+		List<Treatment> prescriptionsActual_absentId = treatmentDao.findCurrentHospitalizationTreatment(absentId,
+				LocalDate.parse(hospitalizationDateCorrect));
+		List<Treatment> prescriptionsActual_nullId = treatmentDao.findCurrentHospitalizationTreatment(null,
+				LocalDate.parse(hospitalizationDateCorrect));
+		List<Treatment> prescriptionsActual_emptyId = treatmentDao.findCurrentHospitalizationTreatment(emptyString,
+				LocalDate.parse(hospitalizationDateCorrect));
+
 		assertEquals(prescriptionsExpected, prescriptionsActual_absentId);
 		assertEquals(prescriptionsExpected, prescriptionsActual_emptyId);
 		assertEquals(prescriptionsExpected, prescriptionsActual_nullId);
@@ -287,20 +291,22 @@ public class TreatmentDaoSqlTest {
 	@Test
 	public void testFindCurrentTreatmentByAppointmentId_positiveResult() throws DaoException {
 
-		List<CurrentTreatment> treatmentListActual = treatmentDao.findCurrentTreatmentByAppointmentId(presentIdAppointment);
+		List<CurrentTreatment> treatmentListActual = treatmentDao
+				.findCurrentTreatmentByAppointmentId(presentIdAppointment);
 		int listSizeExpected = 4;
 		int listSizeActual = treatmentListActual.size();
-		
+
 		assertTrue(listSizeExpected == listSizeActual);
 
 	}
-	
+
 	@Test
 	public void testFindCurrentTreatmentByAppointmentId_negativeResult_idAbsent() throws DaoException {
-		
+
 		List<CurrentTreatment> treatmentListExpected = new ArrayList<CurrentTreatment>();
-		List<CurrentTreatment> treatmentListActual = treatmentDao.findCurrentTreatmentByAppointmentId(absentIdAppointment);
-		
+		List<CurrentTreatment> treatmentListActual = treatmentDao
+				.findCurrentTreatmentByAppointmentId(absentIdAppointment);
+
 		assertEquals(treatmentListExpected, treatmentListActual);
 	}
 

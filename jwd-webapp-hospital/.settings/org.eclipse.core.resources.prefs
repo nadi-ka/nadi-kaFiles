@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/main.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/staff/current_patient.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/staff/diagnosis.jsp=UTF-8
@@ -13,3 +15,5 @@ encoding//src/main/webapp/error/error.jsp=UTF-8
 encoding//src/main/webapp/error/error_runtime.jsp=UTF-8
 encoding//src/main/webapp/index.jsp=UTF-8
 encoding//src/main/webapp/signUp.jsp=UTF-8
+encoding//src/test/java=UTF-8
+encoding/<project>=UTF-8

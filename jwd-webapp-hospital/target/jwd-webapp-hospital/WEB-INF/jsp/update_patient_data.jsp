@@ -16,9 +16,6 @@
 	<fmt:setLocale value="${sessionScope.local}" />
 	<fmt:setBundle basename="localization.locale" var="loc" />
 	
-	<fmt:message bundle="${loc}" key="local.main.showtreat" var="show_treat" />
-	<fmt:message bundle="${loc}" key="local.hospital_plan.nav_main" var="navigate_main" />
-	<fmt:message bundle="${loc}" key="local.main.calc_hospitalization" var="calc_hospitalization" />
 	<fmt:message bundle="${loc}" key="local.surname" var="surname" />
 	<fmt:message bundle="${loc}" key="local.name" var="name" />
 	<fmt:message bundle="${loc}" key="local.email" var="email" />
@@ -62,24 +59,11 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
-  		
-  		<form class="form-inline" name="navigate_main" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_patient_main_page" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${navigate_main}</button>
-        </form>
-        
-        <form class="form-inline" name="get_treatment" action="font" method="GET">
-			<input type="hidden" name="command" value="get_treatment_page" /> 
-			<button type="submit" class="btn btn-sm btn-outline-secondary">${show_treat}</button>
-		</form>
-		
-		<form class="form-inline" name="calc_hospitalization" method="GET" action="font">
-			<input type="hidden" name="command" value="get_hospitalization_plan" /> 
-			<button type="submit" class="btn btn-sm btn-outline-secondary">${calc_hospitalization}</button>
-		</form>
-
-	</nav>
+	<div id="patient_nav">
+    	<jsp:include page="/WEB-INF/jsp/part/patient_nav.jsp"/>
+	</div>
+	
+	<!-- Navigation menu -->
 	
 	<!-- Displaying of the current personal data -->
 

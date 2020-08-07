@@ -26,7 +26,7 @@ import by.epam.ts.dal.pool.ConnectionPoolException;
 import by.epam.ts.dal.pool.factory.ConnectionPoolFactory;
 
 public class UserDaoSQL implements UserDao {
-	
+
 	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
 	private ConnectionPool connectionPool = factory.getConnectionPool();
 
@@ -275,7 +275,6 @@ public class UserDaoSQL implements UserDao {
 			preparedStatement.setString(3, patient.getName());
 			preparedStatement.setDate(4, Date.valueOf(patient.getDateOfBirth()), Calendar.getInstance());
 			preparedStatement.setString(5, patient.getEmail());
-
 			insertedRows = preparedStatement.executeUpdate();
 
 		} catch (ConnectionPoolException ex) {
@@ -604,25 +603,4 @@ public class UserDaoSQL implements UserDao {
 		return insertedRows;
 	}
 
-//	public static void main(String[] args) {
-//		ConnectionPool connectionPool = new ConnectionPool();
-//
-//		try {
-//			connectionPool.initializePoolData();
-//			UserDaoSQL userDaoSQL = new UserDaoSQL(connectionPool);
-//			
-//			List<MedicalStaff> staffs = userDaoSQL.findUserStaffBySurname("Хаддад");
-//			for (MedicalStaff st: staffs) {
-//				System.out.println(st.getRole());
-//			}
-//			
-//		} catch (ConnectionPoolException e) {
-//			e.printStackTrace();
-//
-//		} catch (DaoException e) {
-//			e.printStackTrace();
-//		} finally {
-//			connectionPool.dispose();
-//		}
-//	}
 }

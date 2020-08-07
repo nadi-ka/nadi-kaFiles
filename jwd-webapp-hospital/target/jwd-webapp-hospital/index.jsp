@@ -61,7 +61,7 @@
 	</div>
 	
 	<div class="mx-auto" style="width: 500px;">
-		<img class="img-thumbnail" src="img/hospital_facade.png" alt="hospital facade image">
+		<img class="img-thumbnail" src="img/hospital_building.png" alt="hospital facade image">
 	</div>
 	
 	<!-- Alerts -->

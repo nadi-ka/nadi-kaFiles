@@ -58,7 +58,6 @@ public final class GetTreatPerformancePageCommand implements Command {
 						// the list of performed procedures (could be empty, if the treatment hasn't
 						// been begun yet);
 						performingList = treatmentService.getCurrentTreatmentByAppointmentId(idAppointment);
-						log.info(performingList.toString());
 						treatment.setPerformingList(performingList);
 					}
 				}
@@ -66,6 +65,7 @@ public final class GetTreatPerformancePageCommand implements Command {
 				
 				request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
 				request.setAttribute(RequestAtribute.PATIENT_ID, patientId);
+				log.info("id:" + patientId);
 				String page = NavigationManager.getProperty(PATH);
 				goForward(request, response, page);
 			} else {

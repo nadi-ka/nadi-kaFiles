@@ -13,7 +13,7 @@
 	<fmt:setLocale value="${sessionScope.local}" />
 	<fmt:setBundle basename="localization.locale" var="loc" />
 	
-	<fmt:message bundle="${loc}" key="local.hospital_plan.nav_main" var="navigate_main" />
+	<fmt:message bundle="${loc}" key="local.nav.main_page" var="navigate_main" />
 	<fmt:message bundle="${loc}" key="local.main.update_patient" var="update_patient_data" />
 	<fmt:message bundle="${loc}" key="local.main.showtreat" var="show_treat" />
 	<fmt:message bundle="${loc}" key="local.main.calc_hospitalization" var="calc_hospitalization" />

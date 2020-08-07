@@ -219,7 +219,7 @@ INSERT INTO `HospitalTest`.`medical-staff` (`id`, `specialty`, `surname`, `name`
 INSERT INTO `HospitalTest`.`medical-staff` (`id`, `specialty`, `surname`, `name`, `email`) VALUES ('06517d4f-c428-4aba-86da-482451b29c38', 'nurse', 'Лисовская', 'Алла', NULL);
 INSERT INTO `HospitalTest`.`medical-staff` (`id`, `specialty`, `surname`, `name`, `email`) VALUES ('b5b1c512-d975-4646-81ca-e0fdca2b6f40', 'nurse', 'Рудая', 'Екатерина', NULL);
 INSERT INTO `HospitalTest`.`medical-staff` (`id`, `specialty`, `surname`, `name`, `email`) VALUES ('a3434a9a-7cac-43a4-9671-4879b4737e86', 'nurse', 'Лазебных', 'Тамара', NULL);
-INSERT INTO `HospitalTest`.`medical-staff` (`id`, `specialty`, `surname`, `name`, `email`) VALUES ('5ec28331-a666-47f1-9e4a-3110cd812fd7', 'nurse', 'Григорян', 'Карина', NULL);
+INSERT INTO `HospitalTest`.`medical-staff` (`id`, `specialty`, `surname`, `name`, `email`) VALUES ('5ec28331-a666-47f1-9e4a-3110cd812fd7', 'nurse', 'Григорян', 'Карина', 'grigorjan@gmail.com');
 
 COMMIT;
 

@@ -112,7 +112,7 @@
     	<div class="alert alert-danger" role="alert">
 			<c:out value = "${request_denied}" />
 		</div>
-	</c:if>  
+	</c:if> 
 	
 	<!--  Table 'Treatment' -->
 

@@ -16,10 +16,10 @@ import javax.mail.internet.MimeMessage;
 public class Mailer {
 
 	private static final String MAIL_PROPERTIES = "mailer.properties";
-	private static final String USERNAME = "mailer.username";
-	private static final String PASSWORD = "mailer.password";
+	private static final String USERNAME = "npakhomchik@list.ru";
+	private static final String PASSWORD = "tanya1mur";
 
-	public void send(String subject, String text, String toEmail) throws MailerException{
+	public void send(String subject, String text, String toEmail) throws MailerException {
 
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 		InputStream input = classloader.getResourceAsStream(MAIL_PROPERTIES);
@@ -32,13 +32,12 @@ public class Mailer {
 			Session session = Session.getInstance(properties, new Authenticator() {
 				@Override
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(properties.getProperty(USERNAME),
-							properties.getProperty(PASSWORD));
+					return new PasswordAuthentication(USERNAME, PASSWORD);
 				}
 			});
 			Message message = new MimeMessage(session);
-			
-			message.setFrom(new InternetAddress(properties.getProperty(USERNAME)));
+
+			message.setFrom(new InternetAddress(USERNAME));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 			message.setSubject(subject);
 			message.setText(text);

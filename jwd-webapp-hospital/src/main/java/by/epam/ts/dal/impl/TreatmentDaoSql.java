@@ -270,27 +270,4 @@ public class TreatmentDaoSql implements TreatmentDao {
 		return treatmentList;
 	}
 
-//	public static void main(String[] args) {
-//		
-//		ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
-//		ConnectionPool connectionPool = factory.getConnectionPool();
-//
-//		TreatmentDao treatmentDao = DaoFactoryImpl.getInstance().getTreatmentDao();
-//		
-//		try {
-//			connectionPool.initializePoolData();
-//			
-//			List<Treatment> treatments = treatmentDao.findPatientsTreatmentById("e4a4baa0-25a5-4b60-9856-b55ec84d8c88");
-//			System.out.println(treatments);
-//			
-//		} catch (ConnectionPoolException e) {
-//			e.printStackTrace();
-//
-//		} catch (DaoException e) {
-//			e.printStackTrace();
-//		} finally {
-//			connectionPool.dispose();
-//		}
-//	}
-
 }

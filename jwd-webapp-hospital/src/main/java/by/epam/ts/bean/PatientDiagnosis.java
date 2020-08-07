@@ -12,7 +12,6 @@ public class PatientDiagnosis implements Serializable {
 	private boolean primary;
 	private LocalDate settingDate;
 	private String diagnosisName;
-	private int averageBedDays;
 
 	public PatientDiagnosis() {
 	}

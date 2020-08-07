@@ -118,7 +118,15 @@
 		<li class="list-group-item list-group-item-secondary">
 			<h3>${medical_staff.surname} ${medical_staff.name}</h3>  
 			<ul class="list-group">
-  				<li class="list-group-item">${specialty} ${medical_staff.specialty.getSpecialtyValue()}</li>
+  				<li class="list-group-item">
+  					<c:choose> 
+						<c:when test="${medical_staff.specialty == 'DOCTOR'}">
+							<p>${specialty} ${doctor}</p>
+						</c:when>
+						<c:otherwise>
+							<p>${specialty} ${nurse}</p>
+						</c:otherwise>
+					</c:choose>
   				<li class="list-group-item">${email} ${medical_staff.email}</li>  
 			</ul>         	
 		</li>

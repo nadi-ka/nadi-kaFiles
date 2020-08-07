@@ -37,6 +37,7 @@ public final class GetCurrentPatientPageCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 		String message = request.getParameter(RequestAtribute.MESSAGE);
 
@@ -52,7 +53,6 @@ public final class GetCurrentPatientPageCommand implements Command {
 		List<Hospitalization> hospitalizations;
 		try {
 			prescriptions = treatmentService.getPatientTreatmentById(patientId);
-			log.info("prescriptions:" + prescriptions.isEmpty());
 			if (!prescriptions.isEmpty()) {
 				List<CurrentTreatment> performingList;
 				for (Treatment treatment : prescriptions) {
@@ -60,9 +60,7 @@ public final class GetCurrentPatientPageCommand implements Command {
 					// the list of performed procedures (could be empty, if the treatment hasn't
 					// been begun yet);
 					performingList = treatmentService.getCurrentTreatmentByAppointmentId(idAppointment);
-					log.info("performingList:" + performingList.toString());
 					treatment.setPerformingList(performingList);
-					log.info(treatment.getTreatmentName() + " " + treatment.getTreatmentStatus());
 				}
 			}
 			Collections.sort(prescriptions, Treatment.treatmentStatusComparator);

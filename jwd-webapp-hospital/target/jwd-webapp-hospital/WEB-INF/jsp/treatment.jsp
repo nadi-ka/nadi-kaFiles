@@ -30,9 +30,6 @@
 	<fmt:message bundle="${loc}" key="local.navigate_main" var="navigate_main" />
 	<fmt:message bundle="${loc}" key="local.treatment.button.consent" var="give_consent" />
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_button" />
-	<fmt:message bundle="${loc}" key="local.main.calc_hospitalization" var="calc_hospitalization" />
-	<fmt:message bundle="${loc}" key="local.hospital_plan.nav_main" var="navigate_main" />
-	<fmt:message bundle="${loc}" key="local.main.update_patient" var="update_patient_data" />
 	<fmt:message bundle="${loc}" key="local.staff.treat_perform.status" var="status"/>
 	<fmt:message bundle="${loc}" key="local.treatment.request_denied" var="request_denied" />
 	<fmt:message bundle="${loc}" key="local.staff.prescriptions.surgical" var="surgical" />
@@ -75,24 +72,11 @@
 	
 	<!-- Navigation menu -->
 	
-	<nav class="navbar navbar-dark navbar-expand-lg bg-company-red">
+	<div id="patient_nav">
+    	<jsp:include page="/WEB-INF/jsp/part/patient_nav.jsp"/>
+	</div>
 	
-		<form class="form-inline" name="update_patient_data" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_update_patient_data_page" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${update_patient_data}</button>
-        </form>
-	
-		<form class="form-inline" name="navigate_main" action="font" method="GET">
-  			<input type="hidden" name="command" value="get_patient_main_page" />
-  			<button type="submit" class="btn btn-sm btn-outline-secondary">${navigate_main}</button>
-        </form>
-		
-		<form class="form-inline" name="calc_hospitalization" method="GET" action="font">
-			<input type="hidden" name="command" value="get_hospitalization_plan" /> 
-			<button type="submit" class="btn btn-sm btn-outline-secondary">${calc_hospitalization}</button>
-		</form>
-		
-	</nav>
+	<!-- Navigation menu -->
 	
 	<!-- Alert -->
 	

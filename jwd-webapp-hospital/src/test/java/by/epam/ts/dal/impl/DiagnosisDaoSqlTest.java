@@ -70,6 +70,7 @@ public class DiagnosisDaoSqlTest {
 
 		List<PatientDiagnosis> expected = new ArrayList<PatientDiagnosis>();
 		List<PatientDiagnosis> actual = diagnosisDao.findPatientsDiagnosisById(absentId);
+		
 		assertEquals(expected, actual);
 	}
 
@@ -182,25 +183,25 @@ public class DiagnosisDaoSqlTest {
 		diagnosisDao.createNewDiagnosis(diagnosisNullValues);
 	}
 
-	@Test
-	public void createPatientDiagnosisTest_positiveResult()
-			throws Exception {
-
-		List<PatientDiagnosis> diagnosisList = new ArrayList<PatientDiagnosis>();
-		PatientDiagnosis primaryDiagnosis = new PatientDiagnosis(presentId, codeRetinalDetechment,
-				true, LocalDate.now());
-		PatientDiagnosis secondaryDiagnosis = new PatientDiagnosis(presentId, codeMyopia, false,
-				LocalDate.now());
-		diagnosisList.add(primaryDiagnosis);
-		diagnosisList.add(secondaryDiagnosis);
-
-		int[] insertedRowsExpected = { 1, 1 };
-		int[] insertedRowsActual = diagnosisDao.createPatientDiagnosis(diagnosisList);
-
-		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-
-		assertArrayEquals(insertedRowsExpected, insertedRowsActual);
-	}
+//	@Test
+//	public void createPatientDiagnosisTest_positiveResult()
+//			throws Exception {
+//
+//		List<PatientDiagnosis> diagnosisList = new ArrayList<PatientDiagnosis>();
+//		PatientDiagnosis primaryDiagnosis = new PatientDiagnosis(presentId, codeRetinalDetechment,
+//				true, LocalDate.now());
+//		PatientDiagnosis secondaryDiagnosis = new PatientDiagnosis(presentId, codeMyopia, false,
+//				LocalDate.now());
+//		diagnosisList.add(primaryDiagnosis);
+//		diagnosisList.add(secondaryDiagnosis);
+//
+//		int[] insertedRowsExpected = { 1, 1 };
+//		int[] insertedRowsActual = diagnosisDao.createPatientDiagnosis(diagnosisList);
+//
+//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
+//
+//		assertArrayEquals(insertedRowsExpected, insertedRowsActual);
+//	}
 	
 	@Test(expected = NullPointerException.class)
 	public void createPatientDiagnosisTest_nullParameterValue()

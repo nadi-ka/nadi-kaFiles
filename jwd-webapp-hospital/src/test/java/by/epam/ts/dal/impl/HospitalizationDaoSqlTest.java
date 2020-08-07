@@ -63,17 +63,17 @@ public class HospitalizationDaoSqlTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.HospitalizationDaoSql#createNewHospitalization(by.epam.ts.bean.Hospitalization)}.
 	 */
-	@Test
-	public void testCreateNewHospitalization_positiveResult() throws Exception {
-
-		Hospitalization hospitalization = new Hospitalization(presentId, LocalDate.now());
-		int insertedRowsExpected = 1;
-		int insertedRowsActual = hospitalizationDao.createNewHospitalization(hospitalization);
-
-		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-
-		assertEquals(insertedRowsExpected, insertedRowsActual);
-	}
+//	@Test
+//	public void testCreateNewHospitalization_positiveResult() throws Exception {
+//
+//		Hospitalization hospitalization = new Hospitalization(presentId, LocalDate.now());
+//		int insertedRowsExpected = 1;
+//		int insertedRowsActual = hospitalizationDao.createNewHospitalization(hospitalization);
+//
+//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
+//
+//		assertEquals(insertedRowsExpected, insertedRowsActual);
+//	}
 
 	@Test(expected = NullPointerException.class)
 	public void testCreateNewHospitalization_nullParameterValue() throws DaoException {
