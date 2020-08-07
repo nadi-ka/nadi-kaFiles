@@ -27,6 +27,8 @@
 	<fmt:message bundle="${loc}" key="local.staff.main.not_found" var="not_found" />
 	<fmt:message bundle="${loc}" key="local.main.logout_btn" var="logout_button" />
 	<fmt:message bundle="${loc}" key="local.validation.required" var="field_required"/>
+	<fmt:message bundle="${loc}" key="local.validation.field_length" var="field_length"/>
+	<fmt:message bundle="${loc}" key="local.validation.symbols_signes" var="symbols_signes"/>
 	
 	<fmt:message bundle="${loc}" key="local.button.submit" var="submit_btn" />
 	<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
@@ -177,16 +179,19 @@
 	//Required fields;
 	
 	var requiredField = '<p class="text-danger">${field_required}</p>';
+	var personalDataMessage = '<p class="text-danger">${field_length} 2-45 ${symbols_signes}</p>';
 
  	$('#add_patient').validate({
  		
    		rules: {
      		surname: {
-        		required: true
+        		required: true,
+        		pattern: /^([\\p{L}]|[-]){2,45}$/
      		},
      		
      		name: {
-        		required: true
+        		required: true,
+        		pattern: /^([\\p{L}]|[-]){2,45}$/
      		},
      		
      		email: {
@@ -197,11 +202,13 @@
    		messages: {
    			
       		surname: {
-         		required: requiredField
+         		required: requiredField,
+         		pattern: personalDataMessage
        		},
        		
       		name: {
-      			required: requiredField
+      			required: requiredField,
+      			pattern: personalDataMessage
       		},
       		
       		email: {

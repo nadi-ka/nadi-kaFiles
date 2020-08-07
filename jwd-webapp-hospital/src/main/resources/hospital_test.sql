@@ -13,13 +13,24 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema HospitalTest
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `HospitalTest` ;
 
 -- -----------------------------------------------------
 -- Schema HospitalTest
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `HospitalTest` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
 USE `HospitalTest` ;
+
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `HospitalTest`.`medical-staff`;
+DROP TABLE IF EXISTS `HospitalTest`.`patients`;
+DROP TABLE IF EXISTS `HospitalTest`.`roles`;
+DROP TABLE IF EXISTS `HospitalTest`.`users`;
+DROP TABLE IF EXISTS `HospitalTest`.`treatment`;
+DROP TABLE IF EXISTS `HospitalTest`.`diagnosis`;
+DROP TABLE IF EXISTS `HospitalTest`.`id-m2m-code`;
+DROP TABLE IF EXISTS `HospitalTest`.`current-treatment`;
+DROP TABLE IF EXISTS `HospitalTest`.`hospitalization`;
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- -----------------------------------------------------
 -- Table `HospitalTest`.`medical-staff`
@@ -232,13 +243,6 @@ USE `HospitalTest`;
 INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('e4a4baa0-25a5-4b60-9856-b55ec84d8c88', 'Смолянко', 'Виктор', '1985-04-01', 'smolyanko@gmail.com');
 INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('2fdd8656-e742-47cb-af8a-2f68d414e3bf', 'Егорова ', 'Валентина', '1950-05-15', 'egorova@gmail.com');
 INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('f5c6ece3-8131-4c5b-b055-ad683dac0526', 'Максимов', 'Мирон', '1948-12-03', 'maximov@gmail.com');
-INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('b376a0ee-604e-4909-b160-2fc110b0c710', 'Жукова', 'Анна', '1961-11-19', NULL);
-INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('8a592bea-4e1d-4070-9755-0046d8242865', 'Денисов', 'Алексей', '1970-07-13', NULL);
-INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('a1c822e3-66b5-446a-9bd0-746aef1672df', 'Елисеева', 'Галина', '1945-08-11', 'eliseeva@gmail.com');
-INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('61e51034-e5c2-445c-bd86-51286d883ba1', 'Баран', 'Александр', '1963-11-01', NULL);
-INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('c2090358-9617-4b87-86c3-b8dae87d98ef', 'Лойко', 'Владислав', '1979-10-10', NULL);
-INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('e8eb3023-35dd-47d7-80b8-6c18d2f4f5a9', 'Бузова', 'Оксана', '1961-01-03', NULL);
-INSERT INTO `HospitalTest`.`patients` (`id`, `surname`, `name`, `birth_date`, `email`) VALUES ('d8440434-350a-4ebe-84e0-6586d8730896', 'Ниткин', 'Михаил', '1976-02-07', 'nikitin@gmail.com');
 
 COMMIT;
 
@@ -261,12 +265,11 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `HospitalTest`;
-INSERT INTO `HospitalTest`.`users` (`id`, `id_medical_staff`, `id_patient`, `login`, `password`, `role`, `user_status`) VALUES (1, NULL, NULL, 'superAdmin', '$2a$12$T37YRPFEgUsyK9WTYdfoD.28ACjdUNwYSYYhX7Po3CKmgh5y01TQ6', 1, true);
+
 INSERT INTO `HospitalTest`.`users` (`id`, `id_medical_staff`, `id_patient`, `login`, `password`, `role`, `user_status`) VALUES (2, '6b076d07-87c7-4afb-8397-1b20ee624467', NULL, 'germini', '$2a$12$TV1uLRAYwCFXWnTNkCIpW.ZW9dT/Qxrndw1TyX0DgKJUnDEUPlUFi', 2, true);
 INSERT INTO `HospitalTest`.`users` (`id`, `id_medical_staff`, `id_patient`, `login`, `password`, `role`, `user_status`) VALUES (4, '4dc191b9-3477-423c-8493-cfa531bc2b0b', NULL, 'sagittarius', '$2a$12$7KezwXd5wfexCVHJ9RuXduMBK8FPMOpdaXaw.eU1dDMTy2H/PuguW', 2, true);
 INSERT INTO `HospitalTest`.`users` (`id`, `id_medical_staff`, `id_patient`, `login`, `password`, `role`, `user_status`) VALUES (5, NULL, 'e4a4baa0-25a5-4b60-9856-b55ec84d8c88', 'alfa', '$2a$12$phEo4stRjZ8QBGb4RMisAObHdTGdfru.nQFqpxTfRp5Wx2JM2T6VK', 3, true);
 INSERT INTO `HospitalTest`.`users` (`id`, `id_medical_staff`, `id_patient`, `login`, `password`, `role`, `user_status`) VALUES (6, NULL, '2fdd8656-e742-47cb-af8a-2f68d414e3bf', 'beta', '$2a$12$SgL7V6VVM/69fTaCmN0h5ewDSrq4U0e7Jxqxgco9w2pFDGVN3CuuO', 3, true);
-INSERT INTO `HospitalTest`.`users` (`id`, `id_medical_staff`, `id_patient`, `login`, `password`, `role`, `user_status`) VALUES (7, 'b5b1c512-d975-4646-81ca-e0fdca2b6f40', NULL, 'nurse', '$2a$12$/4xS14Hk0W4grWZfYfMRue2FIA1/LxIL7KwJK6KFbfNM1nOySkpzO', 4, true);
 
 COMMIT;
 
@@ -280,19 +283,6 @@ INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatme
 INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (2, 'e4a4baa0-25a5-4b60-9856-b55ec84d8c88', 'conservative', 'Инстилляции Вигамокс 3 р/день', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-23', '2019-08-02', true);
 INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (3, '2fdd8656-e742-47cb-af8a-2f68d414e3bf', 'surgical', 'ФЭК с имплантацией ИОЛ', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-24', '2019-07-24', true);
 INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (4, 'f5c6ece3-8131-4c5b-b055-ad683dac0526', 'surgical', 'ФЭК с имплантацией ИОЛ', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-24', '2019-07-24', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (5, 'b376a0ee-604e-4909-b160-2fc110b0c710', 'surgical', 'Трабекулэктамия, имплантация дренажа', '67d9be8a-de60-41a1-bc13-dcdac87e4ffe', '2019-07-25', '2019-07-25', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (6, 'b376a0ee-604e-4909-b160-2fc110b0c710', 'procedures', 'Флюоресцентная ангиография', '67d9be8a-de60-41a1-bc13-dcdac87e4ffe', '2019-07-25', '2019-07-25', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (7, '8a592bea-4e1d-4070-9755-0046d8242865', 'surgical', 'ФЭК с имплантацией ИОЛ', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-25', '2019-07-25', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (8, '8a592bea-4e1d-4070-9755-0046d8242865', 'conservative', 'Найз 100мг * 1 р/день перорально', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-24', '2019-07-27', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (9, 'a1c822e3-66b5-446a-9bd0-746aef1672df', 'surgical', 'ФЭК с имплантацией ИОЛ', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-26', '2019-07-25', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (10, '61e51034-e5c2-445c-bd86-51286d883ba1', 'conservative', 'Аугментин 500мг 3 р/день перорально', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-25', '2019-08-01', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (11, '61e51034-e5c2-445c-bd86-51286d883ba1', 'procedures', 'Биопсия роговицы', '67d9be8a-de60-41a1-bc13-dcdac87e4ffe', '2019-07-26', '2019-07-26', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (12, 'c2090358-9617-4b87-86c3-b8dae87d98ef', 'surgical', 'Сквозная кератопластика', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-27', '2019-07-27', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (13, 'c2090358-9617-4b87-86c3-b8dae87d98ef', 'surgical', 'Ревизия трансплантанта', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-29', '2019-07-29', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (14, 'c2090358-9617-4b87-86c3-b8dae87d98ef', 'conservative', 'Инстилляции Вигамокс 4 р/день', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-26', '2019-08-07', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (15, 'e8eb3023-35dd-47d7-80b8-6c18d2f4f5a9', 'conservative', 'Инстилляции Тобрадекс 3 р/день', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-26', '2019-08-01', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (16, 'e8eb3023-35dd-47d7-80b8-6c18d2f4f5a9', 'procedures', 'Парабульбарные инъекции коллализина 10 ICE 1 р/день №6', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-26', '2019-08-01', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (17, 'd8440434-350a-4ebe-84e0-6586d8730896', 'surgical', 'ФЭК с имплантацией ИОЛ', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-08-02', '2019-08-02', true);
 
 COMMIT;
 
@@ -323,17 +313,6 @@ INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_pr
 INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('e4a4baa0-25a5-4b60-9856-b55ec84d8c88', 'H52.13', false, '2019-07-23');
 INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('2fdd8656-e742-47cb-af8a-2f68d414e3bf', 'H26.20', true, '2019-07-23');
 INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('f5c6ece3-8131-4c5b-b055-ad683dac0526', 'H26.20', true, '2019-07-24');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('b376a0ee-604e-4909-b160-2fc110b0c710', 'H40.21', true, '2019-07-24');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('b376a0ee-604e-4909-b160-2fc110b0c710', 'H43.81', false, '2019-07-24');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('8a592bea-4e1d-4070-9755-0046d8242865', 'H26.20', true, '2019-07-24');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('a1c822e3-66b5-446a-9bd0-746aef1672df', 'H26.20', true, '2019-07-25');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('61e51034-e5c2-445c-bd86-51286d883ba1', 'H16.8', true, '2019-07-25');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('61e51034-e5c2-445c-bd86-51286d883ba1', 'H43.81', false, '2019-07-26');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('c2090358-9617-4b87-86c3-b8dae87d98ef', 'H18.603', true, '2019-07-26');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('c2090358-9617-4b87-86c3-b8dae87d98ef', 'H52.13', false, '2019-07-26');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('e8eb3023-35dd-47d7-80b8-6c18d2f4f5a9', 'H44.81', true, '2019-07-26');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('d8440434-350a-4ebe-84e0-6586d8730896', 'H26.20', true, '2019-08-01');
-INSERT INTO `HospitalTest`.`id-m2m-code` (`id_patient`, `code_diagnosis`, `is_primary`, `setting_date`) VALUES ('d8440434-350a-4ebe-84e0-6586d8730896', 'H52.13', false, '2019-08-01');
 
 COMMIT;
 
@@ -350,45 +329,6 @@ INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`
 INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (5, 2, '2019-08-02', 'b5b1c512-d975-4646-81ca-e0fdca2b6f40', 'completed');
 INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (6, 3, '2019-07-24', '6b076d07-87c7-4afb-8397-1b20ee624467', 'completed');
 INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (7, 4, '2019-07-24', '6b076d07-87c7-4afb-8397-1b20ee624467', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (8, 5, '2019-07-25', '67d9be8a-de60-41a1-bc13-dcdac87e4ffe', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (9, 6, '2019-07-25', '67d9be8a-de60-41a1-bc13-dcdac87e4ffe', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (10, 7, '2019-07-25', '6b076d07-87c7-4afb-8397-1b20ee624467', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (11, 8, '2019-07-24', 'b5b1c512-d975-4646-81ca-e0fdca2b6f40', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (12, 8, '2019-07-25', 'b5b1c512-d975-4646-81ca-e0fdca2b6f40', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (13, 8, '2019-07-27', 'b5b1c512-d975-4646-81ca-e0fdca2b6f40', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (14, 9, '2019-07-26', '4dc191b9-3477-423c-8493-cfa531bc2b0b', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (15, 10, '2019-07-25', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (16, 10, '2019-07-26', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (17, 10, '2019-07-28', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (18, 10, '2019-07-29', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (19, 10, '2019-07-30', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (20, 10, '2019-08-01', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (21, 11, '2019-07-26', '67d9be8a-de60-41a1-bc13-dcdac87e4ffe', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (22, 12, '2019-07-27', '6b076d07-87c7-4afb-8397-1b20ee624467', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (23, 13, '2019-07-29', '6b076d07-87c7-4afb-8397-1b20ee624467', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (24, 14, '2019-07-26', '5ec28331-a666-47f1-9e4a-3110cd812fd7', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (25, 14, '2019-07-27', '5ec28331-a666-47f1-9e4a-3110cd812fd7', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (26, 14, '2019-07-28', '5ec28331-a666-47f1-9e4a-3110cd812fd7', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (27, 14, '2019-07-29', '5ec28331-a666-47f1-9e4a-3110cd812fd7', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (28, 14, '2019-07-30', '5ec28331-a666-47f1-9e4a-3110cd812fd7', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (29, 14, '2019-07-31', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (30, 14, '2019-08-02', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (31, 14, '2019-08-04', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (32, 14, '2019-08-05', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (33, 15, '2019-07-26', '06517d4f-c428-4aba-86da-482451b29c38', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (34, 15, '2019-07-27', '06517d4f-c428-4aba-86da-482451b29c38', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (35, 15, '2019-07-28', '06517d4f-c428-4aba-86da-482451b29c38', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (36, 15, '2019-07-29', '06517d4f-c428-4aba-86da-482451b29c38', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (37, 15, '2019-07-30', '06517d4f-c428-4aba-86da-482451b29c38', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (38, 15, '2019-07-31', '06517d4f-c428-4aba-86da-482451b29c38', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (39, 15, '2019-08-01', '06517d4f-c428-4aba-86da-482451b29c38', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (40, 16, '2019-07-26', '6b076d07-87c7-4afb-8397-1b20ee624467', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (41, 16, '2019-07-27', '6b076d07-87c7-4afb-8397-1b20ee624467', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (42, 16, '2019-07-28', '6b076d07-87c7-4afb-8397-1b20ee624467', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (43, 16, '2019-07-29', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (44, 16, '2019-07-30', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'in progress');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (45, 16, '2019-08-01', 'a3434a9a-7cac-43a4-9671-4879b4737e86', 'completed');
-INSERT INTO `HospitalTest`.`current-treatment` (`id_procedure`, `id_appointment`, `date`, `id_performer`, `status`) VALUES (46, 17, '2019-08-02', '6b076d07-87c7-4afb-8397-1b20ee624467', 'completed');
 
 COMMIT;
 
@@ -401,14 +341,6 @@ USE `HospitalTest`;
 INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (1, 'f5c6ece3-8131-4c5b-b055-ad683dac0526', '2019-07-23', '2019-07-26');
 INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (2, 'e4a4baa0-25a5-4b60-9856-b55ec84d8c88', '2019-07-23', '2019-08-02');
 INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (3, '2fdd8656-e742-47cb-af8a-2f68d414e3bf', '2019-07-23', '2019-07-26');
-INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (4, 'b376a0ee-604e-4909-b160-2fc110b0c710', '2019-07-24', '2019-07-31');
-INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (5, '8a592bea-4e1d-4070-9755-0046d8242865', '2019-07-24', '2019-07-27');
-INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (6, 'a1c822e3-66b5-446a-9bd0-746aef1672df', '2019-07-25', '2019-07-28');
-INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (7, '61e51034-e5c2-445c-bd86-51286d883ba1', '2019-07-25', '2019-08-03');
-INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (8, 'c2090358-9617-4b87-86c3-b8dae87d98ef', '2019-07-26', '2019-08-07');
-INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (9, 'e8eb3023-35dd-47d7-80b8-6c18d2f4f5a9', '2019-07-26', '2019-08-01');
-INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (10, 'd8440434-350a-4ebe-84e0-6586d8730896', '2019-08-01', '2019-08-04');
 INSERT INTO `HospitalTest`.`hospitalization` (`id_history`, `id_patient`, `entry_date`, `discharge_date`) VALUES (11, '2fdd8656-e742-47cb-af8a-2f68d414e3bf', '2019-09-10', '2019-09-15');
 
 COMMIT;
-
