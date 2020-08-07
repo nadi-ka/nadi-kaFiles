@@ -109,7 +109,7 @@
 	
 	<!-- Form with possible diagnosis to choose from -->
 	
-	<div class="border border-secondary w-50 p-3 form-bcground"> 
+	<div class="border border-secondary w-50 p-3 form-bcground ml-4"> 
 		<form name="patients_diagnosis" action="font" method="POST">
 			<p><b>${choose_from}</b></p>
 			<input type="hidden" name="command" value="add_patient_diagnosis"/>
@@ -151,7 +151,7 @@
 	
 	<!-- Form for adding new diagnosis to the list of possible diagnosis -->
 	
-	<div class="border border-secondary w-50 p-3 form-bcground">
+	<div class="border border-secondary w-50 p-3 form-bcground ml-4">
 	 
 		<form id="new_diagnosis_form" name="diagnosis" action="font" method="POST">
 			<p><b>${enter_diagnosis}</b></p>

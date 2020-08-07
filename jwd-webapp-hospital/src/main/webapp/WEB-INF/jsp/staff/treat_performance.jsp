@@ -116,7 +116,7 @@
 	
 	<!--  Table 'Treatment' -->
 
-		<table class="table table-bordered">
+		<table class="table table-bordered ml-4">
 			<caption>${treat}</caption>
 			
 			<thead>

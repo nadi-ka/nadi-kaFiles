@@ -7,5 +7,5 @@ public final class MailAttributes {
 	public static final String LETTER_BODY_SUCCESS_REGISTER = "Good day! "
 			+ "You have been successfully registered. "
 			+ "Best regards, Ophthalmological hospital.";
-	public static final String TEMPORARY_EMAIL_FOR_CHECK = "npakhomchik@list.ru";
+	public static final String TEMPORARY_EMAIL_FOR_CHECK = "nadika444@yandex.ru";
 }

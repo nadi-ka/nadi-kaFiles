@@ -114,8 +114,11 @@
 	<!-- Displaying of the new added staff data -->
 
 	<c:if test="${!empty medical_staff}">
-		<h5>${added}</h5>
-		<li class="list-group-item list-group-item-secondary">
+		<div class="ml-4">
+			<h5>${added}</h5>
+		</div>
+		
+		<li class="list-group-item list-group-item-secondary ml-4">
 			<h3>${medical_staff.surname} ${medical_staff.name}</h3>  
 			<ul class="list-group">
   				<li class="list-group-item">
@@ -135,9 +138,11 @@
 	<!-- Staff found after search command -->
 	
 	<c:if test="${!empty staff_list}">
-		<h5>${staff_found}</h5>
+		<div class="ml-4">
+			<h5>${staff_found}</h5>
+		</div>
 
-		<table class="table table-bordered">
+		<table class="table table-bordered ml-4">
 			
 			<thead>
 				<tr>
@@ -166,9 +171,17 @@
 						</c:choose>
 					</td>
 					<td>${staff.email}</td>	
-					<td>
 					
 					<!-- Display current user role -->
+					
+					<td>
+					
+					<c:choose> 
+						<c:when test="${staff.getRole() eq 'NURSE'}">
+							<p>${current_role} <strong>${nurse}</strong></p>
+						</c:when>
+						<c:otherwise>
+							
 						<p>${current_role}
 							<c:choose> 
 								<c:when test="${staff.getRole() eq 'DOCTOR'}">
@@ -199,11 +212,16 @@
 						
 							<button type="submit" class="btn btn-secondary">${change_role}</button>
 						</form>
+						
+						</c:otherwise>
+					</c:choose>
+					
 					</td>
 					
 					<td>
 					
 						<!-- Display current user status -->
+						
 						<p>${current_status}
 							<c:choose> 
 								<c:when test="${staff.userStatus == true}">

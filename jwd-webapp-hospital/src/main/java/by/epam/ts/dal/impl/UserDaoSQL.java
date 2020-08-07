@@ -448,7 +448,7 @@ public class UserDaoSQL implements UserDao {
 			preparedStatement.setString(2, name);
 			preparedStatement.setString(3, email);
 			preparedStatement.setString(4, id);
-
+			
 			insertedRows = preparedStatement.executeUpdate();
 		} catch (ConnectionPoolException ex) {
 			throw new DaoException("Error during taking connection from  pool", ex);

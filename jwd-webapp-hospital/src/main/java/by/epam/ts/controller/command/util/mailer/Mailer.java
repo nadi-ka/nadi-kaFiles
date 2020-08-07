@@ -16,8 +16,8 @@ import javax.mail.internet.MimeMessage;
 public class Mailer {
 
 	private static final String MAIL_PROPERTIES = "mailer.properties";
-	private static final String USERNAME = "npakhomchik@list.ru";
-	private static final String PASSWORD = "tanya1mur";
+	private static final String USERNAME = "nadika444@yandex.ru";
+	private static final String PASSWORD = "nadika111";
 
 	public void send(String subject, String text, String toEmail) throws MailerException {
 
@@ -35,6 +35,8 @@ public class Mailer {
 					return new PasswordAuthentication(USERNAME, PASSWORD);
 				}
 			});
+			session.setDebug(true);
+			
 			Message message = new MimeMessage(session);
 
 			message.setFrom(new InternetAddress(USERNAME));
