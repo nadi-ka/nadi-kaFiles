@@ -38,7 +38,7 @@ public class TreatmentDaoSqlTest {
 	private final static String presentDoctorId = "4dc191b9-3477-423c-8493-cfa531bc2b0b";
 	private final static String hospitalizationDateCorrect = "2019-07-23";
 	private final static String hospitalizationDateLater = "2019-07-25";
-	private final static String treatmentName = "лазеркоагуляция сетчатки";
+	private final static String treatmentName = "лазеркоагуляция";
 	private final static int presentIdAppointment = 2;
 	private final static int absentIdAppointment = 0;
 	private final static String emptyString = "";
@@ -76,8 +76,8 @@ public class TreatmentDaoSqlTest {
 		List<Treatment> listActual = treatmentDao.findPatientsTreatmentById(presentId);
 		int listSizeExpected = 2;
 		int listSizeActual = listActual.size();
-		String procedureName1 = "Витрэктомия с введением ПФОС";
-		String procedureName2 = "Инстилляции Вигамокс 3 р/день";
+		String procedureName1 = "Витрэктомия";
+		String procedureName2 = "Вигамокс";
 		String procedureNamesExpected = procedureName1 + delimiter + procedureName2;
 		String procedureNamesActual = listActual.get(0).getTreatmentName() + delimiter
 				+ listActual.get(1).getTreatmentName();
@@ -242,8 +242,8 @@ public class TreatmentDaoSqlTest {
 
 		int prescriptionsSizeExpected = 2;
 		int prescriptionsSizeActual = prescriptionsActual.size();
-		String treatmentName1 = "Витрэктомия с введением ПФОС";
-		String treatmentName2 = "Инстилляции Вигамокс 3 р/день";
+		String treatmentName1 = "Витрэктомия";
+		String treatmentName2 = "Вигамокс";
 		String treatmentNameExpected = treatmentName1 + delimiter + treatmentName2;
 		String treatmentNameActual = prescriptionsActual.get(0).getTreatmentName() + delimiter
 				+ prescriptionsActual.get(1).getTreatmentName();

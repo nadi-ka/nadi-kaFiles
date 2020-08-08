@@ -574,17 +574,15 @@ public class UserDaoSQLTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.UserDaoSQL#updateStaffUserRole(int, java.lang.String)}.
 	 */
-//	@Test
-//	public void testUpdateStaffUserRole_positiveResult() throws Exception {
-//
-//		int updatedRowsExpected = 1;
-//		int updatedRowsActual = userDao.updateStaffUserRole(UserRole.ADMINISTRATOR.getRoleValue(),
-//				idPresentInTableUsersAsStaff);
-//
-//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-//
-//		assertTrue(updatedRowsExpected == updatedRowsActual);
-//	}
+	@Test
+	public void testUpdateStaffUserRole_positiveResult() throws Exception {
+
+		int updatedRowsExpected = 1;
+		int updatedRowsActual = userDao.updateStaffUserRole(UserRole.ADMINISTRATOR.getRoleValue(),
+				idPresentInTableUsersAsStaff);
+
+		assertTrue(updatedRowsExpected == updatedRowsActual);
+	}
 
 	@Test
 	public void testUpdateStaffUserRole_idAbsent() throws DaoException {

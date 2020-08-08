@@ -119,7 +119,7 @@ public class TestConnectionPool implements ConnectionPool {
 		try {
 			connection.close();
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Connection wasn't returned to the pool", ex);
+			log.log(Level.ERROR, "Connection wasn't closed", ex);
 		}
 	}
 
@@ -135,6 +135,7 @@ public class TestConnectionPool implements ConnectionPool {
 			log.log(Level.ERROR, "Statement wasn't closed", ex);
 		}
 	}
+	
 
 	private void closeConnectionsQueue(BlockingQueue<Connection> queue) throws SQLException {
 		Connection connection;

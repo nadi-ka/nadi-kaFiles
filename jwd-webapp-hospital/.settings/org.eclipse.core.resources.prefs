@@ -16,4 +16,5 @@ encoding//src/main/webapp/error/error_runtime.jsp=UTF-8
 encoding//src/main/webapp/index.jsp=UTF-8
 encoding//src/main/webapp/signUp.jsp=UTF-8
 encoding//src/test/java=UTF-8
+encoding//src/test/java/by/epam/ts/dal/impl/DiagnosisDaoSqlTest.java=UTF-8
 encoding/<project>=UTF-8

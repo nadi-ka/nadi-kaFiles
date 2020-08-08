@@ -44,7 +44,7 @@ public class HospitalizationDaoSqlTest {
 	private static HospitalizationDao hospitalizationDao = DaoFactoryImpl.getInstance().getHospitalizationDao();
 
 	@BeforeClass
-	public static void initTestConnectionPool() {
+	public static void initTestConnectionPool() throws Exception {
 		moskedConnectionPool = new TestConnectionPool();
 		try {
 			moskedConnectionPool.initializePoolData();
@@ -63,17 +63,17 @@ public class HospitalizationDaoSqlTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.HospitalizationDaoSql#createNewHospitalization(by.epam.ts.bean.Hospitalization)}.
 	 */
-//	@Test
-//	public void testCreateNewHospitalization_positiveResult() throws Exception {
-//
-//		Hospitalization hospitalization = new Hospitalization(presentId, LocalDate.now());
-//		int insertedRowsExpected = 1;
-//		int insertedRowsActual = hospitalizationDao.createNewHospitalization(hospitalization);
-//
-//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-//
-//		assertEquals(insertedRowsExpected, insertedRowsActual);
-//	}
+	@Test
+	public void testCreateNewHospitalization_positiveResult() throws Exception {
+
+		Hospitalization hospitalization = new Hospitalization(presentId, LocalDate.now());
+		int insertedRowsExpected = 1;
+		int insertedRowsActual = hospitalizationDao.createNewHospitalization(hospitalization);
+
+		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
+
+		assertEquals(insertedRowsExpected, insertedRowsActual);
+	}
 
 	@Test(expected = NullPointerException.class)
 	public void testCreateNewHospitalization_nullParameterValue() throws DaoException {
@@ -115,16 +115,16 @@ public class HospitalizationDaoSqlTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.HospitalizationDaoSql#updateDischargeDate(java.time.LocalDate, int)}.
 	 */
-	@Test
-	public void testUpdateDischargeDate_positiveResult() throws Exception {
-
-		int insertedRowsExpected = 1;
-		int insertedRowsActual = hospitalizationDao.updateDischargeDate(LocalDate.now(), idHistoryPresent);
-
-		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-
-		assertEquals(insertedRowsExpected, insertedRowsActual);
-	}
+//	@Test
+//	public void testUpdateDischargeDate_positiveResult() throws Exception {
+//
+//		int insertedRowsExpected = 1;
+//		int insertedRowsActual = hospitalizationDao.updateDischargeDate(LocalDate.now(), idHistoryPresent);
+//
+//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
+//
+//		assertEquals(insertedRowsExpected, insertedRowsActual);
+//	}
 
 	@Test(expected = NullPointerException.class)
 	public void testUpdateDischargeDate_nullDateValue() throws DaoException {

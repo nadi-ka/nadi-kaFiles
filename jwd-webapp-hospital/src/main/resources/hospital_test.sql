@@ -17,7 +17,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema HospitalTest
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `HospitalTest` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+
+CREATE SCHEMA IF NOT EXISTS `HospitalTest` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `HospitalTest` ;
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -279,10 +280,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `HospitalTest`;
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (1, 'e4a4baa0-25a5-4b60-9856-b55ec84d8c88', 'surgical', 'Витрэктомия с введением ПФОС', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-24', '2019-07-24', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (2, 'e4a4baa0-25a5-4b60-9856-b55ec84d8c88', 'conservative', 'Инстилляции Вигамокс 3 р/день', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-23', '2019-08-02', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (3, '2fdd8656-e742-47cb-af8a-2f68d414e3bf', 'surgical', 'ФЭК с имплантацией ИОЛ', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-24', '2019-07-24', true);
-INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (4, 'f5c6ece3-8131-4c5b-b055-ad683dac0526', 'surgical', 'ФЭК с имплантацией ИОЛ', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-24', '2019-07-24', true);
+INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (1, 'e4a4baa0-25a5-4b60-9856-b55ec84d8c88', 'surgical', 'Витрэктомия', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-24', '2019-07-24', true);
+INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (2, 'e4a4baa0-25a5-4b60-9856-b55ec84d8c88', 'conservative', 'Вигамокс', '4dc191b9-3477-423c-8493-cfa531bc2b0b', '2019-07-23', '2019-08-02', true);
+INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (3, '2fdd8656-e742-47cb-af8a-2f68d414e3bf', 'surgical', 'ФЭК ИОЛ', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-24', '2019-07-24', true);
+INSERT INTO `HospitalTest`.`treatment` (`id_appointment`, `id_patient`, `treatment_type`, `treatment_name`, `id_assigned_by`, `date_begin/holding`, `date_finish`, `consent`) VALUES (4, 'f5c6ece3-8131-4c5b-b055-ad683dac0526', 'surgical', 'ФЭК ИОЛ', '6b076d07-87c7-4afb-8397-1b20ee624467', '2019-07-24', '2019-07-24', true);
 
 COMMIT;
 
@@ -296,8 +297,8 @@ INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H26
 INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H40.21', 'глаукома', 7);
 INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H33.0', 'отслойка сетчатки', 10);
 INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H16.8', 'кератит', 9);
-INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H43.81', 'деструкция стекловидного тела', 0);
-INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H52.13', 'миопия и другие нарушения рефракции', 0);
+INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H43.81', 'макулопатия', 0);
+INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H52.13', 'миопия', 0);
 INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H18.603', 'кератоконус', 12);
 INSERT INTO `HospitalTest`.`diagnosis` (`code`, `name`, `bed_days`) VALUES ('H44.81', 'гемофтальм', 6);
 

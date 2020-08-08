@@ -35,7 +35,7 @@ public class DiagnosisDaoSqlTest {
 	private final static String presentId = "e4a4baa0-25a5-4b60-9856-b55ec84d8c88";
 	private final static String hospitalizationDateCorrect = "2019-07-23";
 	private final static String hospitalizationDateWrong = "2019-07-24";
-	private final static String diagnosisMyopia = "миопия и другие нарушения рефракции";
+	private final static String diagnosisMyopia = "миопия";
 	private final static String diagnosisRetinalDetechment = "отслойка сетчатки";
 	private final static String codeMyopia = "H52.13";
 	private final static String codeRetinalDetechment = "H33.0";
@@ -150,7 +150,7 @@ public class DiagnosisDaoSqlTest {
 			throws Exception {
 
 		String newDiagnosisCode = "H77.77";
-		String newDiagnosisName = "диабетическая ретинопатия";
+		String newDiagnosisName = "ретинопатия";
 		Diagnosis diagnosis = new Diagnosis(newDiagnosisCode, newDiagnosisName);
 		int insertedRowsExpected = 1;
 		int insertedRowsActual = diagnosisDao.createNewDiagnosis(diagnosis);

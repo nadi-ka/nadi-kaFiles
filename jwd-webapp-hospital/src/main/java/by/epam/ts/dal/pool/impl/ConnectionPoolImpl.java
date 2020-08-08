@@ -123,7 +123,7 @@ public final class ConnectionPoolImpl implements ConnectionPool {
 		try {
 			connection.close();
 		} catch (SQLException ex) {
-			log.log(Level.ERROR, "Connection wasn't returned to the pool", ex);
+			log.log(Level.ERROR, "Connection wasn't closed", ex);
 		}
 	}
 
