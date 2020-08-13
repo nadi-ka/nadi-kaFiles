@@ -80,18 +80,27 @@
 	<!-- If current, actual hospitalization was found, display expected amount of bed-days and discharge date -->
 	
 	<c:if test="${!empty bed_days}">
-		<h5><strong>${hospitalization_calc}:</strong></h5>
-		<ul class="list-group">
+		<div class="ml-4" >
+			<h5><strong>${hospitalization_calc}:</strong></h5>
+		</div>
+		
+		<ul class="list-group ml-4">
   			<li class="list-group-item">${average_bed_days} ${requestScope.bed_days}</li>
   			<li class="list-group-item">${expected_discharge} ${requestScope.date_finishing}</li>
   		</ul>
   	</c:if>
+  	
+  	<!-- Image -->
+  	
+  	<div class="mx-auto" style="width: 500px;">
+		<img class="img-thumbnail" src="img/hospitalization_time.png" alt="clocks image">
+	</div>
 	
 	<!-- Displaying of the dates of the last hospitalization -->
 	
 	<c:if test="${!empty hospitalization}">
 		
-		<table class="table table-bordered">
+		<table class="table table-bordered mx-auto" style="width: 75%;">
 			<thead>
 				<tr class="table-active">
 					<th scope="col">${entry_date}</th>

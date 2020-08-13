@@ -45,11 +45,16 @@ public class TreatmentDaoSql implements TreatmentDao {
 		List<Treatment> prescriptions = new ArrayList<Treatment>();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
+		log.info("id:" + id);
 		try {
 			connection = connectionPool.takeConnection();
 			preparedStatement = connection.prepareStatement(sqlFindTreatmentByPatientId);
 			preparedStatement.setString(1, id);
 			resultSet = preparedStatement.executeQuery();
+			
+			if (!resultSet.isBeforeFirst() ) {    
+			    log.info("RS empty"); 
+			} 
 
 			while (resultSet.next()) {
 				int idAppointment = resultSet.getInt(ColumnNameHolder.TREATMENT_ID_APPOINTMENT);
@@ -253,6 +258,7 @@ public class TreatmentDaoSql implements TreatmentDao {
 						staffName, status);
 				treatmentList.add(treatment);
 			}
+			log.info(treatmentList.toString());
 		} catch (ConnectionPoolException ex) {
 			throw new DaoException("Error during taking connection from pool", ex);
 		} catch (SQLException ex) {

@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.access_manager.AccessManager;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
@@ -31,9 +32,10 @@ public final class AddNewStaffCommand implements Command, AccessManager {
 		// Checking of the user rights;
 		boolean adminRights = checkAdminRights(request);
 		if (!adminRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
 		String specialty = request.getParameter(RequestAtribute.SPECIALTY);
@@ -48,23 +50,26 @@ public final class AddNewStaffCommand implements Command, AccessManager {
 
 			staffId = userService.addNewStaff(specialty, surname, name, email);
 
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ADDED_SUCCESSFULY + "&"
-					+ RequestAtribute.STAFF_ID + "=" + staffId);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase());
+			response.sendRedirect(
+					builder.setMessage(RequestMessage.ADDED_SUCCESSFULY).setStaffId(staffId).getResultString());
 
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
-					"Error when calling userService.addNewStaff() from  AddNewStaffCommand. Invalid parameters:",
-					e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
+					"Error when calling userService.addNewStaff() from  AddNewStaffCommand. Invalid parameters:", e);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).setInvalidParameters(e.getMessage())
+					.getResultString());
+
 		} catch (ServiceException e) {
-			log.log(Level.ERROR, "Error when calling userService.addNewStaff() from  AddNewStaffCommand. The staff wasn't added", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			log.log(Level.ERROR,
+					"Error when calling userService.addNewStaff() from  AddNewStaffCommand. The staff wasn't added", e);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
+
 		}
 
 	}

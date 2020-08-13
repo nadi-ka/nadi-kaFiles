@@ -30,6 +30,13 @@ body{
 	width: 50%;
 }
 
+.has-success {
+	background: green
+	}
+	
+.has-error {
+	background: red
+	}
 
 
 

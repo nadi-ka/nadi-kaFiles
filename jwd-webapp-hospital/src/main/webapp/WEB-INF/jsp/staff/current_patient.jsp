@@ -266,7 +266,7 @@
 											<input type="hidden" name="patient_id" value="${patient.id}">
 											<input type="hidden" name="current_status" value="${treatment.getTreatmentStatus().getStatusValue()}" />						   						
           					
-          									<button id="delete_btn" type="submit" class="btn btn-primary">
+          									<button class="delete_btn" type="submit" class="btn btn-primary">
           									<i class="fa fa-trash"></i>${delete_btn}</button>	 		
 										</form>
 										
@@ -321,7 +321,7 @@
 			  	animate: false
 			}); //end accordion
 			
-			$("#delete_btn").click(function(){
+			$(".delete_btn").click(function(){
 				var deleteQuestion = '<c:out value="${delete_question}"/>';
 			    if (!confirm(deleteQuestion)){
 			        return false;

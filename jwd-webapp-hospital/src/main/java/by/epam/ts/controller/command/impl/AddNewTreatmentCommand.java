@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.access_manager.AccessManager;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.TreatmentService;
@@ -32,9 +33,10 @@ public final class AddNewTreatmentCommand implements Command, AccessManager {
 		// Checking of the user rights;
 		boolean staffRights = checkDoctorRights(request);
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
@@ -55,23 +57,30 @@ public final class AddNewTreatmentCommand implements Command, AccessManager {
 		try {
 			service.addNewTreatment(patientId, treatmentType, treatmentName, staffId, dateBegin, dateFinish);
 			String treatNameUTF8 = URLEncoder.encode(treatmentName, ENCODING);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_PRESCRIPTIONS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.TREATMENT_ADDED_SUCCESSFULY + "&" + RequestAtribute.TREATMENT_NAME + "="
-					+ treatNameUTF8 + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_PRESCRIPTIONS_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TREATMENT_ADDED_SUCCESSFULY)
+					.setTreatmentName(treatNameUTF8).setPatientId(patientId).getResultString());
+
+			log.info("Treat added: " + patientId + " " + treatmentType + " " + treatmentName + " " + staffId + " "
+					+ dateBegin + " " + dateFinish);
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewTreatment() from  AddNewTreatmentCommand. Invalid parameters:",
 					e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.GET_PRESCRIPTIONS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
-					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_PRESCRIPTIONS_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).setPatientId(patientId)
+					.setInvalidParameters(e.getMessage()).getResultString());
+
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling userService.addNewTreatment() from  AddNewTreatmentCommand.", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
+
 		}
 
 	}

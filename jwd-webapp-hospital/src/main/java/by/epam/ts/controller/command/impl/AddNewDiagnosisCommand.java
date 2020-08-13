@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.access_manager.AccessManager;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.DiagnosisService;
@@ -30,9 +31,9 @@ public final class AddNewDiagnosisCommand implements Command, AccessManager {
 		// Checking of the user rights;
 		boolean staffRights = checkDoctorRights(request);
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
 			return;
 		}
 		String diagnosisCode = request.getParameter(RequestAtribute.CODE_DIAGNOSIS);
@@ -49,25 +50,26 @@ public final class AddNewDiagnosisCommand implements Command, AccessManager {
 
 		try {
 			service.addNewDiagnosis(diagnosisCode, diagnosisName, bedDays);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_DIAGNOSIS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.DIAGNOSIS_ADDED_SUCCESSFULY + "&" + RequestAtribute.PATIENT_ID + "="
-					+ patientId);
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_DIAGNOSIS_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.DIAGNOSIS_ADDED_SUCCESSFULY).setPatientId(patientId)
+					.getResultString());
+
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewDiagnosis() from  AddNewDiagnosisCommand. Invalid parameters:",
 					e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.GET_DIAGNOSIS_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
-					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_DIAGNOSIS_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).setPatientId(patientId)
+					.setInvalidParameters(e.getMessage()).getResultString());
+
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling userService.addNewDiagnosis() from  AddNewDiagnosisCommand.", e);
-			request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.TECHNICAL_ERROR);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}

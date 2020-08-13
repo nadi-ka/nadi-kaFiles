@@ -16,6 +16,7 @@ import by.epam.ts.bean.Patient;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.access_manager.AccessManager;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.command.util.mailer.Mailer;
 import by.epam.ts.controller.command.util.mailer.MailerException;
 import by.epam.ts.controller.constant_attribute.MailAttributes;
@@ -31,7 +32,7 @@ public class AddNewPatientCommand implements Command, AccessManager {
 
 	private static final String mustBeAdded = "true";
 	private static final String ENCODING = "UTF-8";
-	
+
 	private static final Logger log = LogManager.getLogger(AddNewPatientCommand.class);
 
 	@Override
@@ -40,9 +41,10 @@ public class AddNewPatientCommand implements Command, AccessManager {
 		// Checking of the user rights;
 		boolean staffRights = checkDoctorRights(request);
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
 		String surname = request.getParameter(RequestAtribute.SURNAME);
@@ -65,43 +67,51 @@ public class AddNewPatientCommand implements Command, AccessManager {
 			// if "anyway add new patient" was chosen or surname is unique;
 			if ((addObviously != null && addObviously.equals(mustBeAdded)) || patients.isEmpty()) {
 				patientId = userService.addNewPatient(surname, name, dateOfBirth, email);
-				
-				//Send the letter to the given patient's e-mail;
+
+				// Send the letter to the given patient's e-mail;
 				Mailer mailer = new Mailer();
-				mailer.send(MailAttributes.LETTER_SUBJECT, MailAttributes.LETTER_BODY_NEW_PATIENT, MailAttributes.TEMPORARY_EMAIL_FOR_CHECK);
-	
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase()
-						+ "&" + RequestAtribute.MESSAGE + "=" + RequestMessage.ADDED_SUCCESSFULY + "&"
-						+ RequestAtribute.PATIENT_ID + "=" + patientId);
-			} else {
-				// display list of existing patients with the same surnames and add to request current
-				// patients data, which were entered in form;
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_PATIENT_DATA_PAGE.toString().toLowerCase()
-						+ "&" + RequestAtribute.MESSAGE + "=" + RequestMessage.PATIENT_EXISTS + "&"
-						+ RequestAtribute.SURNAME + "=" + surnameUTF8 + "&" + RequestAtribute.NAME + "=" + nameUTF8 + "&"
-						+ RequestAtribute.DATE_OF_BIRTH + "=" + dateOfBirth + "&" + RequestAtribute.EMAIL + "="
-						+ email);
+				mailer.send(MailAttributes.LETTER_SUBJECT, MailAttributes.LETTER_BODY_NEW_PATIENT,
+						MailAttributes.TEMPORARY_EMAIL_FOR_CHECK);
+
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase());
+				response.sendRedirect(
+						builder.setMessage(RequestMessage.ADDED_SUCCESSFULY).setPatientId(patientId).getResultString());
+
+				return;
+
 			}
+			// display the list of existing patients with the same surnames and add to
+			// request
+			// current patients data(surname, name, date of birth, email);
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_PATIENT_DATA_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.PATIENT_EXISTS).setSurname(surnameUTF8)
+					.setName(nameUTF8).setDateOfBirth(dateOfBirth).setEmail(email).getResultString());
+
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewPatient(patient) from  AddNewPatientCommand. Invalid parameters:",
 					e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.ERROR_DATA);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).getResultString());
+
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "The patient wasn't added", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
-		}catch (MailerException e) {
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
+
+		} catch (MailerException e) {
 			log.log(Level.WARN, "Error when calling send()from AddNewPatientCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-					+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase()
-					+ "&" + RequestAtribute.MESSAGE + "=" + RequestMessage.ADDED_SUCCESSFULY + "&"
-					+ RequestAtribute.PATIENT_ID + "=" + patientId);
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase());
+			response.sendRedirect(
+					builder.setMessage(RequestMessage.ADDED_SUCCESSFULY).setPatientId(patientId).getResultString());
+
 		}
 
 	}

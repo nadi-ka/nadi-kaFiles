@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.access_manager.AccessManager;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.HospitalizationService;
@@ -29,23 +30,27 @@ public final class AddHospitalizationCommand implements Command, AccessManager {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Checking of the user rights;
 		boolean staffRights = checkDoctorRights(request);
+
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
-		
+
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 		String entryDate = request.getParameter(RequestAtribute.DATE_BEGINNING);
 		String alreadyHospitalized = request.getParameter(RequestAtribute.ALREADY_HOSPITALIZED);
 		String alreadyDischarged = request.getParameter(RequestAtribute.ALREADY_DISCHARGED);
-		
-		//If current hospitalization is open, the patient can't be hospitalized again;
-		if ((alreadyHospitalized != null && !alreadyHospitalized.isEmpty()) && (alreadyDischarged == null || alreadyDischarged.isEmpty())) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.HOSPITALIZED_ELIER + "&" + RequestAtribute.PATIENT_ID + "=" + patientId);
+
+		// If current hospitalization is open, the patient can't be hospitalized again;
+		if ((alreadyHospitalized != null && !alreadyHospitalized.isEmpty())
+				&& (alreadyDischarged == null || alreadyDischarged.isEmpty())) {
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase());
+			response.sendRedirect(
+					builder.setMessage(RequestMessage.HOSPITALIZED_ELIER).setPatientId(patientId).getResultString());
 			return;
 		}
 
@@ -54,24 +59,30 @@ public final class AddHospitalizationCommand implements Command, AccessManager {
 
 		try {
 			service.addNewHospitalisation(patientId, entryDate);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.HOSPITALIZATION_ADDED_SUCCESSFULY + "&"
-					+ RequestAtribute.PATIENT_ID + "=" + patientId);
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.HOSPITALIZATION_ADDED_SUCCESSFULY)
+					.setPatientId(patientId).getResultString());
+
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
 					"Error when calling userService.addNewHospitalisation() from  AddHospitalizationCommand. Invalid parameters:",
 					e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.ERROR_DATA + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
-							+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).setPatientId(patientId)
+					.setInvalidParameters(e.getMessage()).getResultString());
+
 		} catch (ServiceException e) {
 			log.log(Level.ERROR,
 					"Error when calling userService.addNewHospitalisation() from  AddHospitalizationCommand.", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
+
 		}
 
 	}

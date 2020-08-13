@@ -246,7 +246,6 @@ public class UserServiceImpl implements UserService {
 		}
 		// (other != null) means that the e-mail already exists in DB;
 		if (other != null) {
-			log.info(other.toString());
 			throw new ValidationServiceException(ValidationConstant.NOT_ACTUAL_EMAIL);
 		}
 		// Adding of the new staff;

@@ -31,6 +31,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 		List<Treatment> prescriptions;
 		try {
 			prescriptions = treatmentDao.findPatientsTreatmentById(id);
+			log.info(prescriptions.toString());
 		} catch (DaoException ex) {
 			throw new ServiceException("Error when calling userDao.findPatientsTreatmentById(id).", ex);
 		}
@@ -76,7 +77,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 		boolean consent = false;
 		Treatment treatment = new Treatment(idPatient, TreatmentType.getTreatmentType(treatmentType), treatmentName,
 				idDoctor, dateBeginning, dateFinishing, consent);
-		log.info(treatment.toString());
+
 		int effectedRows = 0;
 		try {
 			effectedRows = treatmentDao.createPatientTreatment(treatment);

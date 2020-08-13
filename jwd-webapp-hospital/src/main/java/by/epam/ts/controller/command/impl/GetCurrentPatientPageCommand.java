@@ -62,19 +62,21 @@ public final class GetCurrentPatientPageCommand implements Command {
 					performingList = treatmentService.getCurrentTreatmentByAppointmentId(idAppointment);
 					treatment.setPerformingList(performingList);
 				}
+				Collections.sort(prescriptions, Treatment.treatmentStatusComparator);
 			}
-			Collections.sort(prescriptions, Treatment.treatmentStatusComparator);
-			
+				
 			diagnosisList = diagnosisService.getSortedPatientDiagnosisById(patientId);
 			hospitalizations = hospitalizationService.getAllHospitalizationsById(patientId);
 			patient = userService.getPatientById(patientId);
 			patient.setPrescriptions(prescriptions);
 			patient.setDiagnosisList(diagnosisList);
 			patient.setHospitalizations(hospitalizations);
+			
 			request.setAttribute(RequestAtribute.PATIENT, patient);
 			request.setAttribute(RequestAtribute.MESSAGE, message);
 			String page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
+			
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetCurrentPatientPageCommand", e);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="

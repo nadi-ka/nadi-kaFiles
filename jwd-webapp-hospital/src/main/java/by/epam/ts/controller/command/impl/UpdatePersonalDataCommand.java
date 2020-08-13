@@ -31,6 +31,7 @@ public final class UpdatePersonalDataCommand implements Command {
 		String newEmail = request.getParameter(RequestAtribute.EMAIL);
 		String oldEmail = request.getParameter(RequestAtribute.OLD_EMAIL);
 		String staffId = getUserIdFromSession(request);
+		
 		if ((staffId == null) || staffId.isEmpty()) {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
@@ -39,10 +40,13 @@ public final class UpdatePersonalDataCommand implements Command {
 		}
 		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
-		try {
+		
+		try {	
 			userService.setStaffPersonalData(surname, name, newEmail, oldEmail, staffId);
+			
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
 					+ "=" + CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE.toString().toLowerCase());
+			
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN, "Error when calling execute() from UpdatePersonalDataCommand. Invalid parameters:", e);
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND

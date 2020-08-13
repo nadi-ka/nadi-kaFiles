@@ -22,6 +22,8 @@
 <fmt:message bundle="${loc}" key="local.signup.account" var="account" />
 <fmt:message bundle="${loc}" key="local.signup.reflogin" var="reflogin" />
 <fmt:message bundle="${loc}" key="local.signup.errordata" var="error_data" />
+<fmt:message bundle="${loc}" key="local.signup.password_again" var="password_again" />
+<fmt:message bundle="${loc}" key="local.signup.pass_not_match" var="password_not_match" />
 
 <fmt:message bundle="${loc}" key="local.validation.required" var="field_required"/>
 <fmt:message bundle="${loc}" key="local.validation.field_length" var="field_length"/>
@@ -73,6 +75,14 @@
 					<label class="field-label">${password}</label>
 					<input type="password" name="password" value="" class="required" id="password"/> 	
 				</div>
+				
+				<div class="form-group">
+					<label>${password_again}</label>
+    				<input type="password" name="password-check" id="password-check" value="" />
+    			</div>
+				
+				
+				
 			
 				<div class="form-group">
 					<label class="field-label">${email}</label>
@@ -85,7 +95,7 @@
 					</div>
 				</c:if>
 
-				<button type="submit" class="btn btn-primary" name="btn_signup">${signup_btn}</button>
+				<button type="submit" id="submit" class="btn btn-primary" name="btn_signup">${signup_btn}</button>
 
 			</form>
 		</div>
@@ -162,8 +172,29 @@
       		}
    		} // end messages;
 
-  	}); // end validate; 
-
+  	}); // end validate;
+  	
+  	
+  	//Password validation;
+  	
+  	jQuery(function(){
+        $("#submit").click(function(){
+        $(".error").hide();
+        var hasError = false;
+        var passwordVal = $("#password").val();
+        var checkVal = $("#password-check").val();
+       
+        	if (passwordVal != checkVal ) {
+           	 $("#password-check").after('<p class="text-danger">${password_not_match}</p>');
+            	hasError = true;
+        	}
+        	if(hasError == true) {
+        		return false;
+        	}
+    	});
+	});
+  	
+  	
 </script>
 	
 </body>
