@@ -51,6 +51,7 @@ public final class AddHospitalizationCommand implements Command, AccessManager {
 					CommandEnum.GET_HOSPITALIZATION_PAGE.toString().toLowerCase());
 			response.sendRedirect(
 					builder.setMessage(RequestMessage.HOSPITALIZED_ELIER).setPatientId(patientId).getResultString());
+			
 			return;
 		}
 

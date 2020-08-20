@@ -16,6 +16,7 @@ import by.epam.ts.bean.CurrentTreatment;
 import by.epam.ts.bean.Treatment;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
@@ -25,7 +26,7 @@ import by.epam.ts.service.factory.ServiceFactory;
 import by.epam.ts.service.factory.impl.ServiceFactoryImpl;
 
 public final class GetTreatmentPageCommand implements Command {
-	
+
 	private static final String PATH = "path.page.treatment";
 	private static final Logger log = LogManager.getLogger(GetTreatmentPageCommand.class);
 
@@ -39,9 +40,10 @@ public final class GetTreatmentPageCommand implements Command {
 		String userId = getUserIdFromSession(request);
 
 		if (userId == null) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
 		List<Treatment> prescriptions = new ArrayList<Treatment>();
@@ -57,16 +59,14 @@ public final class GetTreatmentPageCommand implements Command {
 					treatment.setPerformingList(performingList);
 				}
 			}
-
 			request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
 			page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
 		} catch (ServiceException ex) {
-			log.log(Level.ERROR, "Error during calling method getPatientsTreatmentById() from ShowTreatmentCommand",
-					ex);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			log.log(Level.ERROR, "Error when calling execute() from GetTreatmentPageCommand", ex);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}

@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.constant_attribute.SessionAtribute;
@@ -26,10 +27,12 @@ public class ChangeLanguageCommand implements Command {
 
 		HttpSession session = request.getSession(false);
 		if (session == null) {
-			log.log(Level.ERROR, "When calling getSession() from ChangeLanguageCommand, session == null;");
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			log.log(Level.ERROR, "When calling getSession() from ChangeLanguageCommand, session = null;");
+			
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
+			
 			return;
 		}
 
@@ -43,9 +46,10 @@ public class ChangeLanguageCommand implements Command {
 			String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 			String message = request.getParameter(RequestAtribute.MESSAGE);
 
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + redirectCommand + "&" + RequestAtribute.PATIENT_ID + "=" + patientId + "&"
-					+ RequestAtribute.MESSAGE + "=" + message);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					redirectCommand);
+			response.sendRedirect(builder.setMessage(message).setPatientId(patientId).getResultString());
+			
 		} else {
 			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + queryString);
 		}

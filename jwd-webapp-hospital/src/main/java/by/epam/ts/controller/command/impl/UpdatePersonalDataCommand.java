@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
@@ -31,35 +32,39 @@ public final class UpdatePersonalDataCommand implements Command {
 		String newEmail = request.getParameter(RequestAtribute.EMAIL);
 		String oldEmail = request.getParameter(RequestAtribute.OLD_EMAIL);
 		String staffId = getUserIdFromSession(request);
-		
+
 		if ((staffId == null) || staffId.isEmpty()) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_INDEX_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
 		ServiceFactory factory = ServiceFactoryImpl.getInstance();
 		UserService userService = factory.getUserService();
-		
-		try {	
+
+		try {
 			userService.setStaffPersonalData(surname, name, newEmail, oldEmail, staffId);
-			
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE.toString().toLowerCase());
-			
+
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.getResultString());
+
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN, "Error when calling execute() from UpdatePersonalDataCommand. Invalid parameters:", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA + "&"
-					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_UPDATE_PERSONAL_DATA_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).setInvalidParameters(e.getMessage())
+					.getResultString());
+
 		} catch (ServiceException e) {
 			log.log(Level.ERROR,
 					"Error when calling execute() from UpdatePersonalDataCommand. The staff's personal data wasn't updated.",
 					e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 	}
 }

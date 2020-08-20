@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.bean.Patient;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
@@ -42,10 +43,10 @@ public final class GetPatientDataPageCommand implements Command {
 			String page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
 		} catch (ServiceException e) {
-			log.log(Level.ERROR, "The patient wasn't added", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			log.log(Level.ERROR, "Error when calling getPatientBySurname() from execute() from GetPatientDataPageCommand", e);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}

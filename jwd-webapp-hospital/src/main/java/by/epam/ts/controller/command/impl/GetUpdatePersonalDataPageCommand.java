@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
@@ -37,14 +38,14 @@ public final class GetUpdatePersonalDataPageCommand implements Command {
 			// for correctly logged persons);
 			MedicalStaff staff = userService.getStaffById(stafftId);
 			request.setAttribute(RequestAtribute.MEDICAL_STAFF, staff);
-			log.info(staff.getSpecialty().getSpecialtyValue());
 			String page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
+			
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetUpdatePersonalDataPageCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 	}
 }

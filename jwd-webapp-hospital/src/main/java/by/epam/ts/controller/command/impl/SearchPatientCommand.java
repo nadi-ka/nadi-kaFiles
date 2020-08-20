@@ -15,6 +15,7 @@ import by.epam.ts.bean.Patient;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.access_manager.AccessManager;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
@@ -33,17 +34,19 @@ public final class SearchPatientCommand implements Command, AccessManager {
 		// Checking of the user rights;
 		boolean staffRights = checkStaffRights(request);
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
 		String query = request.getParameter(RequestAtribute.QUERY_SEARCH);
 		// If query is incorrect - show current page again with the message;
 		if (query == null || query.isEmpty()) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.NOT_FOUND);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.NOT_FOUND).getResultString());
+
 			return;
 		}
 		ServiceFactory factory = ServiceFactoryImpl.getInstance();
@@ -51,9 +54,10 @@ public final class SearchPatientCommand implements Command, AccessManager {
 		try {
 			List<Patient> patients = userService.getPatientBySurname(query);
 			if (patients.isEmpty()) {
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase() + "&"
-						+ RequestAtribute.MESSAGE + "=" + RequestMessage.NOT_FOUND);
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase());
+				response.sendRedirect(builder.setMessage(RequestMessage.NOT_FOUND).getResultString());
+
 				return;
 			}
 			request.setAttribute(RequestAtribute.LIST_PATIENTS, patients);
@@ -64,9 +68,9 @@ public final class SearchPatientCommand implements Command, AccessManager {
 		} catch (ServiceException e) {
 			log.log(Level.ERROR,
 					"Error when calling userService.getPatientBySurname(surname) from SearchPatientCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}

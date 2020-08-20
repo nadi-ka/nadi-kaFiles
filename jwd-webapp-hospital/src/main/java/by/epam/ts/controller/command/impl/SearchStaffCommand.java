@@ -15,6 +15,7 @@ import by.epam.ts.bean.MedicalStaff;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
 import by.epam.ts.controller.command.access_manager.AccessManager;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
@@ -32,17 +33,18 @@ public final class SearchStaffCommand implements Command, AccessManager {
 		// Checking of the user rights;
 		boolean adminRights = checkAdminRights(request);
 		if (!adminRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
 			return;
 		}
 		String querySurname = request.getParameter(RequestAtribute.QUERY_SEARCH);
 		// If query incorrect - show current page again with the message;
 		if (querySurname == null || querySurname.isEmpty()) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.NOT_FOUND);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.NOT_FOUND).getResultString());
+
 			return;
 		}
 
@@ -51,9 +53,10 @@ public final class SearchStaffCommand implements Command, AccessManager {
 		try {
 			List<MedicalStaff> staffList = userService.getUserStaffBySurname(querySurname);
 			if (staffList.isEmpty()) {
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase() + "&"
-						+ RequestAtribute.MESSAGE + "=" + RequestMessage.NOT_FOUND);
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						CommandEnum.GET_STAFF_DATA_PAGE.toString().toLowerCase());
+				response.sendRedirect(builder.setMessage(RequestMessage.NOT_FOUND).getResultString());
+
 			} else {
 				request.setAttribute(RequestAtribute.STAFF_LIST, staffList);
 				request.setAttribute(RequestAtribute.QUERY_SEARCH, querySurname);
@@ -62,9 +65,9 @@ public final class SearchStaffCommand implements Command, AccessManager {
 			}
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling userService.getStaffBySurname(query) from SearchStaffCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}

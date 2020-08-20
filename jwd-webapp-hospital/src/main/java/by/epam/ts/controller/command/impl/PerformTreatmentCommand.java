@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.bean.treat_type.TreatmentType;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.command.util.treat_inspector.TreatmentRightsInspector;
 import by.epam.ts.controller.command.util.treat_inspector.TreatmentStatusInspector;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
@@ -35,10 +36,11 @@ public final class PerformTreatmentCommand implements Command {
 		// if procedure was completed/canceled, it shouldn't be performed;
 		TreatmentStatusInspector statusInspector = new TreatmentStatusInspector();
 		if (!statusInspector.checkTreatmentStatus(request)) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.WRONG_REQUEST + "&" + RequestAtribute.PATIENT_ID
-					+ "=" + patientId);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase());
+			response.sendRedirect(
+					builder.setMessage(RequestMessage.WRONG_REQUEST).setPatientId(patientId).getResultString());
+
 			return;
 		}
 
@@ -46,9 +48,10 @@ public final class PerformTreatmentCommand implements Command {
 		TreatmentType type = TreatmentType.getTreatmentType(treatmentTypeValue);
 		// The type of treatment is undefined, the procedure is prohibited;
 		if (treatmentTypeValue == null || treatmentTypeValue.isEmpty() || type == TreatmentType.UNKNOWN) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
 
@@ -56,10 +59,11 @@ public final class PerformTreatmentCommand implements Command {
 		TreatmentRightsInspector inspector = new TreatmentRightsInspector();
 		boolean staffRights = inspector.inspectRightsForCurrentProcedure(request, type);
 		if (!staffRights) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ACCESS_DENIED + "&" + RequestAtribute.PATIENT_ID
-					+ "=" + patientId);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase());
+			response.sendRedirect(
+					builder.setMessage(RequestMessage.ACCESS_DENIED).setPatientId(patientId).getResultString());
+
 			return;
 		}
 		// Performing of the procedure is allowed. Getting of all required parameters.
@@ -73,24 +77,24 @@ public final class PerformTreatmentCommand implements Command {
 		TreatmentService service = factory.getTreatmentService();
 		try {
 			service.performCurrentTreatment(consent, idAppointment, datePerforming, staffId, status);
-			log.info(consent + " " + idAppointment + " " + datePerforming + " " + staffId + " " + status);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.PATIENT_ID + "=" + patientId);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setPatientId(patientId).getResultString());
+
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN,
 					"Error when calling performeCurrentTreatment() from  PerformTreatmentCommand. Invalid parameters:",
 					e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA + "&"
-					+ RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage() + "&" + RequestAtribute.PATIENT_ID + "="
-					+ patientId);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_TREAT_PERFORMANCE_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).setPatientId(patientId)
+					.setInvalidParameters(e.getMessage()).getResultString());
+
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling performCurrentTreatment() from PerformTreatmentCommand.", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}

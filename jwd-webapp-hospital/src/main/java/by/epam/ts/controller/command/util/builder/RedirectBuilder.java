@@ -73,6 +73,18 @@ public class RedirectBuilder {
 		appendAttribute(RequestAtribute.TREATMENT_NAME, treatmentName);
 		return this;
 	}
+	
+	public RedirectBuilder setDiagnosisName(String diagnosisName) {
+
+		appendAttribute(RequestAtribute.NAME_DIAGNOSIS, diagnosisName);
+		return this;
+	}
+	
+	public RedirectBuilder setQueryString(String queryString) {
+
+		appendAttribute(RequestAtribute.QUERY_SEARCH, queryString);
+		return this;
+	}
 
 	public String getResultString() {
 

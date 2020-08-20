@@ -18,6 +18,7 @@ import by.epam.ts.bean.Hospitalization;
 import by.epam.ts.bean.Treatment;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
@@ -50,7 +51,8 @@ public final class GetTreatPerformancePageCommand implements Command {
 				LocalDate entryDate = hospitalization.getEntryDate();
 				// the list of prescriptions during the last hospitalization, which could be
 				// empty;
-				List<Treatment> prescriptions = treatmentService.getTreatmentDuringLastHospitalization(patientId, entryDate);
+				List<Treatment> prescriptions = treatmentService.getTreatmentDuringLastHospitalization(patientId,
+						entryDate);
 				if (!prescriptions.isEmpty()) {
 					List<CurrentTreatment> performingList;
 					for (Treatment treatment : prescriptions) {
@@ -62,7 +64,7 @@ public final class GetTreatPerformancePageCommand implements Command {
 					}
 				}
 				Collections.sort(prescriptions, Treatment.treatmentStatusComparator);
-				
+
 				request.setAttribute(RequestAtribute.PRESCRIPTIONS, prescriptions);
 				request.setAttribute(RequestAtribute.PATIENT_ID, patientId);
 				log.info("id:" + patientId);
@@ -71,16 +73,17 @@ public final class GetTreatPerformancePageCommand implements Command {
 			} else {
 				// the patient hasn't been hospitalized yet, no treatment waiting for
 				// performance;
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-						+ CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-						+ "=" + RequestMessage.NO_CURRENT_TREATMENT + "&" + RequestAtribute.PATIENT_ID + "="
-						+ patientId);
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						CommandEnum.GET_CURRENT_PATIENT_PAGE.toString().toLowerCase());
+				response.sendRedirect(builder.setMessage(RequestMessage.NO_CURRENT_TREATMENT).setPatientId(patientId)
+						.getResultString());
+
 			}
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetTreatPerformancePageCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}

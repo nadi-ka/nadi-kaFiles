@@ -19,6 +19,7 @@ import by.epam.ts.bean.PatientDiagnosis;
 import by.epam.ts.bean.Treatment;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
@@ -37,7 +38,7 @@ public final class GetCurrentPatientPageCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		String patientId = request.getParameter(RequestAtribute.PATIENT_ID);
 		String message = request.getParameter(RequestAtribute.MESSAGE);
 
@@ -46,7 +47,7 @@ public final class GetCurrentPatientPageCommand implements Command {
 		TreatmentService treatmentService = factory.getTreatmentService();
 		DiagnosisService diagnosisService = factory.getDiagnosisService();
 		HospitalizationService hospitalizationService = factory.getHospitalizationService();
-		
+
 		Patient patient;
 		List<Treatment> prescriptions;
 		List<PatientDiagnosis> diagnosisList;
@@ -64,24 +65,25 @@ public final class GetCurrentPatientPageCommand implements Command {
 				}
 				Collections.sort(prescriptions, Treatment.treatmentStatusComparator);
 			}
-				
+
 			diagnosisList = diagnosisService.getSortedPatientDiagnosisById(patientId);
 			hospitalizations = hospitalizationService.getAllHospitalizationsById(patientId);
 			patient = userService.getPatientById(patientId);
 			patient.setPrescriptions(prescriptions);
 			patient.setDiagnosisList(diagnosisList);
 			patient.setHospitalizations(hospitalizations);
-			
+
 			request.setAttribute(RequestAtribute.PATIENT, patient);
 			request.setAttribute(RequestAtribute.MESSAGE, message);
 			String page = NavigationManager.getProperty(PATH);
 			goForward(request, response, page);
-			
+
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetCurrentPatientPageCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
+
 		}
 	}
 }

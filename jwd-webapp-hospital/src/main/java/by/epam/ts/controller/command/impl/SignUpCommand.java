@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.bean.User;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.command.util.mailer.Mailer;
 import by.epam.ts.controller.command.util.mailer.MailerException;
 import by.epam.ts.controller.constant_attribute.MailAttributes;
@@ -44,37 +45,39 @@ public final class SignUpCommand implements Command {
 
 			if (user.getId() == null) {
 				// The person with given e-mail was found in base, but wasn't registered as
-				// user;
+				// user because of error;
 				log.log(Level.ERROR,
 						"Error when calling method execute() from SignUpCommand. The user wasn't registered.");
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-						+ RequestAtribute.COMMAND + "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&"
-						+ RequestAtribute.MESSAGE + "=" + RequestMessage.TECHNICAL_ERROR);
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+				response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
+
 			}
 			// Send letter about successful registration to the given patient's e-mail;
 			Mailer mailer = new Mailer();
 			mailer.send(MailAttributes.LETTER_SUBJECT, MailAttributes.LETTER_BODY_SUCCESS_REGISTER,
 					MailAttributes.TEMPORARY_EMAIL_FOR_CHECK);
 
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.SUCCESSFUL_REGISTRATION);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_INDEX_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.SUCCESSFUL_REGISTRATION).getResultString());
 
 		} catch (ValidationServiceException e) {
 			log.log(Level.WARN, "Validation error when calling method execute() from SignUpCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_SIGNUP_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ERROR_DATA + "&" + RequestAtribute.INVALID_PARAMETERS + "=" + e.getMessage());
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_SIGNUP_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).setInvalidParameters(e.getMessage())
+					.getResultString());
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling method execute() from SignUpCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		} catch (MailerException e) {
-			log.log(Level.WARN, "Error when calling send()from SignUpCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.SUCCESSFUL_REGISTRATION);
+			log.log(Level.WARN, "Error when calling send()from SignUpCommand, the message wasn't sent", e);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_INDEX_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.SUCCESSFUL_REGISTRATION).getResultString());
 		}
 
 	}

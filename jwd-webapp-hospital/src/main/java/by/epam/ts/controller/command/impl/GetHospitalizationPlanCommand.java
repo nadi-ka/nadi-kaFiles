@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.bean.Hospitalization;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.manager.NavigationManager;
@@ -33,9 +34,10 @@ public final class GetHospitalizationPlanCommand implements Command {
 
 		String patientId = getUserIdFromSession(request);
 		if ((patientId == null) || patientId.isEmpty()) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.ACCESS_DENIED);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_INDEX_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ACCESS_DENIED).getResultString());
+
 			return;
 		}
 
@@ -65,7 +67,7 @@ public final class GetHospitalizationPlanCommand implements Command {
 					// attempt to get average amount of bed days by primary diagnosis;
 					hospitalizationLength = diagnosisService.getAverageHospitalizationLength(patientId, entryDate);
 					if (hospitalizationLength == 0) {
-						//the primary diagnosis is absent in current moment;
+						// the primary diagnosis is absent in current moment;
 						request.setAttribute(RequestAtribute.HOSPITALIZATION, lastHospitalization);
 						request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.DIAGNOSIS_ABSENT);
 						goForward(request, response, page);
@@ -79,16 +81,17 @@ public final class GetHospitalizationPlanCommand implements Command {
 				}
 			} else {
 				// the patient hasn't been hospitalized yet;
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-						+ CommandEnum.GET_PATIENT_MAIN_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-						+ "=" + RequestMessage.NO_CURRENT_HOSPITALIZATION);
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						CommandEnum.GET_PATIENT_MAIN_PAGE.toString().toLowerCase());
+				response.sendRedirect(builder.setMessage(RequestMessage.NO_CURRENT_HOSPITALIZATION).getResultString());
+
 			}
 
 		} catch (ServiceException e) {
 			log.log(Level.ERROR, "Error when calling execute() from GetHospitalizationPlanCommand", e);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-					+ CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 	}
 }

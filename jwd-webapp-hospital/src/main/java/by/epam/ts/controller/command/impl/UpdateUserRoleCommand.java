@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.UserService;
@@ -36,15 +37,15 @@ public final class UpdateUserRoleCommand implements Command {
 		UserService userService = factory.getUserService();
 		try {
 			userService.setStaffUserRole(role, staffId);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SEARCH_STAFF.toString().toLowerCase() + "&" + RequestAtribute.QUERY_SEARCH + "="
-					+ querySurnameUTF8);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SEARCH_STAFF.toString().toLowerCase());
+			response.sendRedirect(builder.setQueryString(querySurnameUTF8).getResultString());
 			
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method execute from UpdateUserRoleCommand", ex);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 	}
 

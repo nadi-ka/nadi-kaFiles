@@ -15,6 +15,7 @@ import by.epam.ts.bean.User;
 import by.epam.ts.bean.role.UserRole;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.controller.constant_attribute.SessionAtribute;
@@ -39,40 +40,40 @@ public final class LoginCommand implements Command {
 
 		try {
 			user = userService.logIn(login, password);
-			if (user.getId() != null) {
-				HttpSession session = request.getSession(true);
-				UserRole role = user.getRole();
-				// Session stores parameters: user's id and user's role;
-				session.setAttribute(SessionAtribute.USER_ID, user.getId());
-				session.setAttribute(SessionAtribute.USER_ROLE, role);
+			if (user.getId() == null) {
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						 CommandEnum.GET_INDEX_PAGE.toString().toLowerCase());
+				response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).getResultString());
 
-				if (role == UserRole.DOCTOR || role == UserRole.ADMINISTRATOR || role == UserRole.NURSE) {
-					response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-							+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase());
-				} else {
-					response.sendRedirect(
-							request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND + "="
-									+ CommandEnum.GET_PATIENT_MAIN_PAGE.toString().toLowerCase());
-				}
-
-			} else {
-				request.setAttribute(RequestAtribute.MESSAGE, RequestMessage.ERROR_DATA);
-				response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-						+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
-						+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA);
+				return;
 			}
+			HttpSession session = request.getSession(true);
+			UserRole role = user.getRole();
+			// Session stores parameters: user's id and user's role;
+			session.setAttribute(SessionAtribute.USER_ID, user.getId());
+			session.setAttribute(SessionAtribute.USER_ROLE, role);
 
+			if (role == UserRole.DOCTOR || role == UserRole.ADMINISTRATOR || role == UserRole.NURSE) {
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						CommandEnum.GET_STAFF_MAIN_PAGE.toString().toLowerCase());
+				response.sendRedirect(builder.getResultString());
+				
+			} else {
+				RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+						CommandEnum.GET_PATIENT_MAIN_PAGE.toString().toLowerCase());
+				response.sendRedirect(builder.getResultString());
+			}
 		} catch (ValidationServiceException ex) {
-			log.log(Level.INFO, "Validation error during calling method execute from LoginCommand()", ex);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT
-					+ RequestAtribute.COMMAND + "=" + CommandEnum.GET_INDEX_PAGE.toString().toLowerCase() + "&"
-					+ RequestAtribute.MESSAGE + "=" + RequestMessage.ERROR_DATA);
+			log.log(Level.WARN, "Validation error when calling execute() from LoginCommand()", ex);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					 CommandEnum.GET_INDEX_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.ERROR_DATA).getResultString());
 
 		} catch (ServiceException ex) {
-			log.log(Level.ERROR, "Error during calling method execute from LoginCommand.", ex);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			log.log(Level.ERROR, "Error when calling execute() from LoginCommand.", ex);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}

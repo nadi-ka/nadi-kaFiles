@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.ts.bean.treat_status.TreatmentStatus;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
+import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 import by.epam.ts.controller.constant_attribute.RequestMessage;
 import by.epam.ts.service.TreatmentService;
@@ -32,9 +33,10 @@ public final class GiveConsentCommand implements Command {
 		
 		// if procedure was completed/canceled, it shouldn't be performed;
 		if (!checkTreatStatusForPerformProcedure(request)) {
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_TREATMENT_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE
-					+ "=" + RequestMessage.WRONG_REQUEST);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_TREATMENT_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.WRONG_REQUEST).getResultString());
+			
 			return;
 		}
 
@@ -42,13 +44,15 @@ public final class GiveConsentCommand implements Command {
 		TreatmentService service = factory.getTreatmentService();
 		try {
 			service.getPatientsConsent(idAppointment, consent);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.GET_TREATMENT_PAGE.toString().toLowerCase());
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.GET_TREATMENT_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.getResultString());
+			
 		} catch (ServiceException ex) {
 			log.log(Level.ERROR, "Error during calling method execute from GiveConsentCommand", ex);
-			response.sendRedirect(request.getContextPath() + RequestAtribute.CONTROLLER_FONT + RequestAtribute.COMMAND
-					+ "=" + CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase() + "&" + RequestAtribute.MESSAGE + "="
-					+ RequestMessage.TECHNICAL_ERROR);
+			RedirectBuilder builder = new RedirectBuilder(request.getContextPath(), RequestAtribute.CONTROLLER_FONT,
+					CommandEnum.SHOW_ERROR_PAGE.toString().toLowerCase());
+			response.sendRedirect(builder.setMessage(RequestMessage.TECHNICAL_ERROR).getResultString());
 		}
 
 	}
