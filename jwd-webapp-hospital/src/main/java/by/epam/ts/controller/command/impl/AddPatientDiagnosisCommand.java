@@ -14,9 +14,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import by.epam.ts.bean.PatientDiagnosis;
+import by.epam.ts.controller.command.AccessManager;
 import by.epam.ts.controller.command.Command;
 import by.epam.ts.controller.command.CommandEnum;
-import by.epam.ts.controller.command.access_manager.AccessManager;
 import by.epam.ts.controller.command.util.builder.RedirectBuilder;
 import by.epam.ts.controller.command.util.parse.DateParser;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;

@@ -115,16 +115,6 @@ public class HospitalizationDaoSqlTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.HospitalizationDaoSql#updateDischargeDate(java.time.LocalDate, int)}.
 	 */
-//	@Test
-//	public void testUpdateDischargeDate_positiveResult() throws Exception {
-//
-//		int insertedRowsExpected = 1;
-//		int insertedRowsActual = hospitalizationDao.updateDischargeDate(LocalDate.now(), idHistoryPresent);
-//
-//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-//
-//		assertEquals(insertedRowsExpected, insertedRowsActual);
-//	}
 
 	@Test(expected = NullPointerException.class)
 	public void testUpdateDischargeDate_nullDateValue() throws DaoException {

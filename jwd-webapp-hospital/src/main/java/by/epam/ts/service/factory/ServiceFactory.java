@@ -6,13 +6,13 @@ import by.epam.ts.service.TreatmentService;
 import by.epam.ts.service.UserService;
 
 public interface ServiceFactory {
-	
+
 	UserService getUserService();
-	
+
 	TreatmentService getTreatmentService();
-	
+
 	DiagnosisService getDiagnosisService();
-	
+
 	HospitalizationService getHospitalizationService();
 
 }

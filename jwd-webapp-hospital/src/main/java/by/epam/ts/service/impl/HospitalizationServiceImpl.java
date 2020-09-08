@@ -19,9 +19,10 @@ import by.epam.ts.service.exception.ValidationServiceException;
 import by.epam.ts.service.validator.ValidationManager;
 
 public class HospitalizationServiceImpl implements HospitalizationService {
-	
+
 	private DaoFactory daoFactory = DaoFactoryImpl.getInstance();
 	private HospitalizationDao hospitalizationDao = daoFactory.getHospitalizationDao();
+	private static final String delimeter = ",";
 
 	static final Logger log = LogManager.getLogger(HospitalizationServiceImpl.class);
 
@@ -30,7 +31,7 @@ public class HospitalizationServiceImpl implements HospitalizationService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateHospitalizationData(idPatient, entryDate);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		// adding of the new hospitalization;
@@ -55,7 +56,7 @@ public class HospitalizationServiceImpl implements HospitalizationService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateDischargeData(dischargeDate, entryDate, idHistory);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		// setting of the discharge date;

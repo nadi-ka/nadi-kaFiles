@@ -1,10 +1,9 @@
 package by.epam.ts.controller.constant_attribute;
 
 public final class RequestAtribute {
-	
+
 	public final static String MESSAGE = "message";
-	public final static String COMMAND = "command"; 
-	public final static String CONTROLLER_REGISTER = "/register?";
+	public final static String COMMAND = "command";
 	public final static String CONTROLLER_FONT = "/font?";
 	public final static String USER_LOGIN = "login";
 	public final static String USER_PASSWORD = "password";
@@ -19,7 +18,7 @@ public final class RequestAtribute {
 	public final static String SUCCESSFUL_PROCEDURE = "successful_procedure";
 	public final static String PRESCRIPTIONS = "prescriptions";
 	public final static String REDIRECT_COMMAND = "redirect_command";
-	public final static String LIST_PATIENTS  = "patients";
+	public final static String LIST_PATIENTS = "patients";
 	public final static String CURRENT_PATIENT = "current_patient";
 	public final static String PATIENT_ID = "patient_id";
 	public final static String QUERY_STRING = "query_string";
@@ -52,5 +51,5 @@ public final class RequestAtribute {
 	public final static String ID_APPOINTMENT = "id_appointment";
 	public final static String TREATMENT_STATUS = "status";
 	public final static String CURRENT_TREATMENT_STATUS = "current_status";
-	
+
 }

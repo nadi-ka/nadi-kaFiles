@@ -241,8 +241,7 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 
 	/*
 	 * This method is used to calculate the expected period of current patient's
-	 * hospitalization; 
-	 * It returns the list of short patient's diagnosis including
+	 * hospitalization; It returns the list of short patient's diagnosis including
 	 * average number of bed days by the primary disease;
 	 */
 	public List<Diagnosis> findShortDiagnosisByIdAndDate(String id, LocalDate hospitalizationDate) throws DaoException {
@@ -281,28 +280,6 @@ public class DiagnosisDaoSql implements DiagnosisDao {
 			connectionPool.releaseConnection(connection);
 		}
 		return diagnosisList;
-	}
-	
-	public static void main(String[] args) {
-		
-		ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
-		ConnectionPool connectionPool = factory.getConnectionPool();
-
-		try {
-			connectionPool.initializePoolData();
-			DiagnosisDao diagnosisDao = new DiagnosisDaoSql();
-			
-			List<Diagnosis> list = diagnosisDao.findShortDiagnosisByIdAndDate("e4a4baa0-25a5-4b60-9856-b55ec84d8c88", LocalDate.parse("2019-07-23"));
-			System.out.println(list);
-			
-		} catch (ConnectionPoolException e) {
-			e.printStackTrace();
-
-		} catch (DaoException e) {
-			e.printStackTrace();
-		} finally {
-			connectionPool.dispose();
-		}
 	}
 
 }

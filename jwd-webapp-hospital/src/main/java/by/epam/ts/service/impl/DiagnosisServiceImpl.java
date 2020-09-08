@@ -23,6 +23,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
 	private DaoFactory daoFactory = DaoFactoryImpl.getInstance();
 	private DiagnosisDao diagnosisDao = daoFactory.getDiagnosisDao();
+	private static final String delimeter = ",";
 
 	static final Logger log = LogManager.getLogger(DiagnosisServiceImpl.class);
 
@@ -43,7 +44,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateHospitalizationData(id, entryDate);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		LocalDate date = LocalDate.parse(entryDate);
@@ -81,7 +82,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 			Set<String> invalidDataSet = manager.validatePatientDiagnosisData(diagnosis.getIdPatient(),
 					diagnosis.getCodeByICD(), diagnosis.getSettingDate());
 			if (!invalidDataSet.isEmpty()) {
-				String invalidData = String.join(",", invalidDataSet);
+				String invalidData = String.join(delimeter, invalidDataSet);
 				throw new ValidationServiceException(invalidData);
 			}
 		}
@@ -111,7 +112,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateNewDiagnosisData(codeDiagnosis, diagnosisName, numberBedDays);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		// adding of the new diagnosis;

@@ -44,10 +44,10 @@ import by.epam.ts.controller.command.impl.WrongRequestCommand;
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 
 public final class CommandProvider {
-	
-	private final static CommandProvider instance = new CommandProvider();	
+
+	private final static CommandProvider instance = new CommandProvider();
 	private final Map<CommandEnum, Command> repository = new HashMap<>();
-	
+
 	private CommandProvider() {
 		repository.put(CommandEnum.LOGIN, new LoginCommand());
 		repository.put(CommandEnum.LOGOUT, new LogoutCommand());
@@ -87,27 +87,27 @@ public final class CommandProvider {
 		repository.put(CommandEnum.CANCEL_TREATMENT, new CancelTreatmentCommand());
 		repository.put(CommandEnum.WRONG_REQUEST, new WrongRequestCommand());
 	}
-	
+
 	public static CommandProvider getInstance() {
 		return instance;
 	}
-	
+
 	public Command defineCommand(HttpServletRequest request) {
-		
+
 		Command current;
 		String action = request.getParameter(RequestAtribute.COMMAND);
 		if (action == null || action.isEmpty()) {
 			current = repository.get(CommandEnum.WRONG_REQUEST);
 			return current;
 		}
-		
+
 		CommandEnum command = CommandEnum.valueOf(action.toUpperCase());
 		current = repository.get(command);
-		
+
 		if (current == null) {
 			current = repository.get(CommandEnum.WRONG_REQUEST);
 		}
-		
+
 		return current;
 	}
 

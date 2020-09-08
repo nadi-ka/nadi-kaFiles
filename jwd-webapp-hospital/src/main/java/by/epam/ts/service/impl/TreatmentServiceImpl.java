@@ -24,6 +24,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 
 	private DaoFactory daoFactory = DaoFactoryImpl.getInstance();
 	private TreatmentDao treatmentDao = daoFactory.getTreatmentDao();
+	private static final String delimeter = ",";
 
 	static final Logger log = LogManager.getLogger(TreatmentServiceImpl.class);
 
@@ -31,7 +32,6 @@ public class TreatmentServiceImpl implements TreatmentService {
 		List<Treatment> prescriptions;
 		try {
 			prescriptions = treatmentDao.findPatientsTreatmentById(id);
-			log.info(prescriptions.toString());
 		} catch (DaoException ex) {
 			throw new ServiceException("Error when calling userDao.findPatientsTreatmentById(id).", ex);
 		}
@@ -43,7 +43,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateConsent(idAppointment, consent);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		int numAppointment = Integer.parseInt(idAppointment);
@@ -68,7 +68,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 		Set<String> invalidDataSet = manager.validateTreatmentData(idPatient, treatmentType, treatmentName, idDoctor,
 				dateBegin, dateFinish);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		// adding of the new treatment;
@@ -99,7 +99,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 		Set<String> invalidDataSet = manager.validateCurrentTreatmentData(consent, idAppointment, datePerforming,
 				idPerformer, status);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		// check consent;
@@ -132,7 +132,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateTreatCancellationData(idAppointment, idDoctor);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		int numAppointment = Integer.parseInt(idAppointment);

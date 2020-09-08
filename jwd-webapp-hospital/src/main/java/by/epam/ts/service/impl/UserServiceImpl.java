@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
 
 	private DaoFactory daoFactory = DaoFactoryImpl.getInstance();
 	private UserDao userDao = daoFactory.getUserDao();
+	private static final String delimeter = ",";
 
 	static final Logger log = LogManager.getLogger(UserServiceImpl.class);
 
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateSignUpData(login, password, email);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		try {
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateLoginData(login, password);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		User user = null;
@@ -149,7 +150,7 @@ public class UserServiceImpl implements UserService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validatePatientPersonalData(surname, name, email, dateBirth);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		/*
@@ -191,7 +192,7 @@ public class UserServiceImpl implements UserService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validatePatientPersonalData(surname, name, newEmail, dateBirth);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		// check, if the new e-mail is unique in case if old and new e-mails are
@@ -214,6 +215,7 @@ public class UserServiceImpl implements UserService {
 		Patient patient = new Patient(id, surname, name, birthday, newEmail);
 		int effectedRows = 0;
 		try {
+			log.info("new patient:" + patient.toString());
 			effectedRows = userDao.updatePatientPersonalData(patient);
 			if (effectedRows == 0) {
 				throw new ServiceException(
@@ -230,7 +232,7 @@ public class UserServiceImpl implements UserService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateStaffPersonalData(specialty, surname, name, email);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		/*
@@ -274,7 +276,7 @@ public class UserServiceImpl implements UserService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateStaffPersonalData(surname, name, newEmail);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		// check, if the new e-mail is unique in case if old and new e-mails are
@@ -342,7 +344,7 @@ public class UserServiceImpl implements UserService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateUserRole(role, id);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		int userRole = UserRole.valueOf(role).getRoleValue();
@@ -365,7 +367,7 @@ public class UserServiceImpl implements UserService {
 		ValidationManager manager = new ValidationManager();
 		Set<String> invalidDataSet = manager.validateUserStatus(userStatus, id);
 		if (!invalidDataSet.isEmpty()) {
-			String invalidData = String.join(",", invalidDataSet);
+			String invalidData = String.join(delimeter, invalidDataSet);
 			throw new ValidationServiceException(invalidData);
 		}
 		boolean status = Boolean.parseBoolean(userStatus);

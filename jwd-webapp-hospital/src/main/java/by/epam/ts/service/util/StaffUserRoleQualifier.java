@@ -5,6 +5,10 @@ import by.epam.ts.bean.role.UserRole;
 import by.epam.ts.bean.specialty.Specialty;
 import by.epam.ts.service.exception.ServiceException;
 
+/**
+ * The class qualifies the user's role of the staff depending on the specialty;
+ */
+
 public class StaffUserRoleQualifier {
 	
 	public UserRole qualifyStaffUserRole(MedicalStaff staff) throws ServiceException {

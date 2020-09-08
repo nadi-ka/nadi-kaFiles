@@ -37,7 +37,6 @@ public class DiagnosisDaoSqlTest {
 	private final static String hospitalizationDateWrong = "2019-07-24";
 	private final static String diagnosisMyopia = "миопия";
 	private final static String diagnosisRetinalDetechment = "отслойка сетчатки";
-	private final static String codeMyopia = "H52.13";
 	private final static String codeRetinalDetechment = "H33.0";
 	private final static String emptyString = "";
 	private final static String separator = ", ";
@@ -182,26 +181,6 @@ public class DiagnosisDaoSqlTest {
 		Diagnosis diagnosisNullValues = new Diagnosis(null, null, bedDaysRetinalDetechment);
 		diagnosisDao.createNewDiagnosis(diagnosisNullValues);
 	}
-
-//	@Test
-//	public void createPatientDiagnosisTest_positiveResult()
-//			throws Exception {
-//
-//		List<PatientDiagnosis> diagnosisList = new ArrayList<PatientDiagnosis>();
-//		PatientDiagnosis primaryDiagnosis = new PatientDiagnosis(presentId, codeRetinalDetechment,
-//				true, LocalDate.now());
-//		PatientDiagnosis secondaryDiagnosis = new PatientDiagnosis(presentId, codeMyopia, false,
-//				LocalDate.now());
-//		diagnosisList.add(primaryDiagnosis);
-//		diagnosisList.add(secondaryDiagnosis);
-//
-//		int[] insertedRowsExpected = { 1, 1 };
-//		int[] insertedRowsActual = diagnosisDao.createPatientDiagnosis(diagnosisList);
-//
-//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-//
-//		assertArrayEquals(insertedRowsExpected, insertedRowsActual);
-//	}
 	
 	@Test(expected = NullPointerException.class)
 	public void createPatientDiagnosisTest_nullParameterValue()

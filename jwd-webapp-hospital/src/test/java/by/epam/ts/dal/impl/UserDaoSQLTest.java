@@ -70,17 +70,6 @@ public class UserDaoSQLTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.UserDaoSQL#createUserPatient(by.epam.ts.bean.User)}.
 	 */
-//	@Test
-//	public void testCreateUserPatient_positiveResult() throws Exception {
-//
-//		User user = new User(idPresentInPatientsTable, newLoginUserPatient, newHashedPassword, UserRole.PATIENT, true);
-//		int insertedRowsExpected = 1;
-//		int insertedRowsActual = userDao.createUserPatient(user);
-//
-//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-//
-//		assertTrue(insertedRowsExpected == insertedRowsActual);
-//	}
 
 	@Test(expected = DaoException.class)
 	public void testCreateUserPatient_idAbsent() throws DaoException {
@@ -100,18 +89,6 @@ public class UserDaoSQLTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.UserDaoSQL#createUserStaff(by.epam.ts.bean.User)}.
 	 */
-//	@Test
-//	public void testCreateUserStaff_positiveResult() throws Exception {
-//
-//		User user = new User(idPresentInStaffTable, newLoginUserStaff, newHashedPassword, UserRole.NURSE, true);
-//		int insertedRowsExpected = 1;
-//		int insertedRowsActual = userDao.createUserStaff(user);
-//
-//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-//
-//		assertTrue(insertedRowsExpected == insertedRowsActual);
-//
-//	}
 
 	@Test(expected = DaoException.class)
 	public void testCreateUserStaff_idAbsent() throws DaoException {
@@ -428,19 +405,6 @@ public class UserDaoSQLTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.UserDaoSQL#createNewStaff(by.epam.ts.bean.MedicalStaff)}.
 	 */
-//	@Test
-//	public void testCreateNewStaff_positiveResult() throws Exception {
-//
-//		String newSurname = "Сергеев";
-//		String newName = "Сергей";
-//		MedicalStaff medicalStaff = new MedicalStaff(newId, Specialty.DOCTOR, newSurname, newName, emailAbsentInDb);
-//		int insertedRowsExpected = 1;
-//		int insertedRowsActual = userDao.createNewStaff(medicalStaff);
-//
-//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-//
-//		assertTrue(insertedRowsExpected == insertedRowsActual);
-//	}
 
 	@Test(expected = DaoException.class)
 	public void testCreateNewStaff_idAlreadyExists() throws DaoException {
@@ -462,18 +426,6 @@ public class UserDaoSQLTest {
 	 * Test methods for
 	 * {@link by.epam.ts.dal.impl.UserDaoSQL#updateStaffPersonalData(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
-//	@Test
-//	public void testUpdateStaffPersonalData_positiveResult() throws Exception {
-//
-//		String surname = "Антонова";
-//		String name = "Антонина";
-//		int updatedRowsExpected = 1;
-//		int updatedRowsActual = userDao.updateStaffPersonalData(surname, name, emailAbsentInDb, idPresentInStaffTable);
-//
-//		DbScriptRunner.dropAndRestoreTestDB(moskedConnectionPool);
-//
-//		assertTrue(updatedRowsExpected == updatedRowsActual);
-//	}
 
 	@Test
 	public void testUpdateStaffPersonalData_idAbsent() throws DaoException {

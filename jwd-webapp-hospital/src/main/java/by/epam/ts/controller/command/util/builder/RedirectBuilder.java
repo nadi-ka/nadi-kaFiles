@@ -2,6 +2,10 @@ package by.epam.ts.controller.command.util.builder;
 
 import by.epam.ts.controller.constant_attribute.RequestAtribute;
 
+/**
+ * Class for suitable forming the redirect String;
+ */
+
 public class RedirectBuilder {
 
 	private String result = "";
@@ -61,25 +65,25 @@ public class RedirectBuilder {
 		appendAttribute(RequestAtribute.EMAIL, email);
 		return this;
 	}
-	
+
 	public RedirectBuilder setStaffId(String staffId) {
 
 		appendAttribute(RequestAtribute.STAFF_ID, staffId);
 		return this;
 	}
-	
+
 	public RedirectBuilder setTreatmentName(String treatmentName) {
 
 		appendAttribute(RequestAtribute.TREATMENT_NAME, treatmentName);
 		return this;
 	}
-	
+
 	public RedirectBuilder setDiagnosisName(String diagnosisName) {
 
 		appendAttribute(RequestAtribute.NAME_DIAGNOSIS, diagnosisName);
 		return this;
 	}
-	
+
 	public RedirectBuilder setQueryString(String queryString) {
 
 		appendAttribute(RequestAtribute.QUERY_SEARCH, queryString);

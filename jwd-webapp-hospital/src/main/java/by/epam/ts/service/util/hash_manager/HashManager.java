@@ -2,6 +2,11 @@ package by.epam.ts.service.util.hash_manager;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * The class provides methods for hashing the user's password and checking the
+ * password, using the bCrypt;
+ */
+
 public class HashManager {
 
 	private static final String HASH_START = "$2a$";

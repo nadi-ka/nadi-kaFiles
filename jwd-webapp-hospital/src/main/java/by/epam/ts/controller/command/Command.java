@@ -13,6 +13,8 @@ import by.epam.ts.controller.manager.NavigationManager;
 
 public interface Command {
 
+	public final static String ERROR_PAGE = "path.page.error";
+
 	void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 
 	default void goForward(HttpServletRequest request, HttpServletResponse response, String page)
@@ -21,7 +23,7 @@ public interface Command {
 		if (requestDispatcher != null) {
 			requestDispatcher.forward(request, response);
 		} else {
-			response.sendRedirect(NavigationManager.getProperty("path.page.error"));
+			response.sendRedirect(NavigationManager.getProperty(ERROR_PAGE));
 		}
 	}
 

@@ -23,17 +23,17 @@ import by.epam.ts.dal.pool.ConnectionPoolException;
 import by.epam.ts.dal.pool.factory.ConnectionPoolFactory;
 
 public class HospitalizationDaoSql implements HospitalizationDao {
-	
+
 	private final ConnectionPoolFactory factory = ConnectionPoolFactory.getInstance();
 	private ConnectionPool connectionPool = factory.getConnectionPool();
-	
+
 	private static final String sqlAddHospitalization = "INSERT INTO hospitalization (id_patient, entry_date) VALUES (?,?);";
 	private static final String sqlFinishHospitalization = "UPDATE hospitalization SET discharge_date = (?) WHERE id_history = (?);";
 	private static final String sqlFindHospitalizationsByPatientId = "SELECT * FROM hospitalization WHERE id_patient = (?) ORDER BY entry_date DESC;";
 	private static final String sqlFindLastHospitalizationById = "SELECT * FROM hospitalization WHERE id_patient = (?) ORDER BY entry_date DESC LIMIT 1;";
 
 	private static final Logger log = LogManager.getLogger(HospitalizationDaoSql.class);
-	
+
 	public int createNewHospitalization(Hospitalization hospitalization) throws DaoException {
 		int insertedRows;
 		Connection connection = null;
@@ -169,6 +169,5 @@ public class HospitalizationDaoSql implements HospitalizationDao {
 		}
 		return hospitalization;
 	}
-
 
 }
